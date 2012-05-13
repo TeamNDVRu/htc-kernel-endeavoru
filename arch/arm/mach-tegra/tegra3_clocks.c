@@ -303,9 +303,6 @@
 #define ROUND_DIVIDER_DOWN	1
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-#define EARLY_SUSPEND_MIN_CPU_FREQ_IDX	0
-#define ACTIVE_MIN_CPU_FREQ_IDX		1
-
 /*
  * SCLK_ADJUST_DELAY is timeout to delay lowering SCLK
  * after display off/suspend. SCLK is kept at 40Mhz for the specified
