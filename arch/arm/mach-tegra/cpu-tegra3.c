@@ -436,6 +436,26 @@ static void tegra_auto_cpuplug_work_func(struct work_struct *work)
 				up = false;
 				hp_stats_update(cpu, false);
 			} else if (!is_lp_cluster() && !no_lp) {
+
+				/* For some reason this sometimes results in a null
+				   pointer dereference. Set the clocks again if this
+				   case occurs.
+				   start show-p1984, 2012.05.13
+				 */
+				if (!cpu_clk) {
+					printk(KERN_INFO "[cpu-tegra3]: re setting cpu_clk");
+					cpu_clk = clk_get_sys(NULL, "cpu");
+				}
+				if (!cpu_lp_clk) {
+					printk(KERN_INFO "[cpu-tegra3]: re setting cpu_lp_clk");
+					cpu_lp_clk = clk_get_sys(NULL, "cpu_lp");
+				}
+				if (IS_ERR(cpu_clk) || IS_ERR(cpu_lp_clk)) {
+					printk(KERN_INFO "[cpu-tegra3]: Error, cpu_clk/cpu_lp_lck not set");
+					break;
+				}
+				/* end show-p1984, 2012.05.13 */
+
 				if (!clk_set_parent(cpu_clk, cpu_lp_clk)) {
 					hp_stats_update(CONFIG_NR_CPUS, true);
 					hp_stats_update(0, false);
