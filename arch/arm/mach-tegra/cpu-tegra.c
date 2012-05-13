@@ -66,6 +66,7 @@ static unsigned long target_cpu_speed[CONFIG_NR_CPUS];
 static DEFINE_MUTEX(tegra_cpu_lock);
 static bool is_suspended;
 static int suspend_index;
+long unsigned int saved_policy_max = 1500000;
 
 static bool force_policy_max;
 
@@ -724,7 +725,7 @@ int tegra_cpu_set_speed_cap(unsigned int *speed_cap)
 int tegra_cpu_resume_boost(unsigned int *speed_cap)
 {
 	int ret = 0;
-	unsigned int new_speed = 1500000;
+	unsigned int new_speed = saved_policy_max;
 
 	if (is_suspended)
 		return -EBUSY;
@@ -789,7 +790,6 @@ struct early_suspend tegra_cpufreq_powersave_early_suspender;
 struct early_suspend tegra_cpufreq_performance_early_suspender;
 static struct pm_qos_request_list boost_cpu_freq_req;
 static struct pm_qos_request_list cap_cpu_freq_req;
-#define BOOST_CPU_FREQ_MIN 1500000
 #define CAP_CPU_FREQ_MAX 475000
 #endif
 
@@ -818,9 +818,9 @@ static int tegra_pm_notify(struct notifier_block *nb, unsigned long event,
 		is_suspended = false;
 		tegra_cpu_edp_init(true);
 		if (wake_reason_resume == 0x80) {
-			tegra_update_cpu_speed(BOOST_CPU_FREQ_MIN);
+			tegra_update_cpu_speed(saved_policy_max);
 			tegra_auto_hotplug_governor(
-				BOOST_CPU_FREQ_MIN, false);
+				saved_policy_max, false);
 		} else {
 			tegra_cpu_set_speed_cap(&freq);
 		}
@@ -912,13 +912,14 @@ static struct freq_attr *tegra_cpufreq_attr[] = {
 
 static int tegra_cpufreq_suspend(struct cpufreq_policy *policy)
 {
+	saved_policy_max = policy->max;
 	return 0;
 }
 static int tegra_cpufreq_resume(struct cpufreq_policy *policy)
 {
 	/*if it's a power key wakeup, uncap the cpu powersave mode for future boost*/
 	if (wake_reason_resume == 0x80)
-		policy->max = 1500000;
+		policy->max = saved_policy_max;
 	return 0;
 }
 
@@ -969,8 +970,8 @@ static void tegra_cpufreq_powersave_late_resume(struct early_suspend *h)
 	pr_info("tegra_cpufreq_powersave_late_resume: clean cpu freq cap\n");
 	pm_qos_update_request(&cap_cpu_freq_req, (s32)PM_QOS_CPU_FREQ_MAX_DEFAULT_VALUE);
 	pr_info("tegra_cpufreq_powersave_late_resume: boost cpu freq to 1.5GHz\n");
-	pm_qos_update_request(&boost_cpu_freq_req, (s32)BOOST_CPU_FREQ_MIN);
-	tegra_update_cpu_speed(BOOST_CPU_FREQ_MIN);
+	pm_qos_update_request(&boost_cpu_freq_req, saved_policy_max);
+	tegra_update_cpu_speed(saved_policy_max);
 }
 static void tegra_cpufreq_performance_early_suspend(struct early_suspend *h)
 {
