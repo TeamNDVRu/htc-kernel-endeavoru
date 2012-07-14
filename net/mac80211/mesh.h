@@ -31,6 +31,8 @@
  * @MESH_PATH_FIXED: the mesh path has been manually set and should not be
  * 	modified
  * @MESH_PATH_RESOLVED: the mesh path can has been resolved
+ * @MESH_PATH_REQ_QUEUED: there is an unsent path request for this destination
+ * already queued up, waiting for the discovery process to start.
  *
  * MESH_PATH_RESOLVED is used by the mesh path timer to
  * decide when to stop or cancel the mesh path discovery.
@@ -41,6 +43,7 @@ enum mesh_path_flags {
 	MESH_PATH_SN_VALID =	BIT(2),
 	MESH_PATH_FIXED	=	BIT(3),
 	MESH_PATH_RESOLVED =	BIT(4),
+	MESH_PATH_REQ_QUEUED =	BIT(5),
 };
 
 /**
@@ -80,7 +83,9 @@ enum mesh_deferred_task_flags {
  * 	retry
  * @discovery_retries: number of discovery retries
  * @flags: mesh path flags, as specified on &enum mesh_path_flags
- * @state_lock: mesh path state lock
+ * @state_lock: mesh path state lock used to protect changes to the
+ * mpath itself.  No need to take this lock when adding or removing
+ * an mpath to a hash bucket on a path table.
  * @is_gate: the destination station of this path is a mesh gate
  *
  *
@@ -93,7 +98,7 @@ struct mesh_path {
 	u8 dst[ETH_ALEN];
 	u8 mpp[ETH_ALEN];	/* used for MPP or MAP */
 	struct ieee80211_sub_if_data *sdata;
-	struct sta_info *next_hop;
+	struct sta_info __rcu *next_hop;
 	struct timer_list timer;
 	struct sk_buff_head frame_queue;
 	struct rcu_head rcu;
@@ -228,6 +233,8 @@ void ieee80211_mesh_root_setup(struct ieee80211_if_mesh *ifmsh);
 /* Mesh paths */
 int mesh_nexthop_lookup(struct sk_buff *skb,
 		struct ieee80211_sub_if_data *sdata);
+int mesh_nexthop_resolve(struct sk_buff *skb,
+			 struct ieee80211_sub_if_data *sdata);
 void mesh_path_start_discovery(struct ieee80211_sub_if_data *sdata);
 struct mesh_path *mesh_path_lookup(u8 *dst,
 		struct ieee80211_sub_if_data *sdata);

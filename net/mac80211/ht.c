@@ -14,6 +14,7 @@
  */
 
 #include <linux/ieee80211.h>
+#include <linux/module.h>
 #include <net/mac80211.h>
 #include "ieee80211_i.h"
 #include "rate.h"
@@ -27,9 +28,9 @@ bool ieee80111_cfg_override_disables_ht40(struct ieee80211_sub_if_data *sdata)
 	return false;
 }
 
-void __check_htcap_disable(struct ieee80211_sub_if_data *sdata,
-			   struct ieee80211_sta_ht_cap *ht_cap,
-			   u16 flag)
+static void __check_htcap_disable(struct ieee80211_sub_if_data *sdata,
+				  struct ieee80211_sta_ht_cap *ht_cap,
+				  u16 flag)
 {
 	__le16 le_flag = cpu_to_le16(flag);
 	if (sdata->u.mgd.ht_capa_mask.cap_info & le_flag) {
@@ -46,7 +47,9 @@ void ieee80211_apply_htcap_overrides(struct ieee80211_sub_if_data *sdata,
 	int i;
 
 	if (sdata->vif.type != NL80211_IFTYPE_STATION) {
-		WARN_ON_ONCE(sdata->vif.type != NL80211_IFTYPE_STATION);
+		/* AP interfaces call this code when adding new stations,
+		 * so just silently ignore non station interfaces.
+		 */
 		return;
 	}
 
@@ -247,7 +250,7 @@ void ieee80211_ba_session_work(struct work_struct *work)
 			continue;
 		}
 
-		tid_tx = sta->ampdu_mlme.tid_tx[tid];
+		tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 		if (tid_tx && test_and_clear_bit(HT_AGG_STATE_WANT_STOP,
 						 &tid_tx->state))
 			___ieee80211_stop_tx_ba_session(sta, tid,

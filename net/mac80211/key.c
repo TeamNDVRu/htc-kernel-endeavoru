@@ -15,6 +15,7 @@
 #include <linux/rcupdate.h>
 #include <linux/rtnetlink.h>
 #include <linux/slab.h>
+#include <linux/module.h>
 #include <net/mac80211.h>
 #include "ieee80211_i.h"
 #include "driver-ops.h"
@@ -122,6 +123,9 @@ static int ieee80211_key_enable_hw_accel(struct ieee80211_key *key)
 		 */
 		if (!(key->conf.flags & IEEE80211_KEY_FLAG_PAIRWISE))
 			goto out_unsupported;
+		sdata = container_of(sdata->bss,
+				     struct ieee80211_sub_if_data,
+				     u.ap);
 	}
 
 	ret = drv_set_key(key->local, SET_KEY, sdata, sta, &key->conf);
@@ -183,6 +187,11 @@ static void ieee80211_key_disable_hw_accel(struct ieee80211_key *key)
 	      (key->conf.flags & IEEE80211_KEY_FLAG_PUT_IV_SPACE)))
 		increment_tailroom_need_count(sdata);
 
+	if (sdata->vif.type == NL80211_IFTYPE_AP_VLAN)
+		sdata = container_of(sdata->bss,
+				     struct ieee80211_sub_if_data,
+				     u.ap);
+
 	ret = drv_set_key(key->local, DISABLE_KEY, sdata,
 			  sta, &key->conf);
 
@@ -222,7 +231,7 @@ static void __ieee80211_set_default_key(struct ieee80211_sub_if_data *sdata,
 	assert_key_lock(sdata->local);
 
 	if (idx >= 0 && idx < NUM_DEFAULT_KEYS)
-		key = sdata->keys[idx];
+		key = key_mtx_dereference(sdata->local, sdata->keys[idx]);
 
 	if (uni)
 		rcu_assign_pointer(sdata->default_unicast_key, key);
@@ -232,12 +241,16 @@ static void __ieee80211_set_default_key(struct ieee80211_sub_if_data *sdata,
 	ieee80211_debugfs_key_update_default(sdata);
 }
 
-void ieee80211_set_default_key(struct ieee80211_sub_if_data *sdata, int idx,
+int ieee80211_set_default_key(struct ieee80211_sub_if_data *sdata, int idx,
 			       bool uni, bool multi)
 {
+	int ret = 0;
 	mutex_lock(&sdata->local->key_mtx);
 	__ieee80211_set_default_key(sdata, idx, uni, multi);
+	if (uni)
+		ret = drv_set_default_unicast_key(sdata->local, sdata, idx);
 	mutex_unlock(&sdata->local->key_mtx);
+	return ret;
 }
 
 static void
@@ -249,7 +262,7 @@ __ieee80211_set_default_mgmt_key(struct ieee80211_sub_if_data *sdata, int idx)
 
 	if (idx >= NUM_DEFAULT_KEYS &&
 	    idx < NUM_DEFAULT_KEYS + NUM_DEFAULT_MGMT_KEYS)
-		key = sdata->keys[idx];
+		key = key_mtx_dereference(sdata->local, sdata->keys[idx]);
 
 	rcu_assign_pointer(sdata->default_mgmt_key, key);
 
@@ -293,9 +306,15 @@ static void __ieee80211_key_replace(struct ieee80211_sub_if_data *sdata,
 		else
 			idx = new->conf.keyidx;
 
-		defunikey = old && sdata->default_unicast_key == old;
-		defmultikey = old && sdata->default_multicast_key == old;
-		defmgmtkey = old && sdata->default_mgmt_key == old;
+		defunikey = old &&
+			old == key_mtx_dereference(sdata->local,
+						sdata->default_unicast_key);
+		defmultikey = old &&
+			old == key_mtx_dereference(sdata->local,
+						sdata->default_multicast_key);
+		defmgmtkey = old &&
+			old == key_mtx_dereference(sdata->local,
+						sdata->default_mgmt_key);
 
 		if (defunikey && !new)
 			__ieee80211_set_default_key(sdata, -1, true, false);
@@ -479,11 +498,11 @@ int ieee80211_key_link(struct ieee80211_key *key,
 	mutex_lock(&sdata->local->key_mtx);
 
 	if (sta && pairwise)
-		old_key = sta->ptk;
+		old_key = key_mtx_dereference(sdata->local, sta->ptk);
 	else if (sta)
-		old_key = sta->gtk[idx];
+		old_key = key_mtx_dereference(sdata->local, sta->gtk[idx]);
 	else
-		old_key = sdata->keys[idx];
+		old_key = key_mtx_dereference(sdata->local, sdata->keys[idx]);
 
 	increment_tailroom_need_count(sdata);
 

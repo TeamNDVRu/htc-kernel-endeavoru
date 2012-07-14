@@ -56,9 +56,6 @@ static const struct sdio_device_id wl1271_devices[] __devinitconst = {
 };
 MODULE_DEVICE_TABLE(sdio, wl1271_devices);
 
-extern void set_wifi_is_on(int on);
-extern bool stop_wifi_driver_flag;
-
 static void wl1271_sdio_set_block_size(struct device *child,
 				       unsigned int blksz)
 {
@@ -132,21 +129,20 @@ static int wl12xx_sdio_power_on(struct wl12xx_sdio_glue *glue)
 {
 	int ret;
 	struct sdio_func *func = dev_to_sdio_func(glue->dev);
+	struct mmc_card *card = func->card;
 
-/*	printk("[EternityProject] SDIO PowerON\n");
-	set_wifi_is_on(1);  EternityProject, 21/06/2012
-THIS IS NOT SUPPOSED TO BE HERE. */
-
-	/* If enabled, tell runtime PM not to power off the card */
-	if (pm_runtime_enabled(&func->dev)) {
-		ret = pm_runtime_get_sync(&func->dev);
-		if (ret < 0)
+	ret = pm_runtime_get_sync(&card->dev);
+	if (ret) {
+		/*
+		 * Runtime PM might be temporarily disabled, or the device
+		 * might have a positive reference counter. Make sure it is
+		 * really powered on.
+		 */
+		ret = mmc_power_restore_host(card->host);
+		if (ret < 0) {
+			pm_runtime_put_sync(&card->dev);
 			goto out;
-	} else {
-		/* Runtime PM is disabled: power up the card manually */
-		ret = mmc_power_restore_host(func->card->host);
-		if (ret < 0)
-			goto out;
+		}
 	}
 
 	sdio_claim_host(func);
@@ -161,24 +157,21 @@ static int wl12xx_sdio_power_off(struct wl12xx_sdio_glue *glue)
 {
 	int ret;
 	struct sdio_func *func = dev_to_sdio_func(glue->dev);
-
-/*	printk("[EternityProject] SDIO PowerOFF\n");
-	set_wifi_is_on(0);  EternityProject, 21/06/2012 
-THIS IS NOT SUPPOSED TO BE HERE */
+	struct mmc_card *card = func->card;
 
 	sdio_claim_host(func);
 	sdio_disable_func(func);
 	sdio_release_host(func);
 
-	/* Power off the card manually, even if runtime PM is enabled. */
-	ret = mmc_power_save_host(func->card->host);
+	/* Power off the card manually in case it wasn't powered off above */
+	ret = mmc_power_save_host(card->host);
 	if (ret < 0)
-		return ret;
+		goto out;
 
-	/* If enabled, let runtime PM know the card is powered off */
-	if (pm_runtime_enabled(&func->dev))
-		ret = pm_runtime_put_sync(&func->dev);
+	/* Let runtime PM know the card is powered off */
+	pm_runtime_put_sync(&card->dev);
 
+out:
 	return ret;
 }
 
@@ -317,10 +310,9 @@ static int wl1271_suspend(struct device *dev)
 
 	dev_dbg(dev, "wl1271 suspend. wow_enabled: %d\n",
 		wl->wow_enabled);
-
+#if 0
 	/* check whether sdio should keep power */
-/*	if (wl->wow_enabled) {*/
-	if (stop_wifi_driver_flag) {
+	if (wl->wow_enabled) {
 		sdio_flags = sdio_get_host_pm_caps(func);
 
 		if (!(sdio_flags & MMC_PM_KEEP_POWER)) {
@@ -337,26 +329,14 @@ static int wl1271_suspend(struct device *dev)
 			goto out;
 		}
 	}
-	
-	/*
-	 * EternityProject: Add quirks for BOARD_ENDEAVORU
-	 */
-//	if (stop_wifi_driver_flag) {
-		/* Release SDIO host and use
-		 * sdio_set_host_pm_flags for keeping power
-		 */
-//	}
-
 out:
+#endif
 	return ret;
 }
 
 static int wl1271_resume(struct device *dev)
 {
-/*	dev_dbg(dev, "wl1271 resume\n"); */
-
-//	printk("[EternityProject WiFi] Resuming SDIO.\n");
-//	set_wifi_is_on(1);
+	dev_dbg(dev, "wl1271 resume\n");
 
 	return 0;
 }
@@ -381,15 +361,11 @@ static struct sdio_driver wl1271_sdio_driver = {
 
 static int __init wl1271_init(void)
 {
-	printk("EternityProject: set wifi_is_on to 1\n");
-	set_wifi_is_on(1);
 	return sdio_register_driver(&wl1271_sdio_driver);
 }
 
 static void __exit wl1271_exit(void)
 {
-	printk("EternityProject: set wifi_is_on to 0\n");
-	set_wifi_is_on(0);
 	sdio_unregister_driver(&wl1271_sdio_driver);
 }
 
@@ -401,7 +377,5 @@ MODULE_AUTHOR("Luciano Coelho <coelho@ti.com>");
 MODULE_AUTHOR("Juuso Oikarinen <juuso.oikarinen@nokia.com>");
 MODULE_FIRMWARE(WL127X_FW_NAME_SINGLE);
 MODULE_FIRMWARE(WL127X_FW_NAME_MULTI);
-MODULE_FIRMWARE(WL127X_PLT_FW_NAME);
 MODULE_FIRMWARE(WL128X_FW_NAME_SINGLE);
 MODULE_FIRMWARE(WL128X_FW_NAME_MULTI);
-MODULE_FIRMWARE(WL128X_PLT_FW_NAME);

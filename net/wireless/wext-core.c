@@ -13,6 +13,7 @@
 #include <linux/slab.h>
 #include <linux/wireless.h>
 #include <linux/uaccess.h>
+#include <linux/module.h>
 #include <net/cfg80211.h>
 #include <net/iw_handler.h>
 #include <net/netlink.h>
@@ -382,6 +383,7 @@ static void wireless_nlevent_process(struct work_struct *work)
 }
 
 static DECLARE_WORK(wireless_nlevent_work, wireless_nlevent_process);
+
 
 static struct nlmsghdr *rtnetlink_ifinfo_prep(struct net_device *dev,
 					      struct sk_buff *skb)

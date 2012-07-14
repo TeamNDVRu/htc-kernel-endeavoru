@@ -113,7 +113,7 @@ static int wl1271_rx_handle_data(struct wl1271 *wl, u8 *data, u32 length,
 	 * In PLT mode we seem to get frames and mac80211 warns about them,
 	 * workaround this by not retrieving them at all.
 	 */
-	if (unlikely(wl->plt))
+	if (unlikely(wl->state == WL1271_STATE_PLT))
 		return -EINVAL;
 
 	/* the data read starts with the descriptor */
@@ -181,6 +181,11 @@ static int wl1271_rx_handle_data(struct wl1271 *wl, u8 *data, u32 length,
 
 	skb_queue_tail(&wl->deferred_rx_queue, skb);
 	queue_work(wl->freezable_wq, &wl->netstack_work);
+
+#ifdef CONFIG_HAS_WAKELOCK
+	/* let the frame some time to propagate to user-space */
+	wake_lock_timeout(&wl->rx_wake, HZ);
+#endif
 
 	return is_data;
 }
@@ -281,4 +286,65 @@ void wl12xx_rx(struct wl1271 *wl, struct wl12xx_fw_status *status)
 		wl1271_write32(wl, RX_DRIVER_COUNTER_ADDRESS, wl->rx_counter);
 
 	wl12xx_rearm_rx_streaming(wl, active_hlids);
+}
+
+/*
+ * Global on / off for RX packet filtering in firmware
+ */
+int wl1271_rx_data_filtering_enable(struct wl1271 *wl, bool enable,
+				    enum rx_data_filter_action policy)
+{
+	int ret;
+
+	if (policy < FILTER_DROP || policy > FILTER_FW_HANDLE) {
+		wl1271_warning("filter policy value is not in valid range");
+		return -ERANGE;
+	}
+
+	if (enable < 0 || enable > 1) {
+		wl1271_warning("filter enable value is not in valid range");
+		return -ERANGE;
+	}
+
+	ret = wl1271_acx_toggle_rx_data_filter(wl, enable, policy);
+
+	return ret;
+}
+
+int wl1271_rx_data_filter_enable(struct wl1271 *wl,
+				 int index,
+				 bool enable,
+				 struct wl12xx_rx_data_filter *filter)
+{
+	int ret;
+
+	if (wl->rx_data_filters_status[index] == enable) {
+		wl1271_debug(DEBUG_ACX, "Request to enable an already "
+			     "enabled rx filter %d", index);
+		return 0;
+	}
+
+	ret = wl1271_acx_set_rx_data_filter(wl, index, enable, filter);
+
+	if (ret) {
+		wl1271_error("Failed to %s rx data filter %d (err=%d)",
+			     enable ? "enable" : "disable", index, ret);
+		return ret;
+	}
+
+	wl->rx_data_filters_status[index] = enable;
+
+	return 0;
+}
+
+/* Unset any active filters */
+void wl1271_rx_data_filters_clear_all(struct wl1271 *wl)
+{
+	int i;
+
+	for (i = 0; i < WL1271_MAX_RX_FILTERS; i++) {
+		if (!wl->rx_data_filters_status[i])
+			continue;
+		wl1271_rx_data_filter_enable(wl, i, 0, NULL);
+	}
 }

@@ -253,7 +253,6 @@ static inline int drv_set_key(struct ieee80211_local *local,
 
 	might_sleep();
 
-	sdata = get_bss_sdata(sdata);
 	check_sdata_in_driver(sdata);
 
 	trace_drv_set_key(local, cmd, sdata, sta, key);
@@ -273,7 +272,6 @@ static inline void drv_update_tkip_key(struct ieee80211_local *local,
 	if (sta)
 		ista = &sta->sta;
 
-	sdata = get_bss_sdata(sdata);
 	check_sdata_in_driver(sdata);
 
 	trace_drv_update_tkip_key(local, sdata, conf, ista, iv32);
@@ -478,26 +476,21 @@ static inline void drv_sta_remove(struct ieee80211_local *local,
 	trace_drv_return_void(local);
 }
 
-static inline __must_check
-int drv_sta_state(struct ieee80211_local *local,
-		  struct ieee80211_sub_if_data *sdata,
-		  struct sta_info *sta,
-		  enum ieee80211_sta_state old_state,
-		  enum ieee80211_sta_state new_state)
+static inline void drv_sta_state(struct ieee80211_local *local,
+				 struct ieee80211_sub_if_data *sdata,
+				 struct ieee80211_sta *sta,
+				 enum ieee80211_sta_state state)
 {
-	int ret = 0;
-
 	might_sleep();
 
 	sdata = get_bss_sdata(sdata);
 	check_sdata_in_driver(sdata);
 
-	trace_drv_sta_state(local, sdata, &sta->sta, old_state, new_state);
+	trace_drv_sta_state(local, sdata, sta, state);
 	if (local->ops->sta_state)
-		ret = local->ops->sta_state(&local->hw, &sdata->vif, &sta->sta,
-					    old_state, new_state);
-	trace_drv_return_int(local, ret);
-	return ret;
+		local->ops->sta_state(&local->hw, &sdata->vif, sta,
+				      state);
+	trace_drv_return_void(local);
 }
 
 static inline int drv_conf_tx(struct ieee80211_local *local,
@@ -753,6 +746,20 @@ static inline int drv_set_bitrate_mask(struct ieee80211_local *local,
 	return ret;
 }
 
+static inline int drv_set_rx_filters(struct ieee80211_local *local,
+				     struct cfg80211_wowlan *wowlan)
+{
+	int ret = -EOPNOTSUPP;
+
+	might_sleep();
+
+	/* TODO: Add tracing */
+	if (local->ops->set_rx_filters)
+		ret = local->ops->set_rx_filters(&local->hw, wowlan);
+
+	return ret;
+}
+
 static inline void drv_set_rekey_data(struct ieee80211_local *local,
 				      struct ieee80211_sub_if_data *sdata,
 				      struct cfg80211_gtk_rekey_data *data)
@@ -803,4 +810,33 @@ drv_allow_buffered_frames(struct ieee80211_local *local,
 						  more_data);
 	trace_drv_return_void(local);
 }
+
+static inline int
+drv_set_default_unicast_key(struct ieee80211_local *local,
+		    struct ieee80211_sub_if_data *sdata,
+		    int key_idx)
+{
+	int ret = 0;
+	check_sdata_in_driver(sdata);
+
+	if (local->ops->set_default_key_idx)
+		ret = local->ops->set_default_key_idx(&local->hw, &sdata->vif,
+						key_idx);
+
+	trace_drv_return_int(local, ret);
+
+	return ret;
+}
+
+static inline void drv_get_current_rssi(struct ieee80211_local *local,
+					struct ieee80211_sub_if_data *sdata,
+					struct ieee80211_bss_conf *info,
+					struct station_info *sinfo)
+{
+	if (local->ops->get_current_rssi)
+		local->ops->get_current_rssi(&local->hw, &sdata->vif, sinfo);
+
+	trace_drv_return_void(local);
+}
+
 #endif /* __MAC80211_DRIVER_OPS */

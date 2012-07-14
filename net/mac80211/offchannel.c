@@ -12,6 +12,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
+#include <linux/module.h>
 #include <net/mac80211.h>
 #include "ieee80211_i.h"
 #include "driver-trace.h"
@@ -115,7 +116,7 @@ void ieee80211_offchannel_stop_vifs(struct ieee80211_local *local,
 	list_for_each_entry(sdata, &local->interfaces, list) {
 		if (!ieee80211_sdata_running(sdata))
 			continue;
-
+#if 0
 		if (sdata->vif.type != NL80211_IFTYPE_MONITOR)
 			set_bit(SDATA_STATE_OFFCHANNEL, &sdata->state);
 
@@ -125,7 +126,7 @@ void ieee80211_offchannel_stop_vifs(struct ieee80211_local *local,
 		    sdata->vif.type == NL80211_IFTYPE_MESH_POINT)
 			ieee80211_bss_info_change_notify(
 				sdata, BSS_CHANGED_BEACON_ENABLED);
-
+#endif
 		if (sdata->vif.type != NL80211_IFTYPE_MONITOR) {
 			netif_tx_stop_all_queues(sdata->dev);
 			if (offchannel_ps_enable &&
@@ -155,13 +156,16 @@ void ieee80211_offchannel_enable_all_ps(struct ieee80211_local *local,
 }
 
 void ieee80211_offchannel_return(struct ieee80211_local *local,
-				 bool enable_beaconing,
 				 bool offchannel_ps_disable)
 {
 	struct ieee80211_sub_if_data *sdata;
 
 	mutex_lock(&local->iflist_mtx);
 	list_for_each_entry(sdata, &local->interfaces, list) {
+#if 0
+		if (sdata->vif.type != NL80211_IFTYPE_MONITOR)
+			clear_bit(SDATA_STATE_OFFCHANNEL, &sdata->state);
+#endif
 		if (!ieee80211_sdata_running(sdata))
 			continue;
 
@@ -173,7 +177,6 @@ void ieee80211_offchannel_return(struct ieee80211_local *local,
 		}
 
 		if (sdata->vif.type != NL80211_IFTYPE_MONITOR) {
-			clear_bit(SDATA_STATE_OFFCHANNEL, &sdata->state);
 			/*
 			 * This may wake up queues even though the driver
 			 * currently has them stopped. This is not very
@@ -186,14 +189,13 @@ void ieee80211_offchannel_return(struct ieee80211_local *local,
 			 */
 			netif_tx_wake_all_queues(sdata->dev);
 		}
-
-		/* Check to see if we should re-enable beaconing */
-		if (enable_beaconing &&
-		    (sdata->vif.type == NL80211_IFTYPE_AP ||
-		     sdata->vif.type == NL80211_IFTYPE_ADHOC ||
-		     sdata->vif.type == NL80211_IFTYPE_MESH_POINT))
+#if 0
+		if (sdata->vif.type == NL80211_IFTYPE_AP ||
+		    sdata->vif.type == NL80211_IFTYPE_ADHOC ||
+		    sdata->vif.type == NL80211_IFTYPE_MESH_POINT)
 			ieee80211_bss_info_change_notify(
 				sdata, BSS_CHANGED_BEACON_ENABLED);
+#endif
 	}
 	mutex_unlock(&local->iflist_mtx);
 }
@@ -211,8 +213,6 @@ static void ieee80211_hw_roc_start(struct work_struct *work)
 		return;
 	}
 
-	ieee80211_recalc_idle(local);
-
 	if (local->hw_roc_skb) {
 		sdata = IEEE80211_DEV_TO_SUB_IF(local->hw_roc_dev);
 		ieee80211_tx_skb(sdata, local->hw_roc_skb);
@@ -225,6 +225,8 @@ static void ieee80211_hw_roc_start(struct work_struct *work)
 					  local->hw_roc_duration,
 					  GFP_KERNEL);
 	}
+
+	ieee80211_recalc_idle(local);
 
 	mutex_unlock(&local->mtx);
 }

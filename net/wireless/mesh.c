@@ -1,4 +1,5 @@
 #include <linux/ieee80211.h>
+#include <linux/module.h>
 #include <net/cfg80211.h>
 #include "nl80211.h"
 #include "core.h"
@@ -54,7 +55,6 @@ const struct mesh_config default_mesh_config = {
 	.min_discovery_timeout = MESH_MIN_DISCOVERY_TIMEOUT,
 	.dot11MeshHWMPRannInterval = MESH_RANN_INTERVAL,
 	.dot11MeshGateAnnouncementProtocol = false,
-	.dot11MeshForwarding = true,
 };
 
 const struct mesh_setup default_mesh_setup = {

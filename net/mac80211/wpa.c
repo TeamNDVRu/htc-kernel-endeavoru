@@ -415,7 +415,8 @@ static int ccmp_encrypt_skb(struct ieee80211_tx_data *tx, struct sk_buff *skb)
 	memmove(pos, pos + CCMP_HDR_LEN, hdrlen);
 
 	/* the HW only needs room for the IV, but not the actual IV */
-	if (info->control.hw_key->flags & IEEE80211_KEY_FLAG_PUT_IV_SPACE)
+	if (info->control.hw_key &&
+	    (info->control.hw_key->flags & IEEE80211_KEY_FLAG_PUT_IV_SPACE))
 		return 0;
 
 	hdr = (struct ieee80211_hdr *) pos;
@@ -641,4 +642,23 @@ ieee80211_crypto_aes_cmac_decrypt(struct ieee80211_rx_data *rx)
 	skb_trim(skb, skb->len - sizeof(*mmie));
 
 	return RX_CONTINUE;
+}
+
+ieee80211_tx_result
+ieee80211_crypto_hw_encrypt(struct ieee80211_tx_data *tx)
+{
+	struct sk_buff *skb;
+	struct ieee80211_tx_info *info = NULL;
+
+	skb_queue_walk(&tx->skbs, skb) {
+		info  = IEEE80211_SKB_CB(skb);
+
+		/* handle hw-only algorithm */
+		if (!info->control.hw_key)
+			return TX_DROP;
+	}
+
+	ieee80211_tx_set_protected(tx);
+
+	return TX_CONTINUE;
 }

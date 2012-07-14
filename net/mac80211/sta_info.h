@@ -52,8 +52,6 @@
  * @WLAN_STA_SP: Station is in a service period, so don't try to
  *	reply to other uAPSD trigger frames or PS-Poll.
  * @WLAN_STA_4ADDR_EVENT: 4-addr event was already sent for this frame.
- * @WLAN_STA_INSERTED: This station is inserted into the hash table.
- * @WLAN_STA_RATE_CONTROL: rate control was initialized for this station.
  */
 enum ieee80211_sta_info_flags {
 	WLAN_STA_AUTH,
@@ -73,8 +71,6 @@ enum ieee80211_sta_info_flags {
 	WLAN_STA_UAPSD,
 	WLAN_STA_SP,
 	WLAN_STA_4ADDR_EVENT,
-	WLAN_STA_INSERTED,
-	WLAN_STA_RATE_CONTROL,
 };
 
 #define STA_TID_NUM 16
@@ -190,41 +186,18 @@ struct tid_ampdu_rx {
 struct sta_ampdu_mlme {
 	struct mutex mtx;
 	/* rx */
-	struct tid_ampdu_rx *tid_rx[STA_TID_NUM];
+	struct tid_ampdu_rx __rcu *tid_rx[STA_TID_NUM];
 	unsigned long tid_rx_timer_expired[BITS_TO_LONGS(STA_TID_NUM)];
 	unsigned long tid_rx_stop_requested[BITS_TO_LONGS(STA_TID_NUM)];
 	/* tx */
 	struct work_struct work;
-	struct tid_ampdu_tx *tid_tx[STA_TID_NUM];
+	struct tid_ampdu_tx __rcu *tid_tx[STA_TID_NUM];
 	struct tid_ampdu_tx *tid_start_tx[STA_TID_NUM];
 	unsigned long last_addba_req_time[STA_TID_NUM];
 	u8 addba_req_num[STA_TID_NUM];
 	u8 dialog_token_allocator;
 };
 
-
-/**
- * enum plink_state - state of a mesh peer link finite state machine
- *
- * @PLINK_LISTEN: initial state, considered the implicit state of non existent
- * 	mesh peer links
- * @PLINK_OPN_SNT: mesh plink open frame has been sent to this mesh peer
- * @PLINK_OPN_RCVD: mesh plink open frame has been received from this mesh peer
- * @PLINK_CNF_RCVD: mesh plink confirm frame has been received from this mesh
- * 	peer
- * @PLINK_ESTAB: mesh peer link is established
- * @PLINK_HOLDING: mesh peer link is being closed or cancelled
- * @PLINK_BLOCKED: all frames transmitted from this mesh plink are discarded
- */
-/*enum plink_state {
-	PLINK_LISTEN,
-	PLINK_OPN_SNT,
-	PLINK_OPN_RCVD,
-	PLINK_CNF_RCVD,
-	PLINK_ESTAB,
-	PLINK_HOLDING,
-	PLINK_BLOCKED
-};*/
 
 /**
  * struct sta_info - STA information
@@ -293,17 +266,16 @@ struct sta_ampdu_mlme {
  * @dummy: indicate a dummy station created for receiving
  *	EAP frames before association
  * @sta: station information we share with the driver
- * @sta_state: duplicates information about station state (for debug)
  * @beacon_loss_count: number of times beacon loss has triggered
  */
 struct sta_info {
 	/* General information, mostly static */
 	struct list_head list;
-	struct sta_info *hnext;
+	struct sta_info __rcu *hnext;
 	struct ieee80211_local *local;
 	struct ieee80211_sub_if_data *sdata;
-	struct ieee80211_key *gtk[NUM_DEFAULT_KEYS + NUM_DEFAULT_MGMT_KEYS];
-	struct ieee80211_key *ptk;
+	struct ieee80211_key __rcu *gtk[NUM_DEFAULT_KEYS + NUM_DEFAULT_MGMT_KEYS];
+	struct ieee80211_key __rcu *ptk;
 	struct rate_control_ref *rate_ctrl;
 	void *rate_ctrl_priv;
 	spinlock_t lock;
@@ -315,8 +287,6 @@ struct sta_info {
 	bool dead;
 
 	bool uploaded;
-
-	enum ieee80211_sta_state sta_state;
 
 	/* use the accessors defined below */
 	unsigned long _flags;
@@ -446,17 +416,13 @@ static inline int test_and_set_sta_flag(struct sta_info *sta,
 	return test_and_set_bit(flag, &sta->_flags);
 }
 
-int sta_info_move_state(struct sta_info *sta,
-			enum ieee80211_sta_state new_state);
+int sta_info_move_state_checked(struct sta_info *sta,
+				enum ieee80211_sta_state new_state);
 
-static inline void sta_info_pre_move_state(struct sta_info *sta,
-					   enum ieee80211_sta_state new_state)
+static inline void sta_info_move_state(struct sta_info *sta,
+				       enum ieee80211_sta_state new_state)
 {
-	int ret;
-
-	WARN_ON_ONCE(test_sta_flag(sta, WLAN_STA_INSERTED));
-
-	ret = sta_info_move_state(sta, new_state);
+	int ret = sta_info_move_state_checked(sta, new_state);
 	WARN_ON_ONCE(ret);
 }
 
@@ -464,6 +430,13 @@ static inline void sta_info_pre_move_state(struct sta_info *sta,
 void ieee80211_assign_tid_tx(struct sta_info *sta, int tid,
 			     struct tid_ampdu_tx *tid_tx);
 
+static inline struct tid_ampdu_tx *
+rcu_dereference_protected_tid_tx(struct sta_info *sta, int tid)
+{
+	return rcu_dereference_protected(sta->ampdu_mlme.tid_tx[tid],
+					 lockdep_is_held(&sta->lock) ||
+					 lockdep_is_held(&sta->ampdu_mlme.mtx));
+}
 
 #define STA_HASH_SIZE 256
 #define STA_HASH(sta) (sta[5])
@@ -560,7 +533,6 @@ int sta_info_insert(struct sta_info *sta);
 int sta_info_insert_rcu(struct sta_info *sta) __acquires(RCU);
 int sta_info_reinsert(struct sta_info *sta);
 
-int __must_check __sta_info_destroy(struct sta_info *sta);
 int sta_info_destroy_addr(struct ieee80211_sub_if_data *sdata,
 			  const u8 *addr);
 int sta_info_destroy_addr_bss(struct ieee80211_sub_if_data *sdata,

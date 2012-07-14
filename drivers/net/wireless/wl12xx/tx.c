@@ -140,10 +140,10 @@ u8 wl12xx_tx_get_hlid_ap(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 			return wl->system_hlid;
 
 		hdr = (struct ieee80211_hdr *)skb->data;
-		if (ieee80211_is_mgmt(hdr->frame_control))
-			return wlvif->ap.global_hlid;
-		else
+		if (is_multicast_ether_addr(ieee80211_get_DA(hdr)))
 			return wlvif->ap.bcast_hlid;
+		else
+			return wlvif->ap.global_hlid;
 	}
 }
 
@@ -178,15 +178,15 @@ static unsigned int wl12xx_calc_packet_alignment(struct wl1271 *wl,
 
 static int wl1271_tx_allocate(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 			      struct sk_buff *skb, u32 extra, u32 buf_offset,
-			      u8 hlid)
+			      u8 hlid, bool is_gem)
 {
 	struct wl1271_tx_hw_descr *desc;
 	u32 total_len = skb->len + sizeof(struct wl1271_tx_hw_descr) + extra;
 	u32 len;
 	u32 total_blocks;
 	int id, ret = -EBUSY, ac;
-	u32 spare_blocks = wl->tx_spare_blocks;
-	bool is_dummy = false;
+	u32 spare_blocks = is_gem ? TX_HW_BLOCK_SPARE_GEM :
+				    TX_HW_BLOCK_SPARE_DEFAULT;
 
 	if (buf_offset + total_len > WL1271_AGGR_BUFFER_SIZE)
 		return -EAGAIN;
@@ -199,12 +199,6 @@ static int wl1271_tx_allocate(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 	/* approximate the number of blocks required for this packet
 	   in the firmware */
 	len = wl12xx_calc_packet_alignment(wl, total_len);
-
-	/* in case of a dummy packet, use default amount of spare mem blocks */
-	if (unlikely(wl12xx_is_dummy_packet(wl, skb))) {
-		is_dummy = true;
-		spare_blocks = TX_HW_BLOCK_SPARE_DEFAULT;
-	}
 
 	total_blocks = (len + TX_HW_BLOCK_SIZE - 1) / TX_HW_BLOCK_SIZE +
 		spare_blocks;
@@ -226,14 +220,10 @@ static int wl1271_tx_allocate(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 		wl->tx_blocks_available -= total_blocks;
 		wl->tx_allocated_blocks += total_blocks;
 
-		/* If the FW was empty before, arm the Tx watchdog */
-		if (wl->tx_allocated_blocks == total_blocks)
-			wl12xx_rearm_tx_watchdog_locked(wl);
-
 		ac = wl1271_tx_get_queue(skb_get_queue_mapping(skb));
 		wl->tx_allocated_pkts[ac]++;
 
-		if (!is_dummy && wlvif &&
+		if (!wl12xx_is_dummy_packet(wl, skb) && wlvif &&
 		    wlvif->bss_type == BSS_TYPE_AP_BSS &&
 		    test_bit(hlid, wlvif->ap.sta_hlid_map))
 			wl->links[hlid].allocated_pkts++;
@@ -379,6 +369,7 @@ static int wl1271_prepare_tx_frame(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 	u32 total_len;
 	u8 hlid;
 	bool is_dummy;
+	bool is_gem = false;
 
 	if (!skb)
 		return -EINVAL;
@@ -401,11 +392,14 @@ static int wl1271_prepare_tx_frame(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 			 (cipher == WLAN_CIPHER_SUITE_WEP104);
 
 		if (unlikely(is_wep && wlvif->default_key != idx)) {
+			WARN_ON(1);
 			ret = wl1271_set_default_wep_key(wl, wlvif, idx);
 			if (ret < 0)
 				return ret;
 			wlvif->default_key = idx;
 		}
+
+		is_gem = (cipher == WL1271_CIPHER_SUITE_GEM);
 	}
 	hlid = wl12xx_tx_get_hlid(wl, wlvif, skb);
 	if (hlid == WL12XX_INVALID_LINK_ID) {
@@ -413,7 +407,8 @@ static int wl1271_prepare_tx_frame(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 		return -EINVAL;
 	}
 
-	ret = wl1271_tx_allocate(wl, wlvif, skb, extra, buf_offset, hlid);
+	ret = wl1271_tx_allocate(wl, wlvif, skb, extra, buf_offset, hlid,
+				 is_gem);
 	if (ret < 0)
 		return ret;
 
@@ -531,7 +526,7 @@ static struct sk_buff *wl12xx_lnk_skb_dequeue(struct wl1271 *wl,
 	if (skb) {
 		int q = wl1271_tx_get_queue(skb_get_queue_mapping(skb));
 		spin_lock_irqsave(&wl->wl_lock, flags);
-		WARN_ON_ONCE(wl->tx_queue_count[q] <= 0);
+		WARN_ON(wl->tx_queue_count[q] <= 0);
 		wl->tx_queue_count[q]--;
 		spin_unlock_irqrestore(&wl->wl_lock, flags);
 	}
@@ -616,7 +611,7 @@ static struct sk_buff *wl1271_skb_dequeue(struct wl1271 *wl)
 		skb = wl->dummy_packet;
 		q = wl1271_tx_get_queue(skb_get_queue_mapping(skb));
 		spin_lock_irqsave(&wl->wl_lock, flags);
-		WARN_ON_ONCE(wl->tx_queue_count[q] <= 0);
+		WARN_ON(wl->tx_queue_count[q] <= 0);
 		wl->tx_queue_count[q]--;
 		spin_unlock_irqrestore(&wl->wl_lock, flags);
 	}
@@ -988,7 +983,7 @@ void wl12xx_tx_reset(struct wl1271 *wl, bool reset_tx_queues)
 	struct ieee80211_tx_info *info;
 
 	/* only reset the queues if something bad happened */
-	if (WARN_ON_ONCE(wl1271_tx_total_queue_count(wl) != 0)) {
+	if (WARN_ON(wl1271_tx_total_queue_count(wl) != 0)) {
 		for (i = 0; i < WL12XX_MAX_LINKS; i++)
 			wl1271_tx_reset_link_queues(wl, i);
 

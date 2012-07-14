@@ -54,26 +54,6 @@ int wl1271_init_templates_config(struct wl1271 *wl)
 	if (ret < 0)
 		return ret;
 
-/*
- * EternityProject, 05/07/2012
- * Comment this until we add that quirk to WL128x chips
- *	if (wl->quirks & WLCORE_QUIRK_DUAL_PROBE_TMPL) {
- */
-		ret = wl1271_cmd_template_set(wl, WL12XX_INVALID_ROLE_ID,
-					      CMD_TEMPL_APP_PROBE_REQ_2_4, NULL,
-					      WL1271_CMD_TEMPL_MAX_SIZE,
-					      0, WL1271_RATE_AUTOMATIC);
-		if (ret < 0)
-			return ret;
-
-		ret = wl1271_cmd_template_set(wl, WL12XX_INVALID_ROLE_ID,
-					      CMD_TEMPL_APP_PROBE_REQ_5, NULL,
-					      WL1271_CMD_TEMPL_MAX_SIZE,
-					      0, WL1271_RATE_AUTOMATIC);
-		if (ret < 0)
-			return ret;
-/*	} */
-
 	ret = wl1271_cmd_template_set(wl, WL12XX_INVALID_ROLE_ID,
 				      CMD_TEMPL_NULL_DATA, NULL,
 				      sizeof(struct wl12xx_null_data_template),

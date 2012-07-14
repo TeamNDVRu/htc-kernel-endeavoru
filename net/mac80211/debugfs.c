@@ -113,7 +113,7 @@ static ssize_t uapsd_queues_write(struct file *file,
 	u8 val;
 	int ret;
 
-	ret = 1;//kstrtou8_from_user(user_buf, count, 0, &val);
+	ret = kstrtou8_from_user(user_buf, count, 0, &val);
 	if (ret)
 		return ret;
 
@@ -156,7 +156,7 @@ static ssize_t uapsd_max_sp_len_write(struct file *file,
 		return -EFAULT;
 	buf[len] = '\0';
 
-	ret = strict_strtoul(buf, 0, &val);
+	ret = kstrtoul(buf, 0, &val);
 
 	if (ret)
 		return -EINVAL;
@@ -267,8 +267,6 @@ static ssize_t hwflags_read(struct file *file, char __user *user_buf,
 		sf += snprintf(buf + sf, mxln - sf, "AP_LINK_PS\n");
 	if (local->hw.flags & IEEE80211_HW_TX_AMPDU_SETUP_IN_HW)
 		sf += snprintf(buf + sf, mxln - sf, "TX_AMPDU_SETUP_IN_HW\n");
-	if (local->hw.flags & IEEE80211_HW_SCAN_WHILE_IDLE)
-		sf += snprintf(buf + sf, mxln - sf, "SCAN_WHILE_IDLE\n");
 
 	rv = simple_read_from_buffer(user_buf, count, ppos, buf, strlen(buf));
 	kfree(buf);

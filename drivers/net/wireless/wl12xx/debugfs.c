@@ -32,6 +32,7 @@
 #include "ps.h"
 #include "io.h"
 #include "tx.h"
+#include "version.h"
 
 /* ms */
 #define WL1271_DEBUGFS_STATS_LIFETIME 1000
@@ -63,7 +64,7 @@ static ssize_t name## _read(struct file *file, char __user *userbuf,	\
 									\
 static const struct file_operations name## _ops = {			\
 	.read = name## _read,						\
-	.open = wl1271_open_file_generic,						\
+	.open = wl1271_open_file_generic,				\
 	.llseek	= generic_file_llseek,					\
 };
 
@@ -96,7 +97,7 @@ static ssize_t sub## _ ##name## _read(struct file *file,		\
 									\
 static const struct file_operations sub## _ ##name## _ops = {		\
 	.read = sub## _ ##name## _read,					\
-	.open = wl1271_open_file_generic,						\
+	.open = wl1271_open_file_generic,				\
 	.llseek	= generic_file_llseek,					\
 };
 
@@ -113,7 +114,7 @@ static void wl1271_debugfs_update_stats(struct wl1271 *wl)
 	if (ret < 0)
 		goto out;
 
-	if (wl->state == WL1271_STATE_ON && !wl->plt &&
+	if (wl->state == WL1271_STATE_ON &&
 	    time_after(jiffies, wl->stats.fw_stats_update +
 		       msecs_to_jiffies(WL1271_DEBUGFS_STATS_LIFETIME))) {
 		wl1271_acx_statistics(wl, wl->stats.fw_stats);
@@ -131,7 +132,6 @@ static int wl1271_open_file_generic(struct inode *inode, struct file *file)
 	file->private_data = inode->i_private;
 	return 0;
 }
-
 
 DEBUGFS_FWSTATS_FILE(tx, internal_desc_overflow, "%u");
 
@@ -342,7 +342,7 @@ static ssize_t dynamic_ps_timeout_write(struct file *file,
 		wl1271_warning("dyanmic_ps_timeout is not in valid range");
 		return -ERANGE;
 	}
-
+	
 	mutex_lock(&wl->mutex);
 
 	wl->conf.conn.dynamic_ps_timeout = value;
@@ -377,6 +377,7 @@ static const struct file_operations dynamic_ps_timeout_ops = {
 	.llseek = default_llseek,
 };
 
+
 static ssize_t forced_ps_read(struct file *file, char __user *user_buf,
 			  size_t count, loff_t *ppos)
 {
@@ -408,9 +409,6 @@ static ssize_t forced_ps_write(struct file *file,
 	}
 
 	mutex_lock(&wl->mutex);
-
-	if (wl->conf.conn.forced_ps == value)
-		goto out;
 
 	wl->conf.conn.forced_ps = value;
 
@@ -445,6 +443,7 @@ static const struct file_operations forced_ps_ops = {
 	.open = wl1271_open_file_generic,
 	.llseek = default_llseek,
 };
+
 
 static ssize_t split_scan_timeout_read(struct file *file, char __user *user_buf,
 			  size_t count, loff_t *ppos)
@@ -508,11 +507,18 @@ static ssize_t driver_state_read(struct file *file, char __user *user_buf,
 	(res += scnprintf(buf + res, DRIVER_STATE_BUF_LEN - res,\
 			  #x " = " fmt "\n", wl->x))
 
+#define DRIVER_STATE_PRINT_GENERIC(x, fmt, args...)   \
+	(res += scnprintf(buf + res, DRIVER_STATE_BUF_LEN - res,\
+			  #x " = " fmt "\n", args))
+
 #define DRIVER_STATE_PRINT_LONG(x) DRIVER_STATE_PRINT(x, "%ld")
 #define DRIVER_STATE_PRINT_INT(x)  DRIVER_STATE_PRINT(x, "%d")
 #define DRIVER_STATE_PRINT_STR(x)  DRIVER_STATE_PRINT(x, "%s")
 #define DRIVER_STATE_PRINT_LHEX(x) DRIVER_STATE_PRINT(x, "0x%lx")
 #define DRIVER_STATE_PRINT_HEX(x)  DRIVER_STATE_PRINT(x, "0x%x")
+
+	DRIVER_STATE_PRINT_GENERIC(version, "%s", wl12xx_git_head);
+	DRIVER_STATE_PRINT_GENERIC(timestamp, "%s", wl12xx_timestamp);
 
 	DRIVER_STATE_PRINT_INT(tx_blocks_available);
 	DRIVER_STATE_PRINT_INT(tx_allocated_blocks);

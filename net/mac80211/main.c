@@ -47,7 +47,7 @@ void ieee80211_configure_filter(struct ieee80211_local *local)
 	if (atomic_read(&local->iff_allmultis))
 		new_flags |= FIF_ALLMULTI;
 
-	if (local->monitors || local->scanning)
+	if (local->monitors || test_bit(SCAN_SW_SCANNING, &local->scanning))
 		new_flags |= FIF_BCN_PRBRESP_PROMISC;
 
 	if (local->fif_probe_req || local->probe_req_reg)
@@ -92,18 +92,20 @@ static void ieee80211_reconfig_filter(struct work_struct *work)
 	ieee80211_configure_filter(local);
 }
 
-/*
- * Returns true if we are logically configured to be on
- * the operating channel AND the hardware-conf is currently
- * configured on the operating channel.  Compares channel-type
- * as well.
- */
-bool ieee80211_cfg_on_oper_channel(struct ieee80211_local *local)
+int ieee80211_hw_config(struct ieee80211_local *local, u32 changed)
 {
-	struct ieee80211_channel *chan, *scan_chan;
+	struct ieee80211_channel *chan;
+	int ret = 0;
+	int power;
 	enum nl80211_channel_type channel_type;
+	u32 offchannel_flag;
 
-	/* This logic needs to match logic in ieee80211_hw_config */
+	might_sleep();
+
+	/* If this off-channel logic ever changes,  ieee80211_on_oper_channel
+	 * may need to change as well.
+	 */
+	offchannel_flag = local->hw.conf.flags & IEEE80211_CONF_OFFCHANNEL;
 	if (local->scan_channel) {
 		chan = local->scan_channel;
 		/* If scanning on oper channel, use whatever channel-type
@@ -114,52 +116,7 @@ bool ieee80211_cfg_on_oper_channel(struct ieee80211_local *local)
 		else
 			channel_type = NL80211_CHAN_NO_HT;
 	} else if (local->tmp_channel) {
-		chan = scan_chan = local->tmp_channel;
-		channel_type = local->tmp_channel_type;
-	} else {
-		chan = local->oper_channel;
-		channel_type = local->_oper_channel_type;
-	}
-
-	if (chan != local->oper_channel ||
-	    channel_type != local->_oper_channel_type)
-		return false;
-
-	/* Check current hardware-config against oper_channel. */
-	if ((local->oper_channel != local->hw.conf.channel) ||
-	    (local->_oper_channel_type != local->hw.conf.channel_type))
-		return false;
-
-	return true;
-}
-
-int ieee80211_hw_config(struct ieee80211_local *local, u32 changed)
-{
-	struct ieee80211_channel *chan, *scan_chan;
-	int ret = 0;
-	int power;
-	enum nl80211_channel_type channel_type;
-	u32 offchannel_flag;
-
-	might_sleep();
-
-	scan_chan = local->scan_channel;
-
-	/* If this off-channel logic ever changes,  ieee80211_on_oper_channel
-	 * may need to change as well.
-	 */
-	offchannel_flag = local->hw.conf.flags & IEEE80211_CONF_OFFCHANNEL;
-	if (scan_chan) {
-		chan = scan_chan;
-		/* If scanning on oper channel, use whatever channel-type
-		 * is currently in use.
-		 */
-		if (chan == local->oper_channel)
-			channel_type = local->_oper_channel_type;
-		else
-			channel_type = NL80211_CHAN_NO_HT;
-	} else if (local->tmp_channel) {
-		chan = scan_chan = local->tmp_channel;
+		chan = local->tmp_channel;
 		channel_type = local->tmp_channel_type;
 	} else {
 		chan = local->oper_channel;
@@ -193,8 +150,8 @@ int ieee80211_hw_config(struct ieee80211_local *local, u32 changed)
 		changed |= IEEE80211_CONF_CHANGE_SMPS;
 	}
 
-	if ((local->scanning & SCAN_SW_SCANNING) ||
-	    (local->scanning & SCAN_HW_SCANNING))
+	if (test_bit(SCAN_SW_SCANNING, &local->scanning) ||
+	    test_bit(SCAN_HW_SCANNING, &local->scanning))
 		power = chan->max_power;
 	else
 		power = local->power_constr_level ?
@@ -436,9 +393,6 @@ static int ieee80211_ifa_changed(struct notifier_block *nb,
 	sdata = IEEE80211_DEV_TO_SUB_IF(ndev);
 	bss_conf = &sdata->vif.bss_conf;
 
-	if (!ieee80211_sdata_running(sdata))
-		return NOTIFY_DONE;
-
 	/* ARP filtering is only supported in managed mode */
 	if (sdata->vif.type != NL80211_IFTYPE_STATION)
 		return NOTIFY_DONE;
@@ -467,7 +421,7 @@ static int ieee80211_ifa_changed(struct notifier_block *nb,
 	}
 	bss_conf->arp_addr_cnt = c;
 
-	/* Configure driver only if associated */
+	/* Configure driver only if associated (which also implies it is up) */
 	if (ifmgd->associated) {
 		bss_conf->arp_filter_enabled = sdata->arp_filter_state;
 		ieee80211_bss_info_change_notify(sdata,
@@ -579,9 +533,6 @@ struct ieee80211_hw *ieee80211_alloc_hw(size_t priv_data_len,
 	struct ieee80211_local *local;
 	int priv_size, i;
 	struct wiphy *wiphy;
-
-	if (WARN_ON(ops->sta_state && (ops->sta_add || ops->sta_remove)))
-		return NULL;
 
 	/* Ensure 32-byte alignment of our private data and hw private data.
 	 * We use the wiphy priv data for both our ieee80211_local and for
@@ -750,9 +701,6 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
 	    )
 		return -EINVAL;
 
-	if ((hw->flags & IEEE80211_HW_SCAN_WHILE_IDLE) && !local->ops->hw_scan)
-		return -EINVAL;
-
 	if (hw->max_report_rates == 0)
 		hw->max_report_rates = hw->max_rates;
 
@@ -787,6 +735,12 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
 				      sizeof(void *) * channels, GFP_KERNEL);
 	if (!local->int_scan_req)
 		return -ENOMEM;
+
+	for (band = 0; band < IEEE80211_NUM_BANDS; band++) {
+		if (!local->hw.wiphy->bands[band])
+			continue;
+		local->int_scan_req->rates[band] = (u32) -1;
+	}
 
 	/* if low-level driver supports AP, we also support VLAN */
 	if (local->hw.wiphy->interface_modes & BIT(NL80211_IFTYPE_AP)) {
@@ -911,6 +865,11 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
 	/* mac80211 based drivers don't support internal TDLS setup */
 	if (local->hw.wiphy->flags & WIPHY_FLAG_SUPPORTS_TDLS)
 		local->hw.wiphy->flags |= WIPHY_FLAG_TDLS_EXTERNAL_SETUP;
+
+	if (local->hw.flags & IEEE80211_HW_SUPPORTS_CANCEL_SCAN)
+		local->hw.wiphy->flags |= WIPHY_FLAG_SUPPORTS_CANCEL_SCAN;
+	if (local->hw.flags & IEEE80211_HW_SUPPORTS_IM_SCAN_EVENT)
+		local->hw.wiphy->flags |= WIPHY_FLAG_SUPPORTS_IM_SCAN_EVENT;
 
 	result = wiphy_register(local->hw.wiphy);
 	if (result < 0)

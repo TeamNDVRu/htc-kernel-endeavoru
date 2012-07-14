@@ -750,6 +750,8 @@ int wl1271_load_firmware(struct wl1271 *wl)
 	if (ret < 0)
 		goto out;
 
+	/* update loaded fw type */
+	wl->fw_type = wl->saved_fw_type;
 out:
 	return ret;
 }
@@ -759,6 +761,11 @@ int wl1271_boot(struct wl1271 *wl)
 {
 	int ret;
 
+	/* polarity must be set before the firmware is loaded */
+	ret = wl1271_boot_write_irq_polarity(wl);
+	if (ret < 0)
+		goto out;
+
 	/* upload NVS and firmware */
 	ret = wl1271_load_firmware(wl);
 	if (ret)
@@ -766,10 +773,6 @@ int wl1271_boot(struct wl1271 *wl)
 
 	/* 10.5 start firmware */
 	ret = wl1271_boot_run_firmware(wl);
-	if (ret < 0)
-		goto out;
-
-	ret = wl1271_boot_write_irq_polarity(wl);
 	if (ret < 0)
 		goto out;
 

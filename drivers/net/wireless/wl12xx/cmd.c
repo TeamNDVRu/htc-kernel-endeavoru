@@ -531,7 +531,7 @@ static int wl12xx_cmd_role_start_dev(struct wl1271 *wl,
 			goto out_free;
 	}
 	cmd->device.hlid = wlvif->dev_hlid;
-	cmd->device.session = wl12xx_get_new_session_id(wl, wlvif);
+	cmd->device.session = wlvif->session_counter;
 
 	wl1271_debug(DEBUG_CMD, "role start: roleid=%d, hlid=%d, session=%d",
 		     cmd->role_id, cmd->device.hlid, cmd->device.session);
@@ -683,6 +683,12 @@ int wl12xx_cmd_role_stop_sta(struct wl1271 *wl, struct wl12xx_vif *wlvif)
 		goto out_free;
 	}
 
+	ret = wl1271_cmd_wait_for_event(wl, ROLE_STOP_COMPLETE_EVENT_ID);
+	if (ret < 0) {
+		wl1271_error("cmd role stop sta event completion error");
+		goto out_free;
+	}
+
 	wl12xx_free_link(wl, wlvif, &wlvif->sta.hlid);
 
 out_free:
@@ -701,9 +707,16 @@ int wl12xx_cmd_role_start_ap(struct wl1271 *wl, struct wl12xx_vif *wlvif)
 
 	wl1271_debug(DEBUG_CMD, "cmd role start ap %d", wlvif->role_id);
 
-	/* trying to use hidden SSID with an old hostapd version */
+	/* trying to use a non-hidden SSID without SSID IE */
 	if (wlvif->ssid_len == 0 && !bss_conf->hidden_ssid) {
 		wl1271_error("got a null SSID from beacon/bss");
+		ret = -EINVAL;
+		goto out;
+	}
+
+	/* trying to use hidden SSID without configured SSID */
+	if (bss_conf->ssid_len == 0 && bss_conf->hidden_ssid) {
+		wl1271_error("missing hidden SSID");
 		ret = -EINVAL;
 		goto out;
 	}
@@ -1166,22 +1179,12 @@ out:
 int wl12xx_cmd_build_probe_req(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 			       u8 role_id, u8 band,
 			       const u8 *ssid, size_t ssid_len,
-			       const u8 *ie, size_t ie_len, bool sched_scan)
+			       const u8 *ie, size_t ie_len)
 {
 	struct ieee80211_vif *vif = wl12xx_wlvif_to_vif(wlvif);
 	struct sk_buff *skb;
 	int ret;
 	u32 rate;
-/* EternityProject, 05/07/2012:
- * Default by TI is: */
- 	u16 template_id_2_4 = CMD_TEMPL_CFG_PROBE_REQ_2_4;
- 	u16 template_id_5 = CMD_TEMPL_CFG_PROBE_REQ_5;
-/*
- * ehm... !!!!FIXME!!!!
- * Recognize chip and set that instead of breaking
- * WL1271 compatibility!
- * P.S.: Yeah, I'm lazy.
- */
 
 	skb = ieee80211_probereq_get(wl->hw, vif, ssid, ssid_len,
 				     ie, ie_len);
@@ -1192,23 +1195,14 @@ int wl12xx_cmd_build_probe_req(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 
 	wl1271_dump(DEBUG_SCAN, "PROBE REQ: ", skb->data, skb->len);
 
-/* EternityProject, 05/07/2012: This is default from TI.
- *	if (!sched_scan &&
- *	    (wl->quirks & WLCORE_QUIRK_DUAL_PROBE_TMPL)) {
- */
-	if (!sched_scan) {
-		template_id_2_4 = CMD_TEMPL_APP_PROBE_REQ_2_4;
-		template_id_5 = CMD_TEMPL_APP_PROBE_REQ_5;
-	}
-
 	rate = wl1271_tx_min_rate_get(wl, wlvif->bitrate_masks[band]);
 	if (band == IEEE80211_BAND_2GHZ)
 		ret = wl1271_cmd_template_set(wl, role_id,
-					      template_id_2_4,
+					      CMD_TEMPL_CFG_PROBE_REQ_2_4,
 					      skb->data, skb->len, 0, rate);
 	else
 		ret = wl1271_cmd_template_set(wl, role_id,
-					      template_id_5,
+					      CMD_TEMPL_CFG_PROBE_REQ_5,
 					      skb->data, skb->len, 0, rate);
 
 out:
@@ -1578,9 +1572,11 @@ int wl12xx_cmd_add_peer(struct wl1271 *wl, struct wl12xx_vif *wlvif,
 
 	for (i = 0; i < NUM_ACCESS_CATEGORIES_COPY; i++)
 		if (sta->wme && (sta->uapsd_queues & BIT(i)))
-			cmd->psd_type[i] = WL1271_PSD_UPSD_TRIGGER;
+			cmd->psd_type[NUM_ACCESS_CATEGORIES_COPY-1-i] =
+					WL1271_PSD_UPSD_TRIGGER;
 		else
-			cmd->psd_type[i] = WL1271_PSD_LEGACY;
+			cmd->psd_type[NUM_ACCESS_CATEGORIES_COPY-1-i] =
+					WL1271_PSD_LEGACY;
 
 	sta_rates = sta->supp_rates[wlvif->band];
 	if (sta->ht_cap.ht_supported)
@@ -1805,19 +1801,25 @@ out:
 int wl12xx_roc(struct wl1271 *wl, struct wl12xx_vif *wlvif, u8 role_id)
 {
 	int ret = 0;
+	bool is_first_roc;
 
 	if (WARN_ON(test_bit(role_id, wl->roc_map)))
 		return 0;
+
+	is_first_roc = (find_first_bit(wl->roc_map, WL12XX_MAX_ROLES) >=
+			WL12XX_MAX_ROLES);
 
 	ret = wl12xx_cmd_roc(wl, wlvif, role_id);
 	if (ret < 0)
 		goto out;
 
-	ret = wl1271_cmd_wait_for_event(wl,
-					REMAIN_ON_CHANNEL_COMPLETE_EVENT_ID);
-	if (ret < 0) {
-		wl1271_error("cmd roc event completion error");
-		goto out;
+	if (is_first_roc) {
+		ret = wl1271_cmd_wait_for_event(wl,
+					   REMAIN_ON_CHANNEL_COMPLETE_EVENT_ID);
+		if (ret < 0) {
+			wl1271_error("cmd roc event completion error");
+			goto out;
+		}
 	}
 
 	__set_bit(role_id, wl->roc_map);
@@ -1837,14 +1839,6 @@ int wl12xx_croc(struct wl1271 *wl, u8 role_id)
 		goto out;
 
 	__clear_bit(role_id, wl->roc_map);
-
-	/*
-	 * Rearm the tx watchdog when removing the last ROC. This prevents
-	 * recoveries due to just finished ROCs - when Tx hasn't yet had
-	 * a chance to get out.
-	 */
-	if (find_first_bit(wl->roc_map, WL12XX_MAX_ROLES) >= WL12XX_MAX_ROLES)
-		wl12xx_rearm_tx_watchdog_locked(wl);
 out:
 	return ret;
 }

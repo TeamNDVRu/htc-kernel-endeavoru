@@ -650,31 +650,27 @@ TRACE_EVENT(drv_sta_state,
 	TP_PROTO(struct ieee80211_local *local,
 		 struct ieee80211_sub_if_data *sdata,
 		 struct ieee80211_sta *sta,
-		 enum ieee80211_sta_state old_state,
-		 enum ieee80211_sta_state new_state),
+		 enum ieee80211_sta_state state),
 
-	TP_ARGS(local, sdata, sta, old_state, new_state),
+	TP_ARGS(local, sdata, sta, state),
 
 	TP_STRUCT__entry(
 		LOCAL_ENTRY
 		VIF_ENTRY
 		STA_ENTRY
-		__field(u32, old_state)
-		__field(u32, new_state)
+		__field(u32, state)
 	),
 
 	TP_fast_assign(
 		LOCAL_ASSIGN;
 		VIF_ASSIGN;
 		STA_ASSIGN;
-		__entry->old_state = old_state;
-		__entry->new_state = new_state;
+		__entry->state = state;
 	),
 
 	TP_printk(
-		LOCAL_PR_FMT  VIF_PR_FMT  STA_PR_FMT " state: %d->%d",
-		LOCAL_PR_ARG, VIF_PR_ARG, STA_PR_ARG,
-		__entry->old_state, __entry->new_state
+		LOCAL_PR_FMT  VIF_PR_FMT  STA_PR_FMT " state:%d",
+		LOCAL_PR_ARG, VIF_PR_ARG, STA_PR_ARG, __entry->state
 	)
 );
 

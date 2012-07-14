@@ -193,15 +193,14 @@ static int wl1271_event_process(struct wl1271 *wl, struct event_mailbox *mbox)
 
 		/* TODO: configure only the relevant vif */
 		wl12xx_for_each_wlvif_sta(wl, wlvif) {
+			struct ieee80211_vif *vif = wl12xx_wlvif_to_vif(wlvif);
 			bool success;
 
 			if (!test_and_clear_bit(WLVIF_FLAG_CS_PROGRESS,
-						&wl->flags))
+						&wlvif->flags))
 				continue;
 
 			success = mbox->channel_switch_status ? false : true;
-			vif = wl12xx_wlvif_to_vif(wlvif);
-
 			ieee80211_chswitch_done(vif, success);
 		}
 	}
@@ -258,12 +257,41 @@ static int wl1271_event_process(struct wl1271 *wl, struct event_mailbox *mbox)
 		}
 	}
 
-	if (beacon_loss)
+	if (beacon_loss) {
+		unsigned long now = jiffies;
+		struct conf_conn_settings *conn = &wl->conf.conn;
+
 		wl12xx_for_each_wlvif_sta(wl, wlvif) {
 			vif = wl12xx_wlvif_to_vif(wlvif);
-			ieee80211_connection_loss(vif);
-		}
 
+			/* no roaming for p2p connection */
+			if (wlvif->p2p) {
+				ieee80211_connection_loss(vif);
+				continue;
+			}
+
+			/* check for consecutive beacon loss events */
+			if (!wlvif->sta.last_bcn_loss ||
+			    time_after(now,
+				       wlvif->sta.last_bcn_loss +
+				       msecs_to_jiffies(
+						conn->cons_bcn_loss_time))) {
+				/* first beacon loss */
+				wlvif->sta.first_bcn_loss = now;
+				ieee80211_cqm_rssi_notify(
+					vif,
+					NL80211_CQM_RSSI_BEACON_LOSS,
+					GFP_KERNEL);
+
+			} else if (time_after(now,
+					wlvif->sta.first_bcn_loss +
+					msecs_to_jiffies(
+						conn->max_bcn_loss_time))) {
+				ieee80211_connection_loss(vif);
+			}
+			wlvif->sta.last_bcn_loss = now;
+		}
+	}
 	return 0;
 }
 

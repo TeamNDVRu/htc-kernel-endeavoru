@@ -3,12 +3,12 @@
  *
  * Copyright 2007-2009	Johannes Berg <johannes@sipsolutions.net>
  */
+#include <linux/module.h>
 #include <linux/bitops.h>
 #include <linux/etherdevice.h>
 #include <linux/slab.h>
 #include <net/cfg80211.h>
 #include <net/ip.h>
-#include <net/dsfield.h>
 #include "core.h"
 
 struct ieee80211_rate *
@@ -507,10 +507,9 @@ int ieee80211_data_from_8023(struct sk_buff *skb, const u8 *addr,
 		if (head_need)
 			skb_orphan(skb);
 
-		if (pskb_expand_head(skb, head_need, 0, GFP_ATOMIC)) {
-			pr_err("failed to reallocate Tx buffer\n");
+		if (pskb_expand_head(skb, head_need, 0, GFP_ATOMIC))
 			return -ENOMEM;
-		}
+
 		skb->truesize += head_need;
 	}
 
@@ -651,10 +650,7 @@ unsigned int cfg80211_classify8021d(struct sk_buff *skb)
 
 	switch (skb->protocol) {
 	case htons(ETH_P_IP):
-		dscp = ipv4_get_dsfield(ip_hdr(skb)) & 0xfc;
-		break;
-	case htons(ETH_P_IPV6):
-		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) & 0xfc;
+		dscp = ip_hdr(skb)->tos & 0xfc;
 		break;
 	default:
 		return 0;
@@ -755,6 +751,9 @@ static void cfg80211_process_wdev_events(struct wireless_dev *wdev)
 			break;
 		case EVENT_IBSS_JOINED:
 			__cfg80211_ibss_joined(wdev->netdev, ev->ij.bssid);
+			break;
+		case EVENT_IM_SCAN_RESULT:
+			__cfg80211_send_intermediate_result(wdev->netdev, ev);
 			break;
 		}
 		wdev_unlock(wdev);
