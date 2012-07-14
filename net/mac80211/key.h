@@ -41,9 +41,11 @@ struct sta_info;
  *
  * @KEY_FLAG_UPLOADED_TO_HARDWARE: Indicates that this key is present
  *	in the hardware for TX crypto hardware acceleration.
+ * @KEY_FLAG_TAINTED: Key is tainted and packets should be dropped.
  */
 enum ieee80211_internal_key_flags {
 	KEY_FLAG_UPLOADED_TO_HARDWARE	= BIT(0),
+	KEY_FLAG_TAINTED		= BIT(1),
 };
 
 enum ieee80211_internal_tkip_state {
@@ -141,5 +143,8 @@ void ieee80211_set_default_mgmt_key(struct ieee80211_sub_if_data *sdata,
 void ieee80211_free_keys(struct ieee80211_sub_if_data *sdata);
 void ieee80211_enable_keys(struct ieee80211_sub_if_data *sdata);
 void ieee80211_disable_keys(struct ieee80211_sub_if_data *sdata);
+
+#define key_mtx_dereference(local, ref) \
+	rcu_dereference_protected(ref, lockdep_is_held(&((local)->key_mtx)))
 
 #endif /* IEEE80211_KEY_H */

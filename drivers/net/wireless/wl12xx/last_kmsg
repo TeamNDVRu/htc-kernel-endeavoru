@@ -1,0 +1,2440 @@
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Linux version 2.6.39.4-cyanogenmod (pali@wulfgar) (gcc version 4.4.3 (GCC) ) #19 SMP PREEMPT Sat Jul 14 02:02:57 CEST 2012
+[    0.000000] CPU: ARMv7 Processor [412fc099] revision 9 (ARMv7), cr=10c5387f
+[    0.000000] CPU: VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] Machine: endeavoru
+[    0.000000] Ignoring unrecognised tag 0x41000801
+[    0.000000] Ignoring unrecognised tag 0x41000801
+[    0.000000] parse_tag_als_calibration: als_kadc = 0x6da517ac
+[    0.000000] parse_tag_ps_calibration: ps_kparam1 = 0x50530306, ps_kparam2 = 0xffff0a17
+[    0.000000] Ignoring unrecognised tag 0x4e540000
+[    0.000000] Ignoring unrecognised tag 0x54410100
+[    0.000000] Ignoring unrecognised tag 0x54410110
+[    0.000000] Parsting partition tag[emmc] (sizeof(struct msm_ptbl_entry) / sizeof(__u32)) 7
+[    0.000000] [emmc] header->size 94
+[    0.000000] [emmc] count 13
+[    0.000000] Partition (from atag) recovery -- Offset:5 Size:800
+[    0.000000] Partition (from atag) boot -- Offset:4 Size:800
+[    0.000000] Partition (from atag) system -- Offset:c Size:50000
+[    0.000000] Partition (from atag) cache -- Offset:d Size:14000
+[    0.000000] Partition (from atag) misc -- Offset:11 Size:200
+[    0.000000] Partition (from atag) wlan -- Offset:1 Size:600
+[    0.000000] Partition (from atag) WDM -- Offset:2 Size:200
+[    0.000000] Partition (from atag) pdata -- Offset:14 Size:200
+[    0.000000] Partition (from atag) radiocab -- Offset:3 Size:600
+[    0.000000] Partition (from atag) internalsd -- Offset:e Size:650000
+[    0.000000] Partition (from atag) userdata -- Offset:f Size:89400
+[    0.000000] Partition (from atag) devlog -- Offset:13 Size:1600
+[    0.000000] Partition (from atag) extra -- Offset:10 Size:200
+[    0.000000] Ignoring unrecognised tag 0x41000801
+[    0.000000] Ignoring unrecognised tag 0x41000801
+[    0.000000] kmemleak: Kernel memory leak detector disabled
+[    0.000000] Found tegra_fbmem: 00384b40@bc0ab000
+[    0.000000] Tegra reserved memory:
+[    0.000000] LP0:                    bc0a8000 - bc0a9fff
+[    0.000000] Bootloader framebuffer: bc0ab000 - bc42ffff
+[    0.000000] Framebuffer:            bec00000 - beffffff
+[    0.000000] 2nd Framebuffer:        bf000000 - bf7fffff
+[    0.000000] Carveout:               00000000 - 00000000
+[    0.000000] Vpr:                    00000000 - 00000000
+[    0.000000] Nvdumper:               bf7ff000 - bf800000
+[    0.000000] Memory policy: ECC disabled, Data cache writealloc
+[    0.000000] nv - MISC_CLK_ENB: 10000013
+[    0.000000] nv - XBAR_CTRL: 10004
+[    0.000000] [hTC info] project phase: <Latest HW phase> (id=128)
+[    0.000000] Tegra3: CPU Speedo ID 4, Soc Speedo ID 1
+[    0.000000] Tegra Revision: A03 SKU: 0x81 CPU Process: 1 Core Process: 0
+[    0.000000] Lowering cpu_lp maximum rate from 620000000 to 500000000
+[    0.000000] Lowering sbus maximum rate from 334000000 to 267000000
+[    0.000000] Lowering vi maximum rate from 425000000 to 409000000
+[    0.000000] Lowering vde maximum rate from 520000000 to 416000000
+[    0.000000] Lowering mpe maximum rate from 520000000 to 416000000
+[    0.000000] Lowering 2d maximum rate from 520000000 to 416000000
+[    0.000000] Lowering epp maximum rate from 520000000 to 416000000
+[    0.000000] Lowering 3d maximum rate from 520000000 to 416000000
+[    0.000000] Lowering 3d2 maximum rate from 520000000 to 416000000
+[    0.000000] Lowering se maximum rate from 520000000 to 416000000
+[    0.000000] Lowering cbus maximum rate from 700000000 to 416000000
+[    0.000000] Lowering pll_c maximum rate from 1400000000 to 1066000000
+[    0.000000] Lowering ndflash maximum rate from 240000000 to 200000000
+[    0.000000] Lowering sbc1 maximum rate from 160000000 to 100000000
+[    0.000000] Lowering sbc2 maximum rate from 160000000 to 100000000
+[    0.000000] Lowering sbc3 maximum rate from 160000000 to 100000000
+[    0.000000] Lowering sbc4 maximum rate from 160000000 to 100000000
+[    0.000000] Lowering sbc5 maximum rate from 160000000 to 100000000
+[    0.000000] Lowering sbc6 maximum rate from 160000000 to 100000000
+[    0.000000] Lowering dsia maximum rate from 500000000 to 275000000
+[    0.000000] Lowering dsib maximum rate from 500000000 to 275000000
+[    0.000000] Lowering cpu_g maximum rate from 1700000000 to 1500000000
+[    0.000000] tegra dvfs: VDD_CPU nominal 1200mV, scaling enabled
+[    0.000000] tegra dvfs: VDD_CORE nominal 1200mV, scaling enabled
+[    0.000000] [BOOT_LOG] Entering <machine>_init_power
+[    0.000000] [BOOT_LOG] Entering <machine>_init_cache
+[    0.000000] L310 cache controller enabled
+[    0.000000] l2x0: 8 ways, CACHE_ID 0x410000c7, AUX_CTRL 0x7e080001, Cache size: 1048576 B
+[    0.000000] PERCPU: Embedded 8 pages/cpu @c171d000 s8416 r8192 d16160 u32768
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 254736
+[    0.000000] Kernel command line: tegraid=30.1.3.0.0 mem=1016M@2048M vmalloc=668M video=tegrafb zygote_oneshot=off kmemleak=off androidboot.lb=1 androidboot.carrier=HTC-EastEurope led=4 androidboot.keycaps=qwerty console=none debug_uartport=lsport usbcore.old_scheme_first=1 lp0_vec=8192@0xbc0a8000 nvdumper_reserved=0xbf7ff000 tegra_fbmem=3689280@0xbc0ab000 panel_id=0x4940014 tegraboot=sdmmc gpt gpt_sector=61063167  androidboot.mode=normal batt_V=1048575 batt_I=1048575 batt_T=1048575  modem_id=0  androidboot.baseband=1.1204.105.14 androidboot.emmc=true  androidboot.cid=HTC__032 androidboot.mid=PJ4610000 androidboot.serialno=HT24KW111090 androidboot.mb_serialno=419G224224602 androidboot.bootloader=0.95.0000 last_off_event=pmu_poweroff start_on_event=none hw_rst_reason=0x0 sw_rst_reason=0x776655aa project_phase=UNKNOWN  radioflag=0x0 
+[    0.000000] Found panel_vendor: 4940014
+[    0.000000] board_bootloader_setup: 0.95.0000
+[    0.000000] board_bootloader_setup: SHIP BUILD
+[    0.000000] PID hash table entries: 1024 (order: 0, 4096 bytes)
+[    0.000000] Dentry cache hash table entries: 32768 (order: 5, 131072 bytes)
+[    0.000000] Inode-cache hash table entries: 16384 (order: 4, 65536 bytes)
+[    0.000000] Memory: 1003MB = 1003MB total
+[    0.000000] Memory: 999292k/999292k available, 41092k reserved, 789988K highmem
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+[    0.000000]     DMA     : 0xff000000 - 0xffe00000   (  14 MB)
+[    0.000000]     vmalloc : 0xce800000 - 0xf8000000   ( 664 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xce400000   ( 228 MB)
+[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+[    0.000000]       .init : 0xc0008000 - 0xc004d000   ( 276 kB)
+[    0.000000]       .text : 0xc004d000 - 0xc083d324   (8129 kB)
+[    0.000000]       .data : 0xc0d00000 - 0xc0de9f90   ( 936 kB)
+[    0.000000] Preemptable hierarchical RCU implementation.
+[    0.000000] 	RCU-based detection of stalled CPUs is disabled.
+[    0.000000] 	Verbose stalled-CPUs detection is disabled.
+[    0.000000] NR_IRQS:816
+[    0.000000] sched_clock: 32 bits at 1000kHz, resolution 1000ns, wraps every 4294967ms
+[    0.000392] Calibrating delay loop... 1993.93 BogoMIPS (lpj=9969664)
+[    0.060078] pid_max: default: 32768 minimum: 301
+[    0.060538] Mount-cache hash table entries: 512
+[    0.061596] Initializing cgroup subsys debug
+[    0.061609] Initializing cgroup subsys cpuacct
+[    0.061671] Initializing cgroup subsys freezer
+[    0.061740] CPU: Testing write buffer coherency: ok
+[    0.192759] CPU1: Booted secondary processor
+[    0.262717] CPU2: Booted secondary processor
+[    0.332727] CPU3: Booted secondary processor
+[    0.352022] Brought up 4 CPUs
+[    0.352034] SMP: Total of 4 processors activated (7975.73 BogoMIPS).
+[    0.358039] [BOOT_LOG] Entering do_initcalls
+[    0.359027] print_constraints: dummy: 
+[    0.359379] NET: Registered protocol family 16
+[    0.360830] host1x bus init
+[    0.361481] [BOOT_LOG] Entering <machine>.init_machine
+[    0.362601] The pingroup LCD_PWR1 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362664] The pingroup LCD_DC1 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362729] The pingroup LCD_D8 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362768] The pingroup LCD_D14 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362782] The pingroup LCD_D15 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362795] The pingroup GMI_AD0 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362809] The pingroup GMI_AD1 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362822] The pingroup GMI_AD2 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362836] The pingroup GMI_AD3 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362849] The pingroup GMI_AD4 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362862] The pingroup GMI_AD5 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362876] The pingroup GMI_AD6 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362889] The pingroup GMI_AD7 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362908] The pingroup GMI_AD9 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362926] The pingroup GMI_AD11 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362940] The pingroup GMI_AD12 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362953] The pingroup GMI_AD13 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362966] The pingroup GMI_AD14 was configured to RSVD2 instead of <UNKNOWN>
+[    0.362985] The pingroup GMI_WR_N was configured to RSVD3 instead of <UNKNOWN>
+[    0.362999] The pingroup GMI_OE_N was configured to RSVD3 instead of <UNKNOWN>
+[    0.363012] The pingroup GMI_DQS was configured to RSVD3 instead of <UNKNOWN>
+[    0.363046] The pingroup GMI_WAIT was configured to RSVD2 instead of <UNKNOWN>
+[    0.363070] The pingroup GMI_CS1_N was configured to RSVD1 instead of <UNKNOWN>
+[    0.363098] The pingroup GMI_ADV_N was configured to RSVD2 instead of <UNKNOWN>
+[    0.363111] The pingroup GMI_CLK was configured to RSVD2 instead of <UNKNOWN>
+[    0.363125] The pingroup GMI_CS4_N was configured to RSVD2 instead of <UNKNOWN>
+[    0.363138] The pingroup GMI_CS2_N was configured to RSVD2 instead of <UNKNOWN>
+[    0.363151] The pingroup GMI_CS3_N was configured to RSVD1 instead of <UNKNOWN>
+[    0.363190] The pingroup LCD_D18 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363213] The pingroup LCD_D21 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363227] The pingroup LCD_D22 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363240] The pingroup LCD_D23 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363364] The pingroup DAP4_DOUT was configured to RSVD2 instead of <UNKNOWN>
+[    0.363378] The pingroup DAP4_SCLK was configured to RSVD2 instead of <UNKNOWN>
+[    0.363432] The pingroup KB_ROW2 was configured to RSVD3 instead of <UNKNOWN>
+[    0.363445] The pingroup KB_ROW3 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363458] The pingroup KB_ROW4 was configured to RSVD3 instead of <UNKNOWN>
+[    0.363524] The pingroup GPIO_PU0 was configured to RSVD1 instead of <UNKNOWN>
+[    0.363537] The pingroup GPIO_PU1 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363551] The pingroup GPIO_PU2 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363564] The pingroup GPIO_PU3 was configured to RSVD1 instead of <UNKNOWN>
+[    0.363630] The pingroup CRT_VSYNC was configured to RSVD3 instead of <UNKNOWN>
+[    0.363643] The pingroup LCD_CS1_N was configured to RSVD2 instead of RSVD1
+[    0.363672] The pingroup CLK1_OUT was configured to RSVD3 instead of <UNKNOWN>
+[    0.363685] The pingroup CLK2_OUT was configured to RSVD3 instead of <UNKNOWN>
+[    0.363744] The pingroup SPI1_MISO was configured to RSVD3 instead of <UNKNOWN>
+[    0.363778] The pingroup SDMMC1_DAT1 was configured to RSVD1 instead of <UNKNOWN>
+[    0.363889] The pingroup GPIO_PBB0 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363939] The pingroup GPIO_PBB7 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363958] The pingroup GPIO_PCC1 was configured to RSVD2 instead of <UNKNOWN>
+[    0.363986] The pingroup CLK2_REQ was configured to RSVD3 instead of <UNKNOWN>
+[    0.364117] The pingroup KB_ROW0 was configured to RSVD3 instead of <UNKNOWN>
+[    0.364130] The pingroup KB_ROW3 was configured to RSVD2 instead of <UNKNOWN>
+[    0.364143] The pingroup KB_ROW4 was configured to RSVD3 instead of <UNKNOWN>
+[    0.364162] The pingroup CLK3_REQ was configured to RSVD3 instead of <UNKNOWN>
+[    0.364180] The pingroup LCD_D19 was configured to RSVD2 instead of <UNKNOWN>
+[    0.364790] Selecting UARTA as the debug console
+[    0.364806] The debug console clock name is uarta_dbg
+[    0.365657] [USBPHY] tegra_usb_phy_init
+[    0.368107] ram_console: got buffer at beb00000, size 100000
+[    0.368220] ram_console: found existing buffer, size 233613, start 233613
+[    1.155667] console [ram-1] enabled
+[    1.156287] enterprise_edp_init: CPU regulator 0 mA
+[    1.156471] Registering gpio keys
+[    1.172025] enterprise_modem_init: enable baseband gpio(s)
+[    1.172458] enterprise_modem_init: gpio config for sim_det#.
+[    1.172765] enterprise_modem_init: gpio config for core dump when radio fatal error.
+[    1.173170] [DISP]enterprise_panel_init(2821)  IN
+[    1.173362] [DISP]enterprise_panel_init(2837) panel id 0x4940014
+[    1.188336] [DISP]enterprise_panel_init(3019)  OUTinit 533MHz Timing table
+[    1.188872] tegra: validated EMC DFS table
+[    1.189054] [PS][cm3629]psensor_init ps_type = 1
+[    1.189155] [GSNR] g-sensor irq_start...
+[    1.189255] [GSNR] g-sensor irq end...
+[    1.189433] [GYRO] gyro diag_start...
+[    1.189530] [GYRO] gyro diag irq end...
+[    1.189632] [GYRO] mog sleep pin...
+[    1.193677] [mtd] mount /proc/emmc successfully
+[    1.193786] [BOOT_LOG] Leaving <machine>.init_machine
+[    1.195213] tegra_iovmm_register: added iovmm-smmu
+[    1.219401] bio: create slab <bio-0> at 0
+[    1.220801] vgaarb: loaded
+[    1.221055] i2c-core: driver [tps6591x] using legacy suspend method
+[    1.221229] i2c-core: driver [tps6591x] using legacy resume method
+[    1.221479] i2c-core: driver [tps80031] using legacy suspend method
+[    1.221574] i2c-core: driver [tps80031] using legacy resume method
+[    1.222605] SCSI subsystem initialized
+[    1.224252] [USB] otg transceiver registered
+[    1.224351] [USB] <6>[USBOTG] tegra_otg_probe done!
+[    1.224861] usbcore: registered new interface driver usbfs
+[    1.225169] usbcore: registered new interface driver hub
+[    1.225493] usbcore: registered new device driver usb
+[    1.228231] tps80031 4-004a: Jtag version 0x01 and Eeprom version 0x70
+[    1.262021] Wake18 for irq=118
+[    1.262122] Enabling wake18
+[    1.270742] print_constraints: tps80031_VIO: 607 <--> 2100 mV at 1800 mV normal standby
+[    1.277815] print_constraints: tps80031_SMPS1: 607 <--> 2100 mV at 1038 mV normal standby
+[    1.284637] print_constraints: tps80031_SMPS2: 607 <--> 2100 mV at 1202 mV normal standby
+[    1.288394] print_constraints: tps80031_SMPS3: 607 <--> 2100 mV at 1202 mV normal standby
+[    1.292251] print_constraints: tps80031_SMPS4: 1852 <--> 2199 mV at 2817 mV normal standby
+[    1.295160] print_constraints: tps80031_LDO1: 1000 <--> 3300 mV at 1200 mV normal standby
+[    1.295358] set_supply: tps80031_LDO1: supplied by tps80031_VIO
+[    1.300193] print_constraints: tps80031_LDO2: 1000 <--> 1287 mV at 1000 mV normal standby
+[    1.303076] print_constraints: tps80031_LDO3: 1000 <--> 3300 mV at 1300 mV normal standby
+[    1.305972] print_constraints: tps80031_LDO4: 1000 <--> 3300 mV at 3000 mV normal standby
+[    1.308762] print_constraints: tps80031_LDO5: 1000 <--> 3300 mV at 2800 mV normal standby
+[    1.313755] print_constraints: tps80031_LDO6: 1000 <--> 3300 mV at 2800 mV normal standby
+[    1.318773] print_constraints: tps80031_LDO7: 1000 <--> 3300 mV at 1100 mV normal standby
+[    1.318894] set_supply: tps80031_LDO7: supplied by tps80031_VIO
+[    1.323884] print_constraints: tps80031_LDOLN: 1000 <--> 3300 mV at 1000 mV normal standby
+[    1.324082] set_supply: tps80031_LDOLN: supplied by tps80031_SMPS3
+[    1.327707] print_constraints: tps80031_LDOUSB: 1000 <--> 3300 mV at 3300 mV normal standby
+[    1.329684] print_constraints: tps80031_VANA: 1000 <--> 3300 mV at 2100 mV normal standby
+[    1.331758] print_constraints: tps80031_VBUS: normal standby
+[    1.345116] Advanced Linux Sound Architecture Driver Version 1.0.24.
+[    1.346129] Bluetooth: Core ver 2.16
+[    1.346314] NET: Registered protocol family 31
+[    1.346488] Bluetooth: HCI device and connection manager initialized
+[    1.346588] Bluetooth: HCI socket layer initialized
+[    1.346763] Bluetooth: L2CAP socket layer initialized
+[    1.346886] Bluetooth: SCO socket layer initialized
+[    1.347700] cfg80211: Calling CRDA to update world regulatory domain
+[    1.350807] print_constraints: gpio-switch-led_3v3_en: 3300 mV normal standby
+[    1.351192] print_constraints: gpio-switch-vib_3v_en: 3000 mV normal standby
+[    1.351526] print_constraints: gpio-switch-srio_1v8_en: 1800 mV normal standby
+[    1.351897] print_constraints: gpio-switch-aud_a1v8_en: 1800 mV normal standby
+[    1.352213] print_constraints: gpio-switch-aud_3v3_en: 3300 mV normal standby
+[    1.352619] print_constraints: gpio-switch-lcmio_1v8_en: 1800 mV normal standby
+[    1.353012] print_constraints: gpio-switch-lcm_3v3_en: 3300 mV normal standby
+[    1.353170] gpio-switch-regulator gpio-switch-regulator: Unable to request gpio 194
+[    1.353348] gpio-switch-regulator gpio-switch-regulator: Unable to register regulator gpio-switch-mhl_3v3_en
+[    1.353527] gpio-switch-regulator gpio-switch-regulator: Unable to request gpio 36
+[    1.353703] gpio-switch-regulator gpio-switch-regulator: Unable to register regulator gpio-switch-mhl_1v2_en
+[    1.353880] gpio-switch-regulator gpio-switch-regulator: Unable to request gpio 103
+[    1.353977] gpio-switch-regulator gpio-switch-regulator: Unable to register regulator gpio-switch-cam_vcm_2v85_en
+[    1.354160] gpio-switch-regulator gpio-switch-regulator: Unable to request gpio 46
+[    1.354338] gpio-switch-regulator gpio-switch-regulator: Unable to register regulator gpio-switch-cam2_d1v2_en
+[    1.354519] gpio-switch-regulator gpio-switch-regulator: Unable to request gpio 45
+[    1.354617] gpio-switch-regulator gpio-switch-regulator: Unable to register regulator gpio-switch-cam_d1v2_en
+[    1.354793] gpio-switch-regulator gpio-switch-regulator: Unable to request gpio 220
+[    1.354967] gpio-switch-regulator gpio-switch-regulator: Unable to register regulator gpio-switch-camio_1v8_en
+[    1.355143] gpio-switch-regulator gpio-switch-regulator: Unable to request gpio 35
+[    1.355239] gpio-switch-regulator gpio-switch-regulator: Unable to register regulator gpio-switch-cam_a2v85_en
+[    1.355583] print_constraints: gpio-switch-sdmmc_2v85_en: 2850 mV normal standby
+[    1.355993] tegra: started io power detection dynamic control
+[    1.356171] tegra: NO_IO_POWER setting 0x10
+[    1.356270] Switching to clocksource timer_us
+[    1.357739] tegra-nvmap tegra-nvmap: created carveout iram (255KiB)
+[    1.359872] [BATT][tps65200] init chg_int interrupt.
+[    1.360806] [BATT][tps65200] [TPS65200]: Driver registration done
+[    1.362026] Switched to NOHz mode on CPU #0
+[    1.362676] [PMU_ADC]tps80032_adc_probe:GPADC eanbled, then check calibration with map 0x7f
+[    1.362765] Switched to NOHz mode on CPU #2
+[    1.362774] Switched to NOHz mode on CPU #3
+[    1.362804] Switched to NOHz mode on CPU #1
+[    1.366360] NET: Registered protocol family 2
+[    1.366689] IP route cache hash table entries: 8192 (order: 3, 32768 bytes)
+[    1.367499] TCP established hash table entries: 32768 (order: 6, 262144 bytes)
+[    1.368114] TCP bind hash table entries: 32768 (order: 6, 393216 bytes)
+[    1.368603] TCP: Hash tables configured (established 32768 bind 32768)
+[    1.368776] TCP reno registered
+[    1.368871] UDP hash table entries: 128 (order: 0, 4096 bytes)
+[    1.369134] UDP-Lite hash table entries: 128 (order: 0, 4096 bytes)
+[    1.369815] NET: Registered protocol family 1
+[    1.370579] RPC: Registered udp transport module.
+[    1.370677] RPC: Registered tcp transport module.
+[    1.370770] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    1.370945] PCI: CLS 0 bytes, default 32
+[    1.371970] Unpacking initramfs...
+[    1.384975] Freeing initrd memory: 164K
+[    1.385281] PMU: registered new PMU device of type 0
+[    1.386193] [CPUHP]Tegra auto-hotplug initialized: disabled
+[    1.386376] cpu-tegra: init EDP limit: 1350 MHz
+[    1.387836] [FLT][PROBE] flashlight driver probe +++
+[    1.388149] config_enterprise_flashlight_gpios: start...config_enterprise_flashlight_gpios: end...
+[    1.388786] Registered led device: flashlight
+[    1.389051] [FLT]flashlight_probe: led_count = 0
+[    1.389146] [FLT][PROBE] flashlight driver probe ---, led_count = 1
+[    1.389399] baseband_xmm_power_init - host_dbg_flag=0x0
+[    1.389495] [XMM_v10]baseband_xmm_power_init 0x1121
+[    1.389665] [XMM_v10]baseband_xmm_power_init - platfrom_set_flight_mode_onoff - on
+[    1.389762] baseband_xmm_power_init:VP adding pm qos request 
+[    1.389985] [XMM_v10]baseband_xmm_power_driver_probe 0316 hr_sleep and jiffe - CPU Freq. 
+[    1.390160] [XMM_v10]enum_delay_ms=1000
+[    1.390253] [XMM_v10]htcpcbid=128
+[    1.390364] baseband_xmm_power_driver_probe request UART
+[    1.390541] baseband_xmm_power_driver_probe pull UART o d
+[    1.390636] baseband_xmm_power_driver_probe config_gpio_for_power_off
+[    1.390812] [XMM_v10]config_gpio_for_power_off for power consumation 4st 
+[    1.390908] [XMM_v10]modem_off_for_usb_config 1219_01
+[    1.391086] [XMM_v10]modem_off_for_uart_config uart_pin_pull_low=1
+[    1.391183] [XMM_v10]gpio_o_l_uart ,name=IMC_UART_TX gpio=79
+[    1.391494] [XMM_v10]gpio_o_l_uart ,name=IMC_UART_RTS gpio=87
+[    1.391723] [XMM_v10]gpio_o_l_uart ,name=IMC_UART_RX gpio=8
+[    1.392056] [XMM_v10]gpio_o_l_uart ,name=IMC_UART_CTS gpio=9
+[    1.392462] baseband_xmm_power_driver_probe: request enable irq wake SIM det to wakeup source
+[    1.392653] baseband_xmm_power_work_func - work->sate=1
+[    1.392827] BBXMM_WORK_INIT
+[    1.392920] Go to next state 6
+[    1.393020] baseband_xmm_power_work_func - work->sate=6
+[    1.393200] baseband_xmm_power_work_func - work->sate=7
+[    1.393306] Wake23 for irq=293
+[    1.393401] Enabling wake23
+[    1.393574] gpio bank wake found: wake23 for irq=66
+[    1.393667] Enabling wake23
+[    1.393759] baseband_xmm_power_driver_probe }
+[    1.394076] delay work version htc_simhotswap_probe
+[    1.394408] htc_simhotswap_probe(): finish SIM init status=0
+[    1.394511] Wake23 for irq=293
+[    1.397938] [PMU_VSYS]tps80032_vsys_alarm_register_notifier:set_irq_wake failed irq 738
+[    1.398068] [BATT] htc_battery_probe(): finish at 1391673003 (1970-01-01 00:00:09.634671003 UTC)
+[    1.398332] nvdumper: nvdumper_reserved:0xbf7ff000
+[    1.398520] nvdumper: nvdumper_ptr:0xce808000
+[    1.398620] nvdumper: reboot_params:0xce80c000
+[    1.398715] nvdumper: ret:0
+[    1.398887] nvdumper: dirty:1
+[    1.398979] nvdumper: last reboot was dirty
+[    1.415908] ------------[ cut here ]------------
+[    1.416120] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.416294] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.416389] Modules linked in:
+[    1.416632] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.416819] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.417003] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.417196] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.417381] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.417565] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.417748] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.417933] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.418038] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.418220] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.418406] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.418595] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    1.418785] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.418968] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.419156] ---[ end trace 6fcb132ac310d004 ]---
+[    1.419257] cpu-tegra: Failed to set cpu frequency to 1350000 kHz
+[    1.419713] highmem bounce pool size: 64 pages
+[    1.420121] ashmem: initialized
+[    1.423522] NTFS driver 2.1.30 [Flags: R/W].
+[    1.423875] fuse init (API version 7.16)
+[    1.424368] Registering char device tf_driver (122:0)
+[    1.427993] io scheduler noop registered (default)
+[    1.433379] tegra_grhost tegra_grhost: initialized
+[    1.434163] tegradc tegradc.0: DSI: Failed to get chip info
+[    1.434344] tegradc tegradc.0: DSI: HS clock rate is 417000
+[    1.436385] [DISP]bridge_reset(336)  IN
+[    1.446628] [DISP]bridge_reset(362) Workaround for first panel init sequence
+[    1.446815] [DISP]bridge_reset(400) is_power_on:1
+[    1.446991] [DISP]bridge_reset(401)  OUT
+[    1.451186] [DISP]ic_reset(410)  IN
+[    1.451374] [DISP]ic_reset(414) Workaround for first panel init sequence
+[    1.451636] [DISP]ic_reset(425)  OUT
+[    1.486462] ------------[ cut here ]------------
+[    1.486738] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.486835] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.487009] Modules linked in:
+[    1.487223] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.487411] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.487594] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.487788] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.487971] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.488156] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.488340] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.488446] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.488629] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.488811] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.489000] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.489188] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    1.489381] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    1.489564] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    1.489750] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.489855] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.490036] ---[ end trace 6fcb132ac310d005 ]---
+[    1.490136] cpu-tegra: Failed to set cpu frequency to 1350000 kHz
+[    1.490256] ------------[ cut here ]------------
+[    1.490355] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.490529] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.490705] Modules linked in:
+[    1.490899] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.491082] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.491264] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.491448] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.491631] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.491812] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.491995] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.492099] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.492282] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.492463] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.492644] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.492825] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    1.493008] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    1.493190] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    1.493370] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.493472] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.493646] ---[ end trace 6fcb132ac310d006 ]---
+[    1.493742] cpu-tegra: Failed to set cpu frequency to 1350000 kHz
+[    1.493937] ------------[ cut here ]------------
+[    1.494038] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.494215] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.494388] Modules linked in:
+[    1.494584] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.494857] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.495041] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.495222] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.495406] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.495511] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.495698] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.495880] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.496064] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.496246] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.496458] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.496643] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    1.496830] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    1.497011] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    1.497112] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.497290] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.497464] ---[ end trace 6fcb132ac310d007 ]---
+[    1.497562] cpu-tegra: Failed to set cpu frequency to 1350000 kHz
+[    1.609909] tegradc tegradc.0: probed
+[    1.611367] tegradc tegradc.0: probed
+[    1.615208] Wake4 for irq=335
+[    1.618490] nvhdcp: using "always on" policy.
+[    1.620150] tegradc tegradc.1: probed
+[    1.621606] tegradc tegradc.1: probed
+[    1.622904] [DISP]mhl_sii_power(223) IN
+[    1.636717] ------------[ cut here ]------------
+[    1.636985] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.637226] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.637647] Modules linked in:
+[    1.638143] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.638205] [DISP]mhl_sii_power(256) OUT
+[    1.638230] [DISP]MhlTx: SiiMhlTxInitialize
+[    1.639226] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.639683] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.640145] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.640412] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.640869] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.641323] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.641776] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.642230] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.642686] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.643142] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.643604] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    1.643796] [DISP]Drv: SiiMhlTxChipInitialize: 9244
+[    1.644282] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.644736] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.645166] ---[ end trace 6fcb132ac310d008 ]---
+[    1.645209] [DISP]SiI 9234
+[    1.645224] [DISP]Drv: WriteInitialRegisterValues
+[    1.646035] cpu-tegra: Failed to set cpu frequency to 1350000 kHz
+[    1.646572] ------------[ cut here ]------------
+[    1.647021] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.647263] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.647692] Modules linked in:
+[    1.648185] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.648648] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.649110] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.649575] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.650032] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.650495] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.650953] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.651215] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.651668] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.652121] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.652577] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.653036] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    1.653500] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.653958] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.654198] ---[ end trace 6fcb132ac310d009 ]---
+[    1.654637] cpu-tegra: Failed to set cpu frequency to 1350000 kHz
+[    1.664916] [DISP]Drv: MHL 1.0 Compliant Clock
+[    1.694086] [DISP]Drv: InitCBusRegs
+[    1.709443] [DISP]Drv: Switch To D3: pinAllowD3 = 1
+[    1.736526] ------------[ cut here ]------------
+[    1.736977] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.737415] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.737653] Modules linked in:
+[    1.738334] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.738598] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.739051] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.739511] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.739971] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.740425] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.740880] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.741334] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.741787] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.742233] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.742491] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.742948] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    1.743417] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    1.743879] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    1.744331] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.744777] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.745022] ---[ end trace 6fcb132ac310d00a ]---
+[    1.745455] cpu-tegra: Failed to set cpu frequency to 640000 kHz
+[    1.768036] Wake8 for irq=247
+[    1.770266] input: rcp_events as /devices/virtual/input/input0
+[    1.770575] input_set_abs_params: mix_x 941, max_x 31664, min_y 417, max_y 32053
+[    1.771709] input: tv-touchscreen as /devices/virtual/input/input1
+[    1.771970] [DISP]sii9234_probe: Probe success!
+[    1.772630] i2c-core: driver [sii9234] using legacy resume method
+[    1.773782] [SER] Serial: 8250/16550 driver, 4 ports, IRQ sharing disabled
+[    1.776556] ------------[ cut here ]------------
+[    1.776819] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.777253] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.777678] Modules linked in:
+[    1.778178] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.778634] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.779083] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.779541] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.779993] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.780252] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.780698] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.781154] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.781608] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.782059] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.782512] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.782981] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    1.783445] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.783703] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.784141] ---[ end trace 6fcb132ac310d00b ]---
+[    1.784576] cpu-tegra: Failed to set cpu frequency to 475000 kHz
+[    1.786571] ------------[ cut here ]------------
+[    1.787017] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.787253] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.787675] Modules linked in:
+[    1.788158] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.788625] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.789077] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.789531] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.789982] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.790435] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.790891] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.791152] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.791599] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.792047] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.792500] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.792957] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    1.793413] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.793862] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.794100] ---[ end trace 6fcb132ac310d00c ]---
+[    1.794531] cpu-tegra: Failed to set cpu frequency to 640000 kHz
+[    1.876541] ------------[ cut here ]------------
+[    1.877006] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.877443] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.877679] Modules linked in:
+[    1.878166] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.878439] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.878900] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.879364] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.879824] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.880287] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.880744] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.881207] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.881659] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.881923] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.882381] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.882835] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    1.883303] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    1.883765] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    1.884221] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.884670] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.884916] ---[ end trace 6fcb132ac310d00d ]---
+[    1.885354] cpu-tegra: Failed to set cpu frequency to 640000 kHz
+[    1.886681] tegra-i2c tegra-i2c.3: I2c error status 0x00000008
+[    1.887119] tegra-i2c tegra-i2c.3: no acknowledge from address 0x50
+[    1.887359] tegra-i2c tegra-i2c.3: Packet status 0x00010009
+[    1.888897] tegradc tegradc.1: error reading edid
+[    1.896550] ------------[ cut here ]------------
+[    1.897007] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    1.897248] Increasing CPU rate while regulator is not ready may overclock CPU
+[    1.897674] Modules linked in:
+[    1.898173] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    1.898635] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    1.899090] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    1.899760] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.900216] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    1.900671] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    1.901124] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    1.901575] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    1.901835] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    1.902285] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    1.902736] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    1.903200] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    1.903655] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    1.904105] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    1.904536] ---[ end trace 6fcb132ac310d00e ]---
+[    1.904781] cpu-tegra: Failed to set cpu frequency to 640000 kHz
+[    2.376980] serial8250.0: ttyS0 at MMIO 0x70006000 (irq = 68) is a Tegra
+[    2.377421] port->cons=0xC0D5AFB0 port->cons->flags=0x11
+[    2.537386] tegra_uart.1: ttyHS1 at I/O 0x0 (irq = 69) is a unknown
+[    2.537638] port->cons=0x0 
+[    2.696506] Registered UART port ttyHS1
+[    2.697187] tegra_uart.2: ttyHS2 at I/O 0x0 (irq = 78) is a unknown
+[    2.697428] port->cons=0x0 
+[    2.856503] Registered UART port ttyHS2
+[    2.857182] tegra_uart.3: ttyHS3 at I/O 0x0 (irq = 122) is a unknown
+[    2.857424] port->cons=0x0 
+[    3.016497] Registered UART port ttyHS3
+[    3.016983] tegra_uart.4: ttyHS4 at I/O 0x0 (irq = 123) is a unknown
+[    3.017417] port->cons=0x0 
+[    3.176493] Registered UART port ttyHS4
+[    3.177137] Initialized tegra uart driver
+[    3.190488] loop: module loaded
+[    3.191517] i2c-core: driver [apds9802als] using legacy suspend method
+[    3.191763] i2c-core: driver [apds9802als] using legacy resume method
+[    3.192393] nct1008 4-004c: success in enabling rail vdd_nct1008
+[    3.197021] [TMS] local temp = 41 
+[    3.198466] [TMS] remote temp = 49.0 
+[    3.200559] nct1008 4-004c: nct1008_probe: initialized
+[    3.201010] [TMS] nct1008_enable
+[    3.204096] [TMS] throttle end
+[    3.205297] [TMS] throttle start
+[    3.206575] ------------[ cut here ]------------
+[    3.207245] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.207289] [TMS] throttle endIncreasing CPU rate while regulator is not ready may overclock CPU
+[    3.208108] Modules linked in:
+[    3.208795] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.209065] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.209526] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.209842] [TMS] current_temp=49.0, gpio_pcc2=1[<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.210603] [TMS] set hi_limit=60, lo_limit=42[<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.211508] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.211771] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.212225] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.212676] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.213126] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.213583] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.214037] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.214492] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.214942] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.215184] ---[ end trace 6fcb132ac310d00f ]---
+[    3.215620] cpu-tegra: Failed to set cpu frequency to 640000 kHz
+[    3.215963] ------------[ cut here ]------------
+[    3.216470] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.216716] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.217149] Modules linked in:
+[    3.217650] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.218113] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.218567] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.219030] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.219499] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.219956] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.220416] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.220881] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.221140] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.221590] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c398>] (tegra_edp_update_thermal_zone+0x8c/0xa4)
+[    3.222055] [<c007c398>] (tegra_edp_update_thermal_zone+0x8c/0xa4) from [<c00804ac>] (tegra_thermal_alert+0x1f4/0x220)
+[    3.222514] [<c00804ac>] (tegra_thermal_alert+0x1f4/0x220) from [<c00805e8>] (tegra_thermal_set_device+0x9c/0xb0)
+[    3.222981] [<c00805e8>] (tegra_thermal_set_device+0x9c/0xb0) from [<c0611b9c>] (nct1008_probe+0x4dc/0x5e8)
+[    3.223464] [<c0611b9c>] (nct1008_probe+0x4dc/0x5e8) from [<c0395704>] (i2c_device_probe+0xc0/0x100)
+[    3.223926] [<c0395704>] (i2c_device_probe+0xc0/0x100) from [<c02e7c0c>] (driver_probe_device+0x144/0x264)
+[    3.224391] [<c02e7c0c>] (driver_probe_device+0x144/0x264) from [<c02e7d8c>] (__driver_attach+0x60/0x84)
+[    3.224854] [<c02e7d8c>] (__driver_attach+0x60/0x84) from [<c02e72e4>] (bus_for_each_dev+0x48/0x84)
+[    3.225116] [<c02e72e4>] (bus_for_each_dev+0x48/0x84) from [<c02e6bbc>] (bus_add_driver+0xc0/0x238)
+[    3.225571] [<c02e6bbc>] (bus_add_driver+0xc0/0x238) from [<c02e8384>] (driver_register+0xa8/0x138)
+[    3.226023] [<c02e8384>] (driver_register+0xa8/0x138) from [<c0395ad0>] (i2c_register_driver+0x40/0xd4)
+[    3.226605] [<c0395ad0>] (i2c_register_driver+0x40/0xd4) from [<c004d588>] (do_one_initcall+0x94/0x164)
+[    3.227075] [<c004d588>] (do_one_initcall+0x94/0x164) from [<c00083f4>] (kernel_init+0xb0/0x170)
+[    3.227338] [<c00083f4>] (kernel_init+0xb0/0x170) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.227774] ---[ end trace 6fcb132ac310d010 ]---
+[    3.228214] cpu-tegra: Failed to set cpu frequency to 640000 kHz
+[    3.228537] ------------[ cut here ]------------
+[    3.228986] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.229222] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.229645] Modules linked in:
+[    3.230131] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.230589] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.231049] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.231515] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.231967] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.232415] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.232869] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.233130] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.233579] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.234033] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.234489] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.234947] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.235404] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.235849] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.236085] ---[ end trace 6fcb132ac310d011 ]---
+[    3.236573] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.237109] i2c-core: driver [nct1008] using legacy suspend method
+[    3.237543] i2c-core: driver [nct1008] using legacy resume method
+[    3.238414] i2c-core: driver [mpu3050] using legacy suspend method
+[    3.238847] i2c-core: driver [mpu3050] using legacy resume method
+[    3.239296] mpu_init
+[    3.240126] [VIB][PROBE] vibrator_probe +++
+[    3.241315] [VIB][PROBE] vibrator_probe ---
+[    3.241962] [CABLE] tegra_usb_dpdn_switch: Set USB path
+[    3.242407] [DISP]sii9234_change_usb_owner(0)
+[    3.243338] Wake9 for irq=370
+[    3.243944] [CABLE] usb_id_detect_init: ID=146, IRQ=0x172
+[    3.244181] [CABLE] cable_detect_probe: Done
+[    3.246640] PPP generic driver version 2.4.2
+[    3.247748] PPP Deflate Compression module registered
+[    3.247996] PPP BSD Compression module registered
+[    3.250296] PPP MPPE Compression module registered
+[    3.250540] NET: Registered protocol family 24
+[    3.252892] tun: Universal TUN/TAP device driver, 1.6
+[    3.253331] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+[    3.254636] usbcore: registered new interface driver cdc_ether
+[    3.255381] usbcore: registered new interface driver smsc95xx
+[    3.255882] usbcore: registered new interface driver cdc_subset
+[    3.256346] cdc_ncm: 23-Apr-2011
+[    3.256923] usbcore: registered new interface driver cdc_ncm
+[    3.257379] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    3.258524] usbcore: registered new interface driver cdc_wdm
+[    3.258956] Initializing USB Mass Storage driver...
+[    3.259531] usbcore: registered new interface driver usb-storage
+[    3.259964] USB Mass Storage support registered.
+[    3.260519] usbcore: registered new interface driver libusual
+[    3.261642] usbcore: registered new interface driver usbserial
+[    3.261884] usbserial: USB Serial Driver core
+[    3.262559] USB Serial support registered for GSM modem (1-port)
+[    3.263094] usbcore: registered new interface driver option
+[    3.263527] option: v0.7.2:USB Driver for GSM modems
+[    3.263991] USB Serial support registered for pl2303
+[    3.264750] usbcore: registered new interface driver pl2303
+[    3.264993] pl2303: Prolific PL2303 USB to serial adaptor driver
+[    3.265431] [USBUDC] NVidia Tegra High-Speed USB SOC Device Controller driver (Apr 20, 2007)
+[    3.266147] [USBPHY] tegra_usb_phy_open 0(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[    3.266922] [USBPHY] tegra_usb_phy_open regulator_get(NULL, "avdd_usb")
+[    3.268800] [USBPHY] tegra_usb_phy_power_on 0(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[    3.269255] [USBPHY] hssync_start_delay = 0x9
+[    3.269508] [USB] strength setup = 0x39, slew = 0x0
+[    3.273541] Wake19 for irq=52
+[    3.273773] Enabling wake19
+[    3.274012] Wake19 for irq=52
+[    3.274434] Enabling wake19
+[    3.274668] Wake19 for irq=52
+[    3.275527] [USBUDC] fsl_udc_clk_suspend is_dpd:0 
+[    3.275964] [USBPHY] tegra_usb_phy_power_off 0(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[    3.286539] ------------[ cut here ]------------
+[    3.286991] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.287233] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.287664] Modules linked in:
+[    3.288176] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.288634] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.289087] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.289560] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.290014] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.290471] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.290937] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.291400] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.291663] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.292111] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.292568] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.293020] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.293476] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.293928] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.294359] ---[ end trace 6fcb132ac310d012 ]---
+[    3.294604] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.319979] utmi_phy_clk_disable: timeout waiting for phy to stabilize
+[    3.320618] [USB] [USBOTG] SUSPEND --> PERIPHERAL
+[    3.320855] [USBUDC] tegra_usb_set_vbus_state on 
+[    3.321282] [USBUDC] fsl_udc_clk_resume is_dpd:0 
+[    3.321647] [USBPHY] tegra_usb_phy_power_on 0(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[    3.322080] [USBPHY] hssync_start_delay = 0x9
+[    3.322324] [USB] strength setup = 0x39, slew = 0x0
+[    3.326289] [USBUDC] online = on udc->flags 2 
+[    3.326611] [USBUDC] usb_do_work 0 2
+[    3.329249] [USB] android_init_functions rndis init
+[    3.330537] [USB] android_init_functions accessory init
+[    3.331744] [USB] android_init_functions mtp init
+[    3.332536] [USB] android_init_functions ptp init
+[    3.336566] ------------[ cut here ]------------
+[    3.337029] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.337214] android_usb gadget: Mass Storage Function, version: 2009/09/11
+[    3.337240] android_usb gadget: Number of LUNs=2
+[    3.337366]  lun0: LUN: removable file: (no medium)
+[    3.337388]  lun1: LUN: removable read only CD-ROM file: (no medium)
+[    3.337480] [USB] android_init_functions mass_storage init
+[    3.338280] [USB] android_init_functions adb init
+[    3.338708] [USB] android_init_functions cdc_ethernet init
+[    3.339085] [USB] android_init_functions serial init
+[    3.339999] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.340267] [USB] android_init_functions projector init
+[    3.340305] Gadget Android: controller 'fsl-tegra-udc' not recognized
+[    3.340738] android_usb gadget: android_usb ready
+[    3.340758] [USBUDC] fsl-tegra-udc: bind to driver android_usb
+[    3.340814] [USBUDC] usb_do_work 0 1
+[    3.340832] [USBUDC] tegra udc: IDLE -> ONLINE vbus:1
+[    3.341959] Wake7 for irq=390
+[    3.342164] Wake27 for irq=368
+[    3.342327] Wake11 for irq=403
+[    3.342951] Modules linked in:
+[    3.343174] input: gpio-keys as /devices/platform/gpio-keys.0/input/input2
+[    3.343626] [KEY] Power key released
+[    3.343652] [KEY] GPIO key status, key code = 116, state = 0
+[    3.343674] [KEY] GPIO key status, key code = 115, state = 0
+[    3.343695] [KEY] GPIO key status, key code = 114, state = 0
+[    3.345038] 
+[    3.345317] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.345781] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.346236] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.346747] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.347214] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.347669] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.348121] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.348393] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.348857] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.349315] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.349773] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.350241] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    3.350714] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    3.351172] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    3.351630] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.351891] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.352338] ---[ end trace 6fcb132ac310d013 ]---
+[    3.352591] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.356471] [USBUDC] Charger :USB [portsc:4]
+[    3.356573] ------------[ cut here ]------------
+[    3.356612] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.356633] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.356651] Modules linked in:
+[    3.356706] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.356753] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.356797] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.356846] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.356891] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.356935] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.356980] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.357025] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.357066] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.357107] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.357149] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.357195] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.357240] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.357281] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.357306] ---[ end trace 6fcb132ac310d014 ]---
+[    3.357333] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.376563] ------------[ cut here ]------------
+[    3.376822] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.377257] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.377489] Modules linked in:
+[    3.378175] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.378639] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.378904] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.379361] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.379814] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.380265] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.380717] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.381165] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.381611] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.382060] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.382322] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.382780] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    3.383242] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    3.383700] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    3.384148] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.384596] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.385032] ---[ end trace 6fcb132ac310d015 ]---
+[    3.385278] cpu-tegra: Failed to set cpu frequency to 1200000 kHz
+[    3.436465] [KEY] gpio_keys_probe end.
+[    3.438140] usbcore: registered new interface driver xpad
+[    3.438501] [TP] synaptics_ts_probe: enter
+[    3.456548] ------------[ cut here ]------------
+[    3.457012] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.457437] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.457672] Modules linked in:
+[    3.458361] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.458819] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.459081] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.459540] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.460005] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.460461] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.460912] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.461361] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.461811] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.462259] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.462718] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.462985] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    3.463449] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    3.463898] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    3.464349] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.464796] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.465224] ---[ end trace 6fcb132ac310d016 ]---
+[    3.465466] cpu-tegra: Failed to set cpu frequency to 1000000 kHz
+[    3.476577] ------------[ cut here ]------------
+[    3.476835] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.477268] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.477500] Modules linked in:
+[    3.478177] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.478439] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.478894] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.479357] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.479816] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.480282] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.480739] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.481201] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.481654] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.482106] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.482366] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.482826] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.483284] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.483735] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.484174] ---[ end trace 6fcb132ac310d017 ]---
+[    3.484423] cpu-tegra: Failed to set cpu frequency to 1000000 kHz
+[    3.484951] ------------[ cut here ]------------
+[    3.485209] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.485643] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.486072] Modules linked in:
+[    3.486607] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.487070] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.487525] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.487796] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.488249] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.488704] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.489161] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.489624] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.490076] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.490531] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.490990] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.491445] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    3.491719] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    3.492177] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    3.492626] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.493076] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.493513] ---[ end trace 6fcb132ac310d018 ]---
+[    3.493761] cpu-tegra: Failed to set cpu frequency to 640000 kHz
+[    3.496547] ------------[ cut here ]------------
+[    3.496805] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.497236] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.497658] Modules linked in:
+[    3.498137] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.498597] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.498859] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.499319] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.499774] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.500222] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.500683] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.501139] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.501588] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.502043] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.502491] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.502753] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.503207] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.503661] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.504090] ---[ end trace 6fcb132ac310d019 ]---
+[    3.504338] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.537957] [TP] syn_pdt_scan: memory allocate success. ptr: cd429720
+[    3.538199] [TP] synaptics: 4 function supported
+[    3.539056] Query: A2, Command: 0000, Control: 58, Data:  0, INTR:  1, Funtion: 34
+[    3.539810] Query: AB, Command: 00A0, Control: 5C, Data: 13, INTR:  2, Funtion:  1
+[    3.540361] Query: C5, Command: 00A1, Control: 62, Data: 15, INTR:  4, Funtion: 11
+[    3.541218] Query: 1C3, Command: 01C2, Control: 10B, Data: 100, INTR:  8, Funtion: 54
+[    3.542236] [TP] syn_get_version: package_id: 3202
+[    3.542707] [TP] syn_get_version: panel_version: 3330
+[    3.543181] [TP] syn_get_version: packrat_number: 1100755
+[    3.543862] [TP] syn_get_version: config version: 35443038
+[    3.556543] ------------[ cut here ]------------
+[    3.556994] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.557428] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.557665] Modules linked in:
+[    3.558357] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.558621] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.559080] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.559546] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.560008] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.560466] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.560924] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.561381] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.561835] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.562094] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.562356] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.562821] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.563279] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.563731] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.564167] ---[ end trace 6fcb132ac310d01a ]---
+[    3.564415] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.567368] [TP] synaptics: 2 function supported
+[    3.567919] Query: 7F, Command: 0000, Control: 4B, Data:  0, INTR:  1, Funtion: 34
+[    3.568657] Query: 88, Command: 007D, Control: 4F, Data: 13, INTR:  2, Funtion:  1
+[    3.569742] [TP] A3:1 A5:1, A7:1
+[    3.606631] [TP] Disable flash programming success! F01_data: 81
+[    3.608022] [TP] synaptics: 4 function supported
+[    3.608875] Query: A2, Command: 0000, Control: 58, Data:  0, INTR:  1, Funtion: 34
+[    3.609427] Query: AB, Command: 00A0, Control: 5C, Data: 13, INTR:  2, Funtion:  1
+[    3.610178] Query: C5, Command: 00A1, Control: 62, Data: 15, INTR:  4, Funtion: 11
+[    3.611035] Query: 1C3, Command: 01C2, Control: 10B, Data: 100, INTR:  8, Funtion: 54
+[    3.611282] [TP] synaptics_ts_probe: pdata->version = 3330, pdata->packrat_number = 0
+[    3.611738] [TP] CRC = AA2F9390
+[    3.637311] [TP] synaptics: 2 function supported
+[    3.638059] Query: 7F, Command: 0000, Control: 4B, Data:  0, INTR:  1, Funtion: 34
+[    3.638609] Query: 88, Command: 007D, Control: 4F, Data: 13, INTR:  2, Funtion:  1
+[    3.656485] [USBUDC] send connect type 1
+[    3.656724] [USBUDC] wake_lock
+[    3.657169] [BATT] cable USB at 3650763003 (1970-01-01 00:00:11.893759003 UTC)
+[    3.676643] [TP] Disable flash programming success! F01_data: 81
+[    3.677083] [TP] syn_config_update: the same config version and CRC
+[    3.678470] [TP] synaptics: 4 function supported
+[    3.679325] Query: A2, Command: 0000, Control: 58, Data:  0, INTR:  1, Funtion: 34
+[    3.679877] Query: AB, Command: 00A0, Control: 5C, Data: 13, INTR:  2, Funtion:  1
+[    3.680630] Query: C5, Command: 00A1, Control: 62, Data: 15, INTR:  4, Funtion: 11
+[    3.681493] Query: 1C3, Command: 01C2, Control: 10B, Data: 100, INTR:  8, Funtion: 54
+[    3.682212] [TP] Loads customer register
+[    3.682623] [TP] syn_get_information: finger_support: 10
+[    3.683112] [TP] syn_get_information: max_x: 1100, max_y: 1909
+[    3.685108] [TP] syn_get_information: X: 12, Y: 22
+[    3.685611] [TP] syn_get_information: ts->relaxation: 255
+[    3.686395] [TP] input_set_abs_params: mix_x 0, max_x 1100, min_y 0, max_y 1770
+[    3.687400] input: synaptics-rmi-touchscreen as /devices/virtual/input/input3
+[    3.688534] Wake1 for irq=393
+[    3.689157] [TP] synaptics_ts_probe: interrupt enable: 3f
+[    3.690281] [TP]synaptics_touch_sysfs_init: Exported GPIO 169.
+[    3.690532] Major number of rmi_char_dev: 249
+[    3.691860] [TP] synaptics_ts_probe: Start touchscreen synaptics-rmi-touchscreen in interrupt mode
+[    3.693689] using input dev gpio-keys for key reset
+[    3.696566] ------------[ cut here ]------------
+[    3.696826] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.697255] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.697682] Modules linked in:
+[    3.698159] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.698613] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.699063] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.699522] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.699786] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.700238] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.700276] using rtc device, rtc_tps80031, for alarms
+[    3.700375] rtc_tps80031 rtc_tps80031.0: rtc core: registered rtc_tps80031 as rtc0
+[    3.701308] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.701575] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.702030] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.702481] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.702934] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.703404] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.703859] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.704309] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.704548] ---[ end trace 6fcb132ac310d01b ]---
+[    3.704980] cpu-tegra: Failed to set cpu frequency to 1200000 kHz
+[    3.705314] ------------[ cut here ]------------
+[    3.705766] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.706011] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.706492] Modules linked in:
+[    3.706994] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.707468] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.707935] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.708406] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.708867] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.709325] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.709786] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.710240] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.710502] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.710954] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.711410] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.711867] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    3.712327] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    3.712782] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    3.713232] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.713490] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.713923] ---[ end trace 6fcb132ac310d01c ]---
+[    3.714368] cpu-tegra: Failed to set cpu frequency to 1200000 kHz
+[    3.746701] i2c /dev entries driver
+[    3.749737] [NFC] pn544_dev_init: Loading pn544 driver
+[    3.750273] [NFC] pn544_probe:
+[    3.750532] config_nfc_gpios
+[    3.751174] [NFC] pn544_probe : requesting IRQ 422
+[    3.751616] Wake13 for irq=422
+[    3.752849] i2c-core: driver [pn544] using legacy suspend method
+[    3.753291] i2c-core: driver [pn544] using legacy resume method
+[    3.753554] BMA250 G-sensor driver: init
+[    3.753891] bma250 probe start
+[    3.754127] BMA250 G-sensor I2C driver: gs_kvalue = 0x67F80006
+[    3.754790] [GSNR][BMA250] BMA_Init: bma250_RANGE_SEL_REG++: range = 0x03, bw = 0x1f
+[    3.755632] [GSNR][BMA250] BMA_Init: bma250_RANGE_SEL_REG--: range = 0x03, bw = 0x0a
+[    3.757203] [GSNR][BMA250] bma250_probe:OK
+[    3.757444] mog bma250 probe end
+[    3.757898] i2c-core: driver [bma250] using legacy suspend method
+[    3.758330] i2c-core: driver [bma250] using legacy resume method
+[    3.758601] [COMP][AKM8975] AKM8975 compass driver for pana gyro: init
+[    3.759149] [COMP][AKM8975] akm8975_probe:
+[    3.761219] Wake15 for irq=298
+[    3.761819] [COMP][AKM8975] akm8975_probe:OK
+[    3.762276] i2c-core: driver [akm8975] using legacy suspend method
+[    3.762517] i2c-core: driver [akm8975] using legacy resume method
+[    3.763091] [GYRO][PANASONIC] 
+[    3.763102] Enter ewtzmu_i2c_probe!!
+[    3.777323] [GYRO][PANASONIC] Register input device!
+[    3.778371] input: compass as /devices/virtual/input/input4
+[    3.780612] input: ewtzmu2_gyroscope as /devices/virtual/input/input5
+[    3.787222] [TP] Device Status = 0
+[    3.796473] [GYRO][PANASONIC] PANA:GYRO:probe success
+[    3.796553] ------------[ cut here ]------------
+[    3.796593] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.796614] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.796631] Modules linked in:
+[    3.796692] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.796738] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.796782] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.796832] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.796876] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.796920] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.796965] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.797009] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.797051] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.797092] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.797134] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.797181] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0)
+[    3.797233] [<c0400edc>] (cpufreq_interactive_freq_down+0x6c/0xb0) from [<c00bc3fc>] (process_one_work+0x254/0x3b0)
+[    3.797276] [<c00bc3fc>] (process_one_work+0x254/0x3b0) from [<c00bc93c>] (worker_thread+0x228/0x3e8)
+[    3.797317] [<c00bc93c>] (worker_thread+0x228/0x3e8) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.797355] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.797379] ---[ end trace 6fcb132ac310d01d ]---
+[    3.797407] cpu-tegra: Failed to set cpu frequency to 475000 kHz
+[    3.805246] i2c-core: driver [ewtzmu2] using legacy suspend method
+[    3.805489] i2c-core: driver [ewtzmu2] using legacy resume method
+[    3.806375] [PS][cm3629] cm3629_probe
+[    3.806765] _regulator_disable: [REGULATOR]+_regulator_disable ri=gpio-switch-sdmmc_2v85_en
+[    3.807211] _regulator_disable: [REGULATOR]-_regulator_disable ri=gpio-switch-sdmmc_2v85_en
+[    3.816545] ------------[ cut here ]------------
+[    3.816804] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.817233] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.817464] Modules linked in:
+[    3.818135] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.818589] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.818852] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.819307] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.819760] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.820214] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.820667] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.821122] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.821571] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.822017] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.822470] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.822732] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.823187] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.823638] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.824068] ---[ end trace 6fcb132ac310d01e ]---
+[    3.824309] cpu-tegra: Failed to set cpu frequency to 760000 kHz
+[    3.826466] _regulator_enable: [REGULATOR]+_regulator_enable ri=gpio-switch-sdmmc_2v85_en
+[    3.826910] _regulator_enable: [REGULATOR]-_regulator_enable ri=gpio-switch-sdmmc_2v85_en
+[    3.836555] ------------[ cut here ]------------
+[    3.837009] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.837438] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.837667] Modules linked in:
+[    3.838150] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.838607] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.839271] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.839728] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.840184] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.840638] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.841092] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.841550] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.841810] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.842258] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.842707] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.843167] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.843621] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.844075] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.844504] ---[ end trace 6fcb132ac310d01f ]---
+[    3.844750] cpu-tegra: Failed to set cpu frequency to 760000 kHz
+[    3.846680] [PS][cm3629] cm3629_read_chip_id, chip_id value = 0x82, 0xc0, ret 0
+[    3.846926] [PS][cm3629]cm3629_probe: lp_info->ls_cmd = 0x84!
+[    3.847361] [PS][cm3629] cm3629_probe: ls_cmd 0x84, ps1_adc_offset=0x00, ps2_adc_offset=0x00, ps_debounce=0x0
+[    3.848487] input: lightsensor-level as /devices/virtual/input/input6
+[    3.850322] input: proximity as /devices/virtual/input/input7
+[    3.851601] [LS][cm3629] lightsensor_set_kvalue: ALS calibrated als_kadc=0x6da517ac
+[    3.851850] [LS][cm3629] lightsensor_set_kvalue: als_kadc=0x17ac, als_gadc=0x13ef
+[    3.852287] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[0], e
+[    3.852714] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[1], 10
+[    3.852952] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[2], 13
+[    3.853381] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[3], d1
+[    3.853807] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[4], 1ac
+[    3.854044] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[5], 1356
+[    3.854472] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[6], 1ff7
+[    3.854906] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[7], 2cd1
+[    3.855338] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[8], 39ac
+[    3.855572] [LS][cm3629] lightsensor_update_table: Calibrated adc_table: data[9], ffff
+[    3.856245] [PS][cm3629] psensor_set_kvalue: PS calibrated ps_kparam1 = 0x50530306, ps_kparam2 = 0xFFFF0A17
+[    3.856752] [PS][cm3629] psensor_set_kvalue: PS calibrated inte_ps1_canc = 0x17, inte_ps2_canc = 0x0A, ((ps_kparam2 >> 16) & 0xFF) = 0xFF
+[    3.857595] [LS][cm3629] ls_initial_cmd, cmd[0] = 0x85, cmd[1] = 0x0
+[    3.858605] [PS][cm3629] psensor_initial_cmd, finish
+[    3.859170] Wake34 for irq=306
+[    3.860598] [PS][cm3629] cm3629_probe: Probe success!
+[    3.861272] Linux video capture interface: v2.00
+[    3.862076] usbcore: registered new interface driver uvcvideo
+[    3.862512] USB Video Class driver (v1.0.0)
+[    3.863192] trpc_sema_init: registered misc dev 10:38
+[    3.863833] trpc_node_register: Adding 'local' to node list
+[    3.866637] ------------[ cut here ]------------
+[    3.866987] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.867553] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.868010] Modules linked in:
+[    3.868515] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.868978] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.869335] nvavp nvavp: allocated IOVM at ff00000 for AVP os
+[    3.869651] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.870117] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.870366] __tegra_rawchip_probe
+[    3.870387] tegra_rawchip_init:735]
+[    3.870402] [CAM]rawchip_spi_init 
+[    3.870486] [CAM]:spi_rawchip_probe
+[    3.871446] tegra_rawchip_init rawchip: success
+[    3.871464] [CAM] rawchip_open_init
+[    3.872245] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.872538] tegra_camera tegra_camera: tegra_camera_probe
+[    3.872911] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.873359] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.873542] ar0832_init: ++
+[    3.873852] ov5650 sensor driver loading
+[    3.874409] ov9726 sensor driver loading
+[    3.874667] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.874743] ov2710 sensor driver loading
+[    3.875335] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.875785] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.875839] s5k3h2y sensor driver loading
+[    3.875944] s5k3h2y_probe: probing sensor.
+[    3.876470] [CAM] s5k3h2y_sysfs_init: kobject creat and add
+[    3.876538] [CAM] s5k3h2y_sysfs_init:sysfs_create_file
+[    3.876586] [CAM] camera_led: kobject creat and add
+[    3.876948] [CAM] s5k6a1gx03 sensor driver loading. s5k6a1gx03_init
+[    3.877071] [CAM] s5k6a1gx03_probe: probing sensor.
+[    3.877537] [CAM]s5k6a1g:kobject creat and add
+[    3.877586] [CAM]s5k6a1g:sysfs_create_file
+[    3.877886] [CAM] ad5823 sensor driver loading
+[    3.877999] [CAM] ad5823: probing sensor.
+[    3.878923] i2c-core: driver [bq20z75-battery] using legacy suspend method
+[    3.878945] i2c-core: driver [bq20z75-battery] using legacy resume method
+[    3.880214] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.880687] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.880711] watchdog probe
+[    3.881369] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.881832] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.882078] ---[ end trace 6fcb132ac310d020 ]---
+[    3.882527] cpu-tegra: Failed to set cpu frequency to 880000 kHz
+[    3.882841] ------------[ cut here ]------------
+[    3.883290] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.883314] device-mapper: uevent: version 1.0.3
+[    3.883940] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.884370] Modules linked in:
+[    3.884857] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.884888] device-mapper: ioctl: 4.20.0-ioctl (2011-02-02) initialised: dm-devel@redhat.com
+[    3.885543] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.885570] Bluetooth: HCI UART driver ver 2.2
+[    3.885592] Bluetooth: HCI H4 protocol initialized
+[    3.885609] Bluetooth: HCILL protocol initialized
+[    3.886908] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.887374] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.887827] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.888287] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.888741] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.889198] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.889657] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.890117] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.890570] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.890836] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.891297] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.891754] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.892188] ---[ end trace 6fcb132ac310d021 ]---
+[    3.892451] cpu-tegra: Failed to set cpu frequency to 880000 kHz
+[    3.892953] ------------[ cut here ]------------
+[    3.893204] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.893643] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.894067] Modules linked in:
+[    3.894543] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.894997] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.895461] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.895917] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.896184] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.896680] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.897138] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.897592] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.898044] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.898496] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.898939] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.899392] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.899848] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.900107] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.900538] ---[ end trace 6fcb132ac310d022 ]---
+[    3.900987] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.901300] ------------[ cut here ]------------
+[    3.901740] WARNING: at arch/arm/mach-tegra/tegra3_clocks.c:884 tegra3_cpu_clk_set_rate+0x54/0x144()
+[    3.901978] Increasing CPU rate while regulator is not ready may overclock CPU
+[    3.902404] Modules linked in:
+[    3.902888] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c00a9df8>] (warn_slowpath_common+0x4c/0x64)
+[    3.903350] [<c00a9df8>] (warn_slowpath_common+0x4c/0x64) from [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c)
+[    3.903801] [<c00a9e90>] (warn_slowpath_fmt+0x2c/0x3c) from [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144)
+[    3.904255] [<c0065a64>] (tegra3_cpu_clk_set_rate+0x54/0x144) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.904709] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8)
+[    3.905164] [<c0064f34>] (tegra3_cpu_cmplx_clk_set_rate+0x58/0xa8) from [<c0062f20>] (clk_set_rate_locked+0xf4/0x170)
+[    3.905616] [<c0062f20>] (clk_set_rate_locked+0xf4/0x170) from [<c0063160>] (clk_set_rate+0x58/0x90)
+[    3.905878] [<c0063160>] (clk_set_rate+0x58/0x90) from [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438)
+[    3.906326] [<c007bd24>] (tegra_update_cpu_speed+0x1f4/0x438) from [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84)
+[    3.906830] [<c007c0e4>] (tegra_cpu_set_speed_cap+0x64/0x84) from [<c007c25c>] (tegra_target+0x68/0x88)
+[    3.907290] [<c007c25c>] (tegra_target+0x68/0x88) from [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60)
+[    3.907745] [<c03fc10c>] (__cpufreq_driver_target+0x4c/0x60) from [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118)
+[    3.908200] [<c0400fec>] (cpufreq_interactive_up_task+0xcc/0x118) from [<c00c2324>] (kthread+0x80/0x88)
+[    3.908651] [<c00c2324>] (kthread+0x80/0x88) from [<c0054058>] (kernel_thread_exit+0x0/0x8)
+[    3.908896] ---[ end trace 6fcb132ac310d023 ]---
+[    3.909353] cpu-tegra: Failed to set cpu frequency to 1400000 kHz
+[    3.912207] cpuidle: using governor ladder
+[    3.916019] cpuidle: using governor menu
+[    3.917476] sdhci: Secure Digital Host Controller Interface driver
+[    3.917917] sdhci: Copyright(c) Pierre Ossman
+[    3.919651] mmc0: Invalid maximum block size, assuming 512 bytes
+[    3.921569] Registered led device: mmc0::
+[    3.922338] mmc0: clock 0Hz busmode 1 powermode 0 cs 0 Vdd 0 width 0 timing 0 ddr 0
+[    3.923909] mmc0: SDHCI controller on platform [sdhci-tegra.3] using ADMA
+[    3.923950] mmc0: clock 0Hz busmode 1 powermode 1 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[    3.925888] mmc1: Invalid maximum block size, assuming 512 bytes
+[    3.927642] Registered led device: mmc1::
+[    3.928585] mmc1: clock 0Hz busmode 1 powermode 0 cs 0 Vdd 0 width 0 timing 0 ddr 0
+[    3.929984] mmc1: SDHCI controller on platform [sdhci-tegra.2] using ADMA
+[    3.930827] [LED][PROBE] led driver probe +++
+[    3.932144] Registered led device: amber
+[    3.932979] Registered led device: green
+[    3.933621] Registered led device: button-backlight
+[    3.934115] [LED] lp5521_amber_on +++
+[    3.936485] mmc0: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[    3.946017] [LED] lp5521_amber_on ---
+[    3.946254] [LED][PROBE] led driver probe ---
+[    3.950127] tegra-se tegra-se: tegra_se_probe: complete
+[    3.961283] mmc0: clock 400000Hz busmode 1 powermode 2 cs 1 Vdd 21 width 0 timing 0 ddr 0
+[    3.963985] mmc0: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[    3.992551] usbcore: registered new interface driver usbhid
+[    3.992993] usbhid: USB HID core driver
+[    4.004363] mmc0: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[    4.004831] mmc0: clock 400000Hz busmode 1 powermode 2 cs 1 Vdd 7 width 0 timing 0 ddr 0
+[    4.006165] logger: created 256K log 'log_main'
+[    4.007741] mmc0: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[    4.009728] logger: created 256K log 'log_events'
+[    4.010382] logger: created 256K log 'log_radio'
+[    4.011032] logger: created 256K log 'log_system'
+[    4.027782] mmc0: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[    4.043824] mmc0: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 1 ddr 0
+[    4.044093] mmc0: clock 52000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 1 ddr 0
+[    4.045722] mmc0: clock 52000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 3 timing 1 ddr 0
+[    4.047322] mmc0: clock 52000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 3 timing 5 ddr 0
+[    4.047588] mmc0: clock 52000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 3 timing 5 ddr 0
+[    4.048075] mmc0: new high speed DDR MMC card at address 0001
+[    4.050186] mmcblk0: mmc0:0001 K2U00M 29.1 GiB 
+[    4.055127] Primary GPT is invalid, using alternate GPT.
+[    4.055798]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15 p16 p17 p18 p19 p20
+[    4.068321] mmc1: clock 0Hz busmode 1 powermode 1 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[    4.068842] enterprise_wifi_power: Powering on wifi
+[    4.106517] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[    4.131293] mmc1: clock 400000Hz busmode 1 powermode 2 cs 1 Vdd 21 width 0 timing 0 ddr 0
+[    4.133957] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[    4.138150] mmc1: card claims to support voltages below the defined range. These will be ignored.
+[    4.138411] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[    4.139600] mmc1: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[    4.149572] mmc1: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 2 ddr 0
+[    4.150032] mmc1: clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 2 ddr 0
+[    4.150437] mmc1: clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 2 timing 2 ddr 0
+[    4.152906] mmc1: queuing unknown CIS tuple 0x91 (3 bytes)
+[    4.155055] mmc1: new high speed SDIO card at address 0001
+[    4.155994] mmc1: clock 0Hz busmode 1 powermode 0 cs 0 Vdd 0 width 0 timing 0 ddr 0
+[    4.157501] enterprise_wifi_power: Powering off wifi
+[    4.336473] [USB] android_enable_function: mass_storage enabled
+[    4.336919] [USB] android_bind_enabled_functions bind name: mass_storage
+[    4.337194] [USB] android_usb_init_work: ret: 0
+[    4.340212] [USBUDC] SUSPEND packet
+[    4.569418] [AUD] SPI control for AIC3008 started successfully...
+[    4.573971] [AUD] starting tegra_aic3008_driver_probe...
+[    4.575079] [AUD] aic3008_probe() start... aic3008_codec:cd4e0000
+[    4.575322] [AUD] aic3008_config: AIC3008 is power off now
+[    4.629102] [USBUDC] RESET packet
+[    4.647257] [AUD] Audio Codec Driver init complete in 78 ms
+[    4.647996] [PWR_STORY][AUD] Turn on
+[    4.648256] [AUD] [PWR] ***** gpio AUD_MCLK_EN 191 output enable *****
+[    4.648704] [AUD] [PWR] ***** gpio AUD_AIC3008_RST# 181 output enable *****
+[    4.648979] _regulator_enable: [REGULATOR]+_regulator_enable ri=gpio-switch-aud_a1v8_en
+[    4.649419] _regulator_enable: [REGULATOR]-_regulator_enable ri=gpio-switch-aud_a1v8_en
+[    4.649863] [AUD] [PWR] ***** regulator v_aud_a1v8 26 enable *****
+[    4.650123] _regulator_enable: [REGULATOR]+_regulator_enable ri=gpio-switch-aud_3v3_en
+[    4.650560] _regulator_enable: [REGULATOR]-_regulator_enable ri=gpio-switch-aud_3v3_en
+[    4.650992] [AUD] [PWR] ***** regulator v_aud_3v3 10 enable *****
+[    4.654027] asoc: aic3008-hifi <-> tegra30-i2s.1 mapping ok
+[    4.655883] asoc: dit-hifi <-> tegra30-spdif mapping ok
+[    4.659466] ALSA device list:
+[    4.659708]   #0: HDA NVIDIA Tegra at 0x70038000 irq 113
+[    4.660129]   #1: tegra-aic3008
+[    4.661063] GACT probability NOT on
+[    4.661317] Mirror/redirect action on
+[    4.661753] u32 classifier
+[    4.661987]     Actions configured
+[    4.662227] Netfilter messages via NETLINK v0.30.
+[    4.662857] nf_conntrack version 0.5.0 (15616 buckets, 62464 max)
+[    4.671009] NF_TPROXY: Transparent proxy support initialized, version 4.1.0
+[    4.671458] NF_TPROXY: Copyright (c) 2006-2007 BalaBit IT Ltd.
+[    4.672759] xt_time: kernel timezone is -0000
+[    4.673721] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    4.675231] arp_tables: (C) 2002 David S. Miller
+[    4.676002] TCP cubic registered
+[    4.676240] Initializing XFRM netlink socket
+[    4.677215] NET: Registered protocol family 10
+[    4.681783] Mobile IPv6
+[    4.682137] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[    4.683575] IPv6 over IPv4 tunneling driver
+[    4.688898] NET: Registered protocol family 17
+[    4.689237] NET: Registered protocol family 15
+[    4.689817] Bluetooth: RFCOMM socket layer initialized
+[    4.690249] Bluetooth: RFCOMM ver 1.11
+[    4.690487] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[    4.690918] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+[    4.691551] lib80211: common routines for IEEE802.11 drivers
+[    4.691999] lib80211_crypt: registered algorithm 'NULL'
+[    4.692239] VFP support v0.3: implementor 41 architecture 3 part 30 variant 9 rev 4
+[    4.693357] Registering SWP/SWPB emulation handler
+[    4.697965] [USBUDC] RESET packet
+[    4.743380] Disabling clocks left on by bootloader:
+[    4.743629]    audio_2x
+[    4.743867]    audio4_2x
+[    4.744101]    audio3_2x
+[    4.744532]    audio2_2x
+[    4.744766]    audio1_2x
+[    4.745002]    audio0_2x
+[    4.745235]    audio
+[    4.745658]    audio4
+[    4.745886]    audio3
+[    4.746115]    audio2
+[    4.746344]    audio1
+[    4.746610]    audio0
+[    4.747183]    uarta
+[    4.747483]    fuse_burn
+[    4.747739]    cclk_lp
+[    4.747973]    pll_x_out0
+[    4.748203]    pll_d2_out0
+[    4.748624]    pll_c_out1
+[    4.748981] CPU rate: 340 MHz
+[    4.749454] tegra_fuse_program_init: no vdd_fuse. fuse write disabled
+[    4.751763] tegra3_dvfs: minimum cap.cbus rate 228000000 requires 1000 mV
+[    4.752462] tegra dvfs: tegra sysfs cap interface is initialized
+[    4.753747] tegra_actmon.emc: Completed initialization (0)
+[    4.754344] tegra_actmon.avp: Completed initialization (0)
+[    4.756385] [GPIO_SETUP] force to obtain requested gpio: 171 (GPIO_PV3)
+[    4.756842] [GPIO_SETUP] force to obtain requested gpio: 127 (DAP4_SCLK)
+[    4.758729] [HS_MGR] (htc_headset_mgr_init) INIT
+[    4.759164] [HS_MGR] (htc_headset_mgr_probe) ++++++++++++++++++++
+[    4.762470] input: h2w headset as /devices/virtual/input/input8
+[    4.763221] using input dev h2w headset for key reset
+[    4.765282] [HS_MGR] (hs_notify_driver_ready) HS_MGR ready
+[    4.766064] [HS_MGR] (htc_headset_mgr_probe) --------------------
+[    4.766867] [HS_GPIO] (htc_headset_gpio_init) INIT
+[    4.767459] [HS_PMIC] (htc_headset_pmic_init) INIT
+[    4.768059] [HS_PMIC] (htc_headset_pmic_probe) ++++++++++++++++++++
+[    4.768906] [HS_MGR] (headset_notifier_register) Register REMOTE_ADC notifier
+[    4.769353] [HS_MGR] (headset_notifier_register) Register REMOTE_KEYCODE notifier
+[    4.769793] [HS_MGR] (headset_notifier_register) Register RPC_KEY notifier
+[    4.770033] [HS_MGR] (headset_notifier_register) Register MIC_STATUS notifier
+[    4.770468] [HS_MGR] (hs_notify_driver_ready) HS_PMIC ready
+[    4.771254] [HS_GPIO] (htc_headset_gpio_probe) ++++++++++++++++++++
+[    4.772316] Wake12 for irq=402
+[    4.772786] Wake12 for irq=402
+[    4.773022] Enabling wake12
+[    4.773441] gpio bank wake found: wake12 for irq=119
+[    4.773667] Enabling wake12
+[    4.773896] [HS_MGR] (headset_notifier_register) Register HPIN_GPIO notifier
+[    4.774323] [HS_MGR] (hs_notify_driver_ready) HS_GPIO ready
+[    4.774552] [HS_GPIO] (htc_headset_gpio_probe) --------------------
+[    4.774985] [HS_PMIC] (htc_headset_pmic_probe) --------------------
+[    4.775637] [Poke] poke init.
+[    4.780565] [BKL] POWER_CONTROL = 0x50155
+[    4.780808] [BKL] POWER_CONTROL = 0x10155
+[    4.781568] brightness orig = 255, transformed=255
+[    4.782007] [DISP] tegra_pwm_backlight_update_status brightness=255 ,duty_cycle=255
+[    4.784033] regulator_init_complete: tps80031_VANA: incomplete constraints, leaving on
+[    4.784289] regulator_init_complete: tps80031_LDOLN: incomplete constraints, leaving on
+[    4.784765] regulator_init_complete: tps80031_LDO7: incomplete constraints, leaving on
+[    4.785202] regulator_init_complete: tps80031_LDO6: incomplete constraints, leaving on
+[    4.785495] regulator_init_complete: tps80031_LDO5: incomplete constraints, leaving on
+[    4.785937] regulator_init_complete: tps80031_LDO4: incomplete constraints, leaving on
+[    4.786492] regulator_init_complete: tps80031_SMPS2: incomplete constraints, leaving on
+[    4.786929] regulator_init_complete: tps80031_SMPS1: incomplete constraints, leaving on
+[    4.789660] rtc_tps80031 rtc_tps80031.0: setting system clock to 2012-07-14 06:26:06 UTC (1342247166)
+[    4.790229] [BOOT_LOG] Leaving do_initcalls
+[    4.790696] Warning: unable to open an initial console.
+[    4.791418] android_usb gadget: high speed config #1: android
+[    4.792156] [USB] set usb_connect2pc = 1
+[    4.792680] Freeing init memory: 276K
+[    4.792912] [BOOT_LOG] Entering run_init_process
+[    4.799950] init: could not import file /system/etc/init.local.rc
+[    4.806740] init: init.endeavoru.common.rc: 251: ignored duplicate definition of service 'nvm-server'
+[    4.807254] init: init.endeavoru.common.rc: 258: ignored duplicate definition of service 'init-acmx0'
+[    4.807734] init: init.endeavoru.common.rc: 262: ignored duplicate definition of service 'init-acmx2'
+[    4.809491] init (1): /proc/1/oom_adj is deprecated, please use /proc/1/oom_score_adj instead.
+[    4.826673] [DVFS] each freq runs (ms): 0,0,0,3310,0,0,0,0,9760,0,0,0,0,0
+[    4.996149] keychord: using input dev gpio-keys for fevent
+[    4.996244] keychord: using input dev h2w headset for fevent
+[    5.069615] [PWR_STORY][CPUIDLE]0 us, 867708 us, 0 us, 1007113 us, 0 us, 1075913 us, 0 us, 969962 us
+[    5.069764] [PWR_STORY][CPUHP]CPUs total active time:0,0,0,5063372
+[    5.177682] [USB] iSerial_store: HT24KW111090
+[    5.192714] EXT4-fs (mmcblk0p12): recovery complete
+[    5.193655] EXT4-fs (mmcblk0p12): mounted filesystem with ordered data mode. Opts: (null)
+[    6.141789] EXT4-fs (mmcblk0p15): recovery complete
+[    6.142702] EXT4-fs (mmcblk0p15): mounted filesystem with ordered data mode. Opts: noauto_da_alloc
+[    6.159827] EXT4-fs (mmcblk0p13): recovery complete
+[    6.160685] EXT4-fs (mmcblk0p13): mounted filesystem with ordered data mode. Opts: noauto_da_alloc
+[    6.164788] EXT4-fs (mmcblk0p3): mounted filesystem with ordered data mode. Opts: (null)
+[    6.401963] EXT4-fs (mmcblk0p18): recovery complete
+[    6.402808] EXT4-fs (mmcblk0p18): mounted filesystem with ordered data mode. Opts: (null)
+[    6.408004] EXT4-fs (mmcblk0p19): warning: mounting fs with errors, running e2fsck is recommended
+[    6.409205] EXT4-fs (mmcblk0p19): recovery complete
+[    6.409288] EXT4-fs (mmcblk0p19): mounted filesystem with ordered data mode. Opts: (null)
+[    6.514923] [BATT] First level read at 6508523002 (2012-07-14 06:26:08.218246001 UTC)
+[    6.632741] init: cannot find '/system/bin/htcbkopsd', disabling 'htcbkopsd'
+[    6.633884] init: cannot find '/system/bin/DxDrmServerIpc', disabling 'dx_drm_server'
+[    6.636320] [USB] iManufacturer_store: HTC
+[    6.638464] [USB] iProduct_store: HTC One X
+[    6.641249] [BATT] htc_batt_open: open misc device driver. at 6634847002 (2012-07-14 06:26:08.344569001 UTC)
+[    6.643310] [BATT]get_reboot_battery_level:the reboot_battery_first_level:0xbbc56643
+[    6.643455] [BATT] do charger control = 1 at 6637060002 (2012-07-14 06:26:08.346783001 UTC)
+[    6.646981] [BATT][tps65200] regh 0x00=28, regh 0x01=29, regh 0x02=63, regh 0x03=83
+[    6.647700] [BATT][tps65200] regh 0x06=23
+[    6.653118] [BATT][tps65200] Switch charger ON (SLOW): regh 0x03=83, regh 0x02=63
+[    6.653373] [BATT] ioctl: battery level update: 67 at 6646978002 (2012-07-14 06:26:08.356701001 UTC)
+[    6.653523] [BATT] capacity=67%, ID=2, vol=3727, temp=351, curr=0, dis_curr=888, chg_src=1, chg_en=1, over_vchg=0, batt_state=1, batt_ol=0 at 6647126002 (2012-07-14 06:26:08.356850001 UTC)
+[    6.654156] [BATT] power_supply_changed: battery at 6647761002 (2012-07-14 06:26:08.357484001 UTC)
+[    6.654418] [BATT] power_supply_changed: usb at 6648024002 (2012-07-14 06:26:08.357748001 UTC)
+[    6.679729] compat: exports duplicate symbol kstrtos8_from_user (owned by kernel)
+[    6.776414] [DISP]init_complete_handler()
+[    7.007993] [COMP][AKM8975] akmd_open:
+[    7.010696] [COMP][AKM8975] AKECS_GetOpenStatus:
+[    7.493355] (stk) :sysfs entries created
+[    7.493591] (stk) : debugfs entries created 
+[    7.494588] (stk) :change to new rfkill state: 0
+[    7.494665] (stk) :wl127x_config_bt_on: Entering
+[    7.494798] (stk) :wl127x_config_bt_on, rfkilltool_on off
+[    7.494963] (stk) :rfkill prob for Bluetooth ==> status: 0
+[    7.535228] fm_drv: module is from the staging directory, the quality is unknown, you have been warned.
+[    7.643631] bluetooth: exports duplicate symbol bt_sock_wait_state (owned by kernel)
+[    7.702983] rfcomm: module is already loaded
+[    7.773297] hidp: module is already loaded
+[    7.816448] cfg80211: exports duplicate symbol wiphy_rfkill_set_hw_state (owned by kernel)
+[    7.817427] Bluetooth: Bluetooth Driver for TI WiLink - Version 1.0
+[    7.819003] (stc): st_register(4) 
+[    7.819144] (stc):  chnl_id list empty :4 
+[    7.819219] plat_chip_awake
+[    7.819295] st_kim_start_entering 1222 v3
+[    7.819429] (stk) : st_kim_start
+[    7.819503] 
+[    7.819505] [BT_GPS] nshutdown gpio new: 160
+[    7.819645] plat_chip_awake
+[    7.887456] bnep: module is already loaded
+[    7.934466] (stk) :ldisc_install = 1
+[    8.580944] mac80211: exports duplicate symbol ieee80211_free_hw (owned by kernel)
+[    8.881461] init: cannot find '/system/bin/fusermount', disabling 'fusermount'
+[    8.906691] gannet_setup
+[    8.908186] gannet initialized OK
+[    8.910248] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[    8.926453] (stk) :line disc installation timed out 
+[    8.926495] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[    8.926743] (stk) :ldisc_install = 0
+[    8.926816] (stk) :Close UART and retry
+[    8.932237] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[    8.946525] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[    8.953342] [NFC] pn544_dev_open : major=10, minor=47
+[    8.953549] [NFC] pn544_dev_open : major=10, minor=47
+[    9.926422] (stk) :uart close  timeout
+[    9.926509] [BT_GPS] nshutdown gpio new: 160
+[    9.926715] plat_chip_awake
+[   10.032135] (stk) :ldisc_install = 1
+[   10.033357] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   10.046446] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   10.048678] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   10.096495] sys_chown ignore_nice_load error: -14
+[   10.096598] sys_chown io_is_busy error: -14
+[   10.096825] sys_chown powersave_bias error: -14
+[   10.096989] sys_chown sampling_down_factor error: -14
+[   10.097154] sys_chown sampling_rate error: -14
+[   10.097378] sys_chown two_phase_freq error: -14
+[   10.097540] sys_chown up_threshold error: -14
+[   10.097778] [PWR_STORY][CPUIDLE]0 us, 4444560 us, 0 us, 5337112 us, 0 us, 5493500 us, 0 us, 5090179 us
+[   10.097948] [PWR_STORY][CPUHP]CPUs total active time:0,0,0,10091553
+[   10.099202] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   10.099357] (stc): st_tty_open 
+[   10.099519] (stk) : line discipline installed 
+[   10.100088] (stk) :TIInit_10.6.15.bts
+[   10.192386] CPU1: shutdown
+[   10.198326] CPU2: shutdown
+[   10.223641] CPU3: shutdown
+[   10.259843] init: service 'console' requires console
+[   10.261123] [USB] android_switch_function: 3, before 1
+[   10.261294] [USB] # mass_storage
+[   10.261386] [USB] # adb
+[   10.261561] [USB] android_switch_function: vendor_id=0xbb4, product_id=0xcd6
+[   10.261659] [USB] android_bind_enabled_functions bind name: mass_storage
+[   10.261841] [USB] android_bind_enabled_functions bind name: adb
+[   10.261935] [USBF] adb_bind_config
+[   10.288461] [USB] adb_count_set: count(0) -> 0
+[   10.289698] [USB] adb_function_bind: done
+[   10.438608] [USBUDC] SUSPEND packet
+[   10.439458] [USB] adb_open: adbd(parent:init): tgid=248 (0)
+[   10.569159] [USBUDC] RESET packet
+[   10.639126] [USBUDC] RESET packet
+[   10.685812] [ACM14]acm_init
+[   10.686213] usbcore: registered new interface driver cdc_acm
+[   10.686287] cdc_acm: v0.26:USB Abstract Control Model driver for USB modems and ISDN adapters
+[   10.686449] [ACM14]: acm_init - host_dbg_flag=0x0
+[   10.730496] [AUD] [RX] AIC3008_IO_CONFIG_RX: DOWNLINK idx = 23
+[   10.730579] [AUD] [RX] ----- change i/o downlink RX 23 len(-1) -----
+[   10.730778] [AUD] [RX] AIC3008_IO_CONFIG_RX: PATH OFF Call aic3008_powerdown()
+[   10.730856] [AUD] [PWR] ***** gpio AUD_MCLK_EN 191 disable *****
+[   10.731053] [AUD] [PWR] power down AIC3008 0ms
+[   10.731139] [AUD] [TX] AIC3008 is power off now, can't do IO CONFIG TX = 23, please check this condition!!
+[   10.731272] [AUD] [TX] Since IO CONFIG TX = -1065603341 can't be done, it maybe no sound on device
+[   10.731489] android_usb gadget: high speed config #1: android
+[   10.734602] init: sys_prop: permission denied uid:1013  name:media.tegra.max.out.channels
+[   10.736017] init: sys_prop: permission denied uid:1013  name:media.tegra.out.channel.map
+[   10.736432] init: sys_prop: permission denied uid:1013  name:media.tegra.max.out.channels
+[   10.754005] [AUD] aic3008_config: AIC3008 is power off now
+[   10.754089] [AUD] [TX] ----- change i/o uplink TX 0 len(9) -----
+[   10.754283] [AUD] aic3008_config: AIC3008 is power off now
+[   10.754353] [AUD] update RX/TX tables(64, 1024) successfully
+[   10.754866] [AUD] update RX/TX tables(64, 1024) successfully
+[   10.784353] baseband_xmm_onoff power_onoff=1 count=1, buf[0]=0x31
+[   10.784491] [XMM_v10]baseband_xmm_power_on{
+[   10.784561] [XMM_v10] htc_get_pcbid_info= 128
+[   10.784634] [XMM_v10]config_gpio_for_power_on for power consumation 4st 
+[   10.784761] [XMM_v10]modem_on_for_usb_config 
+[   10.784836] [XMM_v10]modem_on_for_uart_config ,first_time=true uart_pin_pull_low=0
+[   10.784963] [XMM_v10]modem_on_for_uart_config tegra_gpio_disable for UART
+[   10.785094] baseband_xmm_power_on(673)register usb host controller
+[   10.785739] [USBHv1] tegra_ehci_probe:0309 - instance 1
+[   10.785990] [USBPHY] tegra_usb_phy_open 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   10.790253] [USBPHY] tegra_usb_phy_power_on 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   10.790804] [USBPHY] uhsic_phy_power_on 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   10.802521] tegra-ehci tegra-ehci.1: Tegra EHCI Host Controller
+[   10.802754] tegra-ehci tegra-ehci.1: new USB bus registered, assigned bus number 1
+[   10.803252] [USBHHCD] : usb_add_hcd, hcd->driver->flags & HCD_MASK=0x20
+[   10.816422] [USBHv1] tegra_ehci_setup
+[   10.846454] tegra-ehci tegra-ehci.1: irq 53, io mem 0x7d004000
+[   10.866437] tegra-ehci tegra-ehci.1: USB 2.0 started, EHCI 1.00
+[   10.866646] usb usb1: default language 0x0409
+[   10.866748] usb usb1: udev 1, busnum 1, minor = 0
+[   10.866820] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+[   10.866951] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[   10.867083] usb usb1: Product: Tegra EHCI Host Controller
+[   10.867154] usb usb1: Manufacturer: Linux 2.6.39.4-cyanogenmod ehci_hcd
+[   10.867284] usb usb1: SerialNumber: tegra-ehci.1
+[   10.869056] usb usb1: adding 1-0:1.0 (config #1, interface 0)
+[   10.869508] hub 1-0:1.0: USB hub found
+[   10.869600] tegra_ehci_hub_control: typereq: a006 wValue: 2900 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   10.869737] tegra_ehci_hub_control hsic=true typeReq=a006 wValue=2900 wIndex=0
+[   10.869876] hub 1-0:1.0: 1 port detected
+[   10.869948] hub 1-0:1.0: standalone hub
+[   10.870020] hub 1-0:1.0: individual port power switching
+[   10.870151] hub 1-0:1.0: individual port over-current protection
+[   10.870222] hub 1-0:1.0: Single TT
+[   10.870544] hub 1-0:1.0: TT requires at most 8 FS bit times (666 ns)
+[   10.871229] hub 1-0:1.0: power on to power good time: 20ms
+[   10.871383] tegra_ehci_hub_control: typereq: a000 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   10.871518] tegra_ehci_hub_control hsic=true typeReq=a000 wValue=0 wIndex=0
+[   10.871594] hub 1-0:1.0: local power source is good
+[   10.871728] hub 1-0:1.0: enabling power on all ports
+[   10.871806] tegra_ehci_hub_control: typereq: 2303 wValue: 8 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   10.871939] tegra_ehci_hub_control hsic=true typeReq=2303 wValue=8 wIndex=1
+[   10.872138] [USBPHY] tegra_usb_phy_bus_connect
+[   10.874462] [USBPHY] tegra_usb_phy_bus_connect(2983) - val=0x144f8e
+[   10.874597] [USBPHY] tegra_usb_phy_bus_connect(2988) - val=0x14cf8e
+[   10.874671] [USBPHY] tegra_usb_phy_bus_connect(2996) - val=0x81
+[   10.874813] cardu_usb_hsic_phy_ready
+[   10.875117] [XMM_v10]baseband_xmm_set_power_status{ status=2
+[   10.875248] L0
+[   10.875318] baseband_xmm_set_power_status: wake_lock [baseband_xmm_power] in L0
+[   10.875394] L0 Get current gpio_get_value(ipc_hsic_active)=1
+[   10.875523] baseband_modem_power_on VP: 03/08 22.52{
+[   10.987967] (stc): add_channel_to_table: id 4
+[   10.988108] (stc): st_register(2) 
+[   10.988178] (stc): add_channel_to_table: id 2
+[   10.988249] (stc): st_register(3) 
+[   10.988377] (stc): add_channel_to_table: id 3
+[   11.046702] baseband_modem_power_on }
+[   11.046783] baseband_modem_power_on:VP pm qos request CPU 1.5GHz
+[   11.046937] [XMM_v10]baseband_xmm_set_power_status } baseband_xmm_powerstate = 2
+[   11.101938] [USBPHY] tegra_usb_phy_bus_connect complete
+[   11.102135] [USBF] usb_set_configuration: usb intf dev_add - 1-0:1.0
+[   11.106864] baseband_xmm_device_add_handler 
+[   11.107047] Wake40 for irq=53
+[   11.107121] Enabling wake40
+[   11.107255] [USBHv1] tegra_ehci_probe complete err=0
+[   11.107334] baseband_xmm_power_on: before enable irq wake 
+[   11.107410] Wake33 for irq=296
+[   11.107541] Enabling wake33
+[   11.107613] baseband_xmm_power_on: before enable irq wake Radio fatal 
+[   11.107746] Wake30 for irq=330
+[   11.107818] Enabling wake30
+[   11.107890] gpio bank wake found: wake30 for irq=67
+[   11.107962] Enabling wake30
+[   11.108096] baseband_xmm_power_on }
+[   11.162648] [USBCHRv1] 0308 usb chr driver Ver.2 {
+[   11.162730] baseband_usb_chr_init - host_dbg_flag=0x0
+[   11.162870] registered baseband usb character device - major 66
+[   11.163025] [USBCHRv1] baseband_usb_chr_init }
+[   11.196454] tegra_ehci_hub_control: typereq: a300 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   11.196597] tegra_ehci_hub_control hsic=true typeReq=a300 wValue=0 wIndex=1
+[   11.196686] hub 1-0:1.0: port 1: status 0503 change 0001
+[   11.196824] tegra_ehci_hub_control: typereq: 2301 wValue: 1 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   11.196957] tegra_ehci_hub_control hsic=true typeReq=2301 wValue=1 wIndex=1
+[   11.197476] tegra_ehci_hub_control: typereq: 2301 wValue: 10 USBMODE: 0, USBCMD: 18005, PORTSC: 1803, USBSTS: 80 HOSTPC: 80000202 
+[   11.197609] tegra_ehci_hub_control hsic=true typeReq=2301 wValue=10 wIndex=1
+[   11.296536] hub 1-0:1.0: state 7 ports 1 chg 0002 evt 0000
+[   11.296698] tegra_ehci_hub_control: typereq: a300 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1801, USBSTS: 80 HOSTPC: 80000202 
+[   11.296832] tegra_ehci_hub_control hsic=true typeReq=a300 wValue=0 wIndex=1
+[   11.296920] hub 1-0:1.0: port 1, status 0101, change 0000, 12 Mb/s
+[   11.297071] hub_port_init  (b) hub_port_reset- 2829
+[   11.297152] tegra_ehci_hub_control: typereq: 2303 wValue: 4 USBMODE: 0, USBCMD: 18005, PORTSC: 1801, USBSTS: 80 HOSTPC: 80000202 
+[   11.297284] tegra_ehci_hub_control hsic=true typeReq=2303 wValue=4 wIndex=1
+[   11.297414] [USBPHY] tegra_usb_phy_bus_reset patch for late 5sec 
+[   11.381255] touch watchdog
+[   11.415110] [USBPHY] tegra_usb_phy_bus_reset, complete
+[   11.415209] [USBHHUB] hub_port_wait_reset: marked delay 50
+[   11.415356] tegra_ehci_hub_control: typereq: a300 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1005, USBSTS: 80 HOSTPC: 84000202 
+[   11.415490] tegra_ehci_hub_control hsic=true typeReq=a300 wValue=0 wIndex=1
+[   11.415570] [USBHHUB] hub_port_reset: reduced delay by 40msec
+[   11.426448] tegra_ehci_hub_control: typereq: 2301 wValue: 14 USBMODE: 0, USBCMD: 18005, PORTSC: 1005, USBSTS: 80 HOSTPC: 84000202 
+[   11.426592] tegra_ehci_hub_control hsic=true typeReq=2301 wValue=14 wIndex=1
+[   11.426741] usb 1-1: new high speed USB device number 2 using tegra-ehci
+[   11.426814] hub_port_init (b) hub_set_address- 2997
+[   11.466431] hub_port_init  (b) usb_get_device_descriptor- 3025
+[   11.466968] hub_port_init  (b) usb_get_device_descriptor- 3060
+[   11.468607] usb 1-1: config 1 interface 0 altsetting 0 endpoint 0x81 has an invalid bInterval 255, changing to 11
+[   11.468751] usb 1-1: udev 2, busnum 1, minor = 1
+[   11.468823] usb 1-1: New USB device found, idVendor=058b, idProduct=0041
+[   11.468952] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[   11.470582] usb 1-1: adding 1-1:1.0 (config #1, interface 0)
+[   11.471110] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 0 max_intfs=1
+[   11.471245]  0320 quirks & NOT_REAL_ACM acm_ready_table[intf->cur_altsetting->desc.bInterfaceNumber=0]=false
+[   11.471333] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.0
+[   11.471603] usb 1-1: adding 1-1:1.1 (config #1, interface 1)
+[   11.472225] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 1 max_intfs=1
+[   11.472362]  0320 quirks & NOT_REAL_ACM acm_ready_table[intf->cur_altsetting->desc.bInterfaceNumber=1]=false
+[   11.472506] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.1
+[   11.474836] baseband_xmm_device_add_handler 
+[   11.474950] baseband_usb_driver_probe(897) 0308 - usb chr driver Ver.2 { intf cd10a200 id bf02b07c
+[   11.475086] intf->cur_altsetting->desc.bInterfaceNumber 00
+[   11.475183] baseband_usb_driver_probe(897) 0308 - usb chr driver Ver.2 { intf cd10a400 id bf02b07c
+[   11.475319] intf->cur_altsetting->desc.bInterfaceNumber 01
+[   11.475451] baseband_usb_driver_probe(925) }
+[   11.475905] usbcore: registered new interface driver baseband_usb_58b_41_1
+[   11.476043] baseband_usb_open: waiting for usb probe...
+[   11.476521] [USBCHRv1] unsupported ioctl cmd 5418
+[   11.478447] baseband_usb_chr_ioctl flush queued ipc transaction work cmd=540b
+[   11.478531] baseband_usb_chr_ioctl flush queued ipc transaction work cmd=540b
+[   11.485150] VP: put_ipc_rx_buf started wait 
+[   11.500803] VP: put_ipc_rx_buf finished wait 
+[   11.501125] VP: put_ipc_rx_buf started wait 
+[   11.501215] VP: put_ipc_rx_buf finished wait 
+[   11.503744] VP: put_ipc_rx_buf started wait 
+[   11.504051] VP: put_ipc_rx_buf finished wait 
+[   11.504493] VP: put_ipc_rx_buf started wait 
+[   11.504586] VP: put_ipc_rx_buf finished wait 
+[   11.504993] VP: put_ipc_rx_buf started wait 
+[   11.506570] VP: put_ipc_rx_buf finished wait 
+[   11.507441] VP: put_ipc_rx_buf started wait 
+[   11.507600] VP: put_ipc_rx_buf finished wait 
+[   11.508870] VP: put_ipc_rx_buf started wait 
+[   11.510551] VP: put_ipc_rx_buf finished wait 
+[   11.534457] baseband_usb_chr_ioctl flush queued ipc transaction work cmd=540b
+[   11.552766] baseband_usb_chr_ioctl flush queued ipc transaction work cmd=540b
+[   11.664680] VP: put_ipc_rx_buf started wait 
+[   11.664864] VP: put_ipc_rx_buf finished wait 
+[   11.738996] VP: put_ipc_rx_buf started wait 
+[   11.740048] VP: put_ipc_rx_buf finished wait 
+[   11.745119] VP: put_ipc_rx_buf started wait 
+[   11.755106] VP: put_ipc_rx_buf finished wait 
+[   11.766890] VP: put_ipc_rx_buf started wait 
+[   11.770568] VP: put_ipc_rx_buf finished wait 
+[   11.775004] VP: put_ipc_rx_buf started wait 
+[   11.777398] VP: put_ipc_rx_buf finished wait 
+[   11.781463] VP: put_ipc_rx_buf started wait 
+[   11.785640] VP: put_ipc_rx_buf finished wait 
+[   11.917912] [AUD] update dsp table(26, 20000) successfully
+[   11.941499] nvavp nvavp: using SMMU at ff00000 to load AVP kernel
+[   11.987124] nvavp nvavp: read firmware from 'nvavp_os_0ff00000.bin' (15212 bytes)
+[   12.039840] nvavp nvavp: entry=00000094 control=00004930 debug=00005130 size=15188
+[   12.040204] nvavp nvavp: AVP os at vaddr=ce8c2000 paddr=ff00000 reset_addr=0ff00094
+[   12.079675] nvavp nvavp: read ucode firmware from 'nvavp_vid_ucode.bin' (41956 bytes)
+[   12.259730] nvavp nvavp: using SMMU at ff00000 to load AVP kernel
+[   12.260098] nvavp nvavp: AVP os at vaddr=ce8c2000 paddr=ff00000 reset_addr=0ff00094
+[   12.382964] [CAM] flash_led_info_get: length(11)
+[   12.386994] [CAM] ad5823_open::ad5823_open
+[   12.387181] [CAM] open flashlight
+[   12.424146] init: cannot find '/system/bin/fusermount', disabling 'fusermount'
+[   12.536699] [AUD] [PWR] ***** gpio AUD_MCLK_EN 191 output enable *****
+[   12.536780] [AUD] [PWR] power on AIC3008 0ms
+[   12.536948] [AUD] [DSP] AIC3008_IO_CONFIG_MEDIA: Original RX 23, TX 23. start DSP = 9, len = 3507 ++. 
+[   12.554887] [AUD] [DSP] AIC3008_IO_CONFIG_MEDIA: configure miniDSP index(9) time: 18ms --
+[   12.555151] [AUD] [RX] AIC3008_IO_CONFIG_RX: first_boot_path = 10
+[   12.555282] [AUD] [RX] AIC3008_IO_CONFIG_RX: DOWNLINK idx = 23
+[   12.555395] [AUD] [RX] ----- change i/o downlink RX 23 len(22) -----
+[   12.567526] [AUD] [RX] AIC3008_IO_CONFIG_RX: PATH OFF Call aic3008_powerdown()
+[   12.568152] [AUD] [PWR] ***** gpio AUD_MCLK_EN 191 disable *****
+[   12.568349] [AUD] [PWR] power down AIC3008 0ms
+[   12.568629] init: sys_prop: permission denied uid:1013  name:media.tegra.max.out.channels
+[   12.579436] init: sys_prop: permission denied uid:1013  name:media.tegra.max.out.channels
+[   12.579714] [AUD] [PWR] ***** gpio AUD_MCLK_EN 191 output enable *****
+[   12.579788] [AUD] [PWR] power on AIC3008 0ms
+[   12.580008] [AUD] [DSP] AIC3008_IO_CONFIG_MEDIA: Original RX 23, TX 23. start DSP = 9, len = 3507 ++. 
+[   12.594776] [AUD] [DSP] AIC3008_IO_CONFIG_MEDIA: configure miniDSP index(9) time: 15ms --
+[   12.594978] [AUD] [RX] AIC3008_IO_CONFIG_RX: DOWNLINK idx = 10
+[   12.597412] [AUD] [RX] ----- change i/o downlink RX 10 len(28) -----
+[   12.599128] [AUD] VoteMinFreqS:102000
+[   12.649315] [AUD] [PWR] ***** gpio AUD_SPK_EN 126 output enable *****
+[   12.649697] [AUD] [TX] AIC3008_IO_CONFIG_TX: UPLINK idx = 23
+[   12.649831] [AUD] [TX] ----- change i/o uplink TX 23 len(17) -----
+[   12.652671] [AUD] [PWR] ***** gpio AUD_SPK_EN 126 disable *****
+[   12.652808] [AUD] [RX] AIC3008_IO_CONFIG_RX: DOWNLINK idx = 23
+[   12.652879] [AUD] [RX] ----- change i/o downlink RX 23 len(22) -----
+[   12.667403] [AUD] VoteMinFreqE:0
+[   12.667481] [AUD] [RX] AIC3008_IO_CONFIG_RX: PATH OFF Call aic3008_powerdown()
+[   12.668182] [AUD] [PWR] ***** gpio AUD_MCLK_EN 191 disable *****
+[   12.668325] [AUD] [PWR] power down AIC3008 0ms
+[   12.881918] nvavp nvavp: using SMMU at ff00000 to load AVP kernel
+[   12.882229] nvavp nvavp: AVP os at vaddr=ce8c2000 paddr=ff00000 reset_addr=0ff00094
+[   12.997238] (stc): remove_channel_from_table: id 3
+[   12.997318] (stc): remove_channel_from_table: id 2
+[   12.997446] (stc): remove_channel_from_table: id 4
+[   12.997523] (stk) :ldisc_install = 0
+[   12.997910] (stc): st_tty_close 
+[   13.000084] plat_chip_asleep
+[   13.000168] plat_chip_asleep
+[   13.026514] VP: put_ipc_rx_buf started wait 
+[   13.030368] VP: put_ipc_rx_buf finished wait 
+[   13.040498] VP: put_ipc_rx_buf started wait 
+[   13.046603] VP: put_ipc_rx_buf finished wait 
+[   13.101253] VP: put_ipc_rx_buf started wait 
+[   13.108985] VP: put_ipc_rx_buf finished wait 
+[   13.118004] VP: put_ipc_rx_buf started wait 
+[   13.124641] VP: put_ipc_rx_buf finished wait 
+[   13.155376] VP: put_ipc_rx_buf started wait 
+[   13.157765] VP: put_ipc_rx_buf finished wait 
+[   13.189504] VP: put_ipc_rx_buf started wait 
+[   13.196469] VP: put_ipc_rx_buf finished wait 
+[   13.213125] VP: put_ipc_rx_buf started wait 
+[   13.227959] VP: put_ipc_rx_buf finished wait 
+[   13.247800] [TMS] cpu temp = 51.75, local temp = 41, gpio = 1 
+[   13.367005] VP: put_ipc_rx_buf started wait 
+[   13.386768] VP: put_ipc_rx_buf finished wait 
+[   13.393429] baseband_usb_chr_rx_urb_comp: link down
+[   13.395947] baseband_usb_close: started
+[   13.396080] baseband_usb_close kill rx urb
+[   13.396182] usbcore: deregistering interface driver baseband_usb_58b_41_1
+[   13.396355] baseband_usb_driver_disconnect
+[   13.396450] baseband_usb_driver_disconnect: Matching usb device flush queued ipc transaction work, device_remove_file
+[   13.396903] baseband_usb_close: finished
+[   13.533519] [XMM2_v1]baseband_xmm_power2_init 0219 - 
+[   13.533783] Wake30 for irq=330
+[   13.533963] gpio CORE_DUMP_DETECT value is 1
+[   13.534049] init and add core dump into kobject
+[   13.541229] Wake33 for irq=296
+[   13.541405] baseband_xmm_power2_flashless_pm_ver_ge_1130_step1 {
+[   13.541481] XYZ=1000800500 X=1000 Y=800 Z=500
+[   13.541630] [USBHv1] tegra_ehci_remove
+[   13.541717] Wake40 for irq=53
+[   13.541789] Disabling wake40
+[   13.541924] tegra-ehci tegra-ehci.1: remove, state 1
+[   13.542021] usb usb1: USB disconnect, device number 1
+[   13.542156] usb 1-1: USB disconnect, device number 2
+[   13.542228] usb 1-1: unregistering device
+[   13.542301] usb 1-1: unregistering interface 1-1:1.0
+[   13.543046] usb 1-1: unregistering interface 1-1:1.1
+[   13.543458] usb 1-1: usb_disable_device nuking all URBs
+[   13.545242] usb usb1: unregistering device
+[   13.545321] usb usb1: unregistering interface 1-0:1.0
+[   13.547409] usb usb1: usb_disable_device nuking all URBs
+[   13.567485] tegra-ehci tegra-ehci.1: USB bus 1 deregistered
+[   13.586486] [USBHHCD] : hcd_release 
+[   13.586628] [USBPHY] tegra_usb_phy_power_off 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   13.586701] [USBPHY] uhsic_phy_power_off 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   13.586834] cardu_usb_hsic_phy_off
+[   13.586905] [XMM_v10]baseband_xmm_set_power_status{ status=7
+[   13.587035] L3
+[   13.587105] L3 --- wake_unlock[baseband_xmm_power]
+[   13.587180] Set gpio host active low->
+[   13.587310] [XMM_v10]baseband_xmm_set_power_status } baseband_xmm_powerstate = 7
+[   13.587417] [USBPHY] tegra_usb_phy_close 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   13.587546] [USBPHY] vbus_disable 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   13.587674] [USBPHY] vbus_disable nop
+[   13.587747] [USBHv1] tegra_ehci_remove - del_timer_sync clk_timer
+[   13.587854] [USBHv1] tegra_ehci_remove complete
+[   14.596425] baseband_xmm_power2_flashless_pm_ver_ge_1130_step1 }
+[   14.994454] warning: `zygote' uses 32-bit capabilities (legacy support in use)
+[   15.102024] [PWR_STORY][CPUIDLE]0 us, 4533069 us, 0 us, 5429674 us, 0 us, 5584314 us, 0 us, 5230855 us
+[   15.102167] [PWR_STORY][CPUHP]CPUs total active time:5004222,0,0,10091553
+[   15.176558] [LS][cm3629] lightsensor_open
+[   15.176701] [LS][cm3629] lightsensor_ioctl LIGHTSENSOR_IOCTL_GET_ENABLED, enabled 0
+[   15.176774] [LS][cm3629] lightsensor_release
+[   15.216595] [PS][cm3629] psensor_open
+[   15.216684] [PS][cm3629] psensor_ioctl cmd 1
+[   15.239349] baseband_xmm_power2_flashless_pm_ver_ge_1130_step2 {
+[   15.239424] XYZ=1000800500 X=1000 Y=800 Z=500
+[   15.336667] [COMP] Compass enable
+[   15.336899] [COMP][AKM8975] [COMP] Compass disable
+[   15.417041] [PS][cm3629] psensor_ioctl cmd 2
+[   15.417179] [PS][cm3629] psensor_disable
+[   15.417249] [PS][cm3629] psensor_disable: already disabled
+[   15.417320] [PS][cm3629] psensor_release
+[   15.417447] [PS][cm3629] psensor_disable
+[   15.417517] [PS][cm3629] psensor_disable: already disabled
+[   16.046794] [USBHv1] tegra_ehci_probe:0309 - instance 1
+[   16.046974] [USBPHY] tegra_usb_phy_open 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   16.052197] [USBPHY] tegra_usb_phy_power_on 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   16.052274] [USBPHY] uhsic_phy_power_on 3(0:utmi, 1:ulpi, 2:null, 3:hsic)
+[   16.081923] tegra-ehci tegra-ehci.1: Tegra EHCI Host Controller
+[   16.082171] tegra-ehci tegra-ehci.1: new USB bus registered, assigned bus number 1
+[   16.082361] [USBHHCD] : usb_add_hcd, hcd->driver->flags & HCD_MASK=0x20
+[   16.096408] [USBHv1] tegra_ehci_setup
+[   16.136493] tegra-ehci tegra-ehci.1: irq 53, io mem 0x7d004000
+[   16.156494] tegra-ehci tegra-ehci.1: USB 2.0 started, EHCI 1.00
+[   16.156702] usb usb1: default language 0x0409
+[   16.156803] usb usb1: udev 1, busnum 1, minor = 0
+[   16.156933] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+[   16.157006] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[   16.157136] usb usb1: Product: Tegra EHCI Host Controller
+[   16.157207] usb usb1: Manufacturer: Linux 2.6.39.4-cyanogenmod ehci_hcd
+[   16.157336] usb usb1: SerialNumber: tegra-ehci.1
+[   16.157887] usb usb1: adding 1-0:1.0 (config #1, interface 0)
+[   16.158831] hub 1-0:1.0: USB hub found
+[   16.158926] tegra_ehci_hub_control: typereq: a006 wValue: 2900 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   16.159063] tegra_ehci_hub_control hsic=true typeReq=a006 wValue=2900 wIndex=0
+[   16.159202] hub 1-0:1.0: 1 port detected
+[   16.159275] hub 1-0:1.0: standalone hub
+[   16.159407] hub 1-0:1.0: individual port power switching
+[   16.159479] hub 1-0:1.0: individual port over-current protection
+[   16.159680] hub 1-0:1.0: Single TT
+[   16.159754] hub 1-0:1.0: TT requires at most 8 FS bit times (666 ns)
+[   16.159887] hub 1-0:1.0: power on to power good time: 20ms
+[   16.159977] tegra_ehci_hub_control: typereq: a000 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   16.160115] tegra_ehci_hub_control hsic=true typeReq=a000 wValue=0 wIndex=0
+[   16.160254] hub 1-0:1.0: local power source is good
+[   16.160329] hub 1-0:1.0: enabling power on all ports
+[   16.160470] tegra_ehci_hub_control: typereq: 2303 wValue: 8 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   16.160655] tegra_ehci_hub_control hsic=true typeReq=2303 wValue=8 wIndex=1
+[   16.160730] [USBPHY] tegra_usb_phy_bus_connect
+[   16.160868] [USBPHY] tegra_usb_phy_bus_connect(2983) - val=0x14cf8e
+[   16.160942] [USBPHY] tegra_usb_phy_bus_connect(2988) - val=0x14cf8e
+[   16.161075] [USBPHY] tegra_usb_phy_bus_connect(2996) - val=0x81
+[   16.161147] cardu_usb_hsic_phy_ready
+[   16.161280] [XMM_v10]baseband_xmm_set_power_status{ status=2
+[   16.161352] L0
+[   16.161424] baseband_xmm_set_power_status: wake_lock [baseband_xmm_power] in L0
+[   16.161604] L0 Get current gpio_get_value(ipc_hsic_active)=0
+[   16.161678] L0 gpio set ipc_hsic_active=1 ->
+[   16.161812] [XMM_v10]baseband_xmm_set_power_status } baseband_xmm_powerstate = 2
+[   16.179079] [USBPHY] tegra_usb_phy_bus_connect complete
+[   16.179223] [USBF] usb_set_configuration: usb intf dev_add - 1-0:1.0
+[   16.179701] baseband_xmm_device_add_handler 
+[   16.179907] Wake40 for irq=53
+[   16.179979] Enabling wake40
+[   16.180050] [USBHv1] tegra_ehci_probe complete err=0
+[   16.276451] tegra_ehci_hub_control: typereq: a300 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   16.276593] tegra_ehci_hub_control hsic=true typeReq=a300 wValue=0 wIndex=1
+[   16.276682] hub 1-0:1.0: port 1: status 0503 change 0001
+[   16.276820] tegra_ehci_hub_control: typereq: 2301 wValue: 1 USBMODE: 0, USBCMD: 18005, PORTSC: 1007, USBSTS: 80 HOSTPC: 84000202 
+[   16.276952] tegra_ehci_hub_control hsic=true typeReq=2301 wValue=1 wIndex=1
+[   16.277034] tegra_ehci_hub_control: typereq: 2301 wValue: 10 USBMODE: 0, USBCMD: 18005, PORTSC: 1803, USBSTS: 80 HOSTPC: 80000202 
+[   16.277227] tegra_ehci_hub_control hsic=true typeReq=2301 wValue=10 wIndex=1
+[   16.376482] hub 1-0:1.0: state 7 ports 1 chg 0002 evt 0000
+[   16.376639] tegra_ehci_hub_control: typereq: a300 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1801, USBSTS: 80 HOSTPC: 80000202 
+[   16.376775] tegra_ehci_hub_control hsic=true typeReq=a300 wValue=0 wIndex=1
+[   16.376861] hub 1-0:1.0: port 1, status 0101, change 0000, 12 Mb/s
+[   16.377012] hub_port_init  (b) hub_port_reset- 2829
+[   16.377091] tegra_ehci_hub_control: typereq: 2303 wValue: 4 USBMODE: 0, USBCMD: 18005, PORTSC: 1801, USBSTS: 80 HOSTPC: 80000202 
+[   16.377222] tegra_ehci_hub_control hsic=true typeReq=2303 wValue=4 wIndex=1
+[   16.377351] [USBPHY] tegra_usb_phy_bus_reset patch for late 5sec 
+[   16.462125] [USBPHY] tegra_usb_phy_bus_reset, complete
+[   16.462282] [USBHHUB] hub_port_wait_reset: marked delay 50
+[   16.462371] tegra_ehci_hub_control: typereq: a300 wValue: 0 USBMODE: 0, USBCMD: 18005, PORTSC: 1005, USBSTS: 80 HOSTPC: 84000202 
+[   16.462507] tegra_ehci_hub_control hsic=true typeReq=a300 wValue=0 wIndex=1
+[   16.462647] [USBHHUB] hub_port_reset: reduced delay by 40msec
+[   16.476447] tegra_ehci_hub_control: typereq: 2301 wValue: 14 USBMODE: 0, USBCMD: 18005, PORTSC: 1005, USBSTS: 80 HOSTPC: 84000202 
+[   16.476585] tegra_ehci_hub_control hsic=true typeReq=2301 wValue=14 wIndex=1
+[   16.476669] usb 1-1: new high speed USB device number 2 using tegra-ehci
+[   16.476800] hub_port_init (b) hub_set_address- 2997
+[   16.506449] hub_port_init  (b) usb_get_device_descriptor- 3025
+[   16.516437] hub_port_init  (b) usb_get_device_descriptor- 3060
+[   16.522150] usb 1-1: default language 0x0409
+[   16.524664] usb 1-1: udev 2, busnum 1, minor = 1
+[   16.524743] usb 1-1: New USB device found, idVendor=1519, idProduct=0020
+[   16.524877] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   16.524949] usb 1-1: Product: HSIC Device
+[   16.525079] usb 1-1: Manufacturer: Comneon
+[   16.525151] usb 1-1: SerialNumber: 0123456789
+[   16.547707] usb 1-1: adding 1-1:1.0 (config #1, interface 0)
+[   16.548175] baseband_xmm_power_ipc_ap_wake_irq - IPC_AP_WAKE_INIT2 - got rising edge
+[   16.548333] baseband_xmm_power_init2_work
+[   16.548925] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 0 max_intfs=1
+[   16.549065] cdc_acm 1-1:1.0: This device cannot do calls on its own. It is not a modem.
+[   16.549884] cdc_acm 1-1:1.0: ttyACM0: USB ACM device
+[   16.553567] acm_probe: acm_ready_table[minor=0]=ture
+[   16.553656] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.0
+[   16.553858] usb 1-1: adding 1-1:1.1 (config #1, interface 1)
+[   16.554678] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.1
+[   16.554927] usb 1-1: adding 1-1:1.2 (config #1, interface 2)
+[   16.555783] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 2 max_intfs=1
+[   16.555923] XMM HACK - interface #2 reserved for RAW-IP network driver
+[   16.556071] cdc_acm: probe of 1-1:1.2 failed with error -22
+[   16.556147] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.2
+[   16.556336] usb 1-1: adding 1-1:1.3 (config #1, interface 3)
+[   16.557506] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 3 max_intfs=1
+[   16.557645] XMM HACK - interface #3 reserved for RAW-IP network driver
+[   16.557792] cdc_acm: probe of 1-1:1.3 failed with error -22
+[   16.557867] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.3
+[   16.558100] usb 1-1: adding 1-1:1.4 (config #1, interface 4)
+[   16.562657] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 4 max_intfs=1
+[   16.562796] XMM HACK - interface #4 reserved for RAW-IP network driver
+[   16.562938] cdc_acm: probe of 1-1:1.4 failed with error -22
+[   16.563014] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.4
+[   16.563209] usb 1-1: adding 1-1:1.5 (config #1, interface 5)
+[   16.564421] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 5 max_intfs=1
+[   16.564557] XMM HACK - interface #5 reserved for RAW-IP network driver
+[   16.564696] cdc_acm: probe of 1-1:1.5 failed with error -22
+[   16.564770] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.5
+[   16.565016] usb 1-1: adding 1-1:1.6 (config #1, interface 6)
+[   16.566556] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 6 max_intfs=1
+[   16.566695] XMM HACK - interface #6 reserved for RAW-IP network driver
+[   16.566835] cdc_acm: probe of 1-1:1.6 failed with error -22
+[   16.566909] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.6
+[   16.567106] usb 1-1: adding 1-1:1.7 (config #1, interface 7)
+[   16.568454] acm_probe: 0311 - cdc drop urb fix intf->cur_altsetting->desc.bInterfaceNumber 7 max_intfs=1
+[   16.568587] XMM HACK - interface #7 reserved for RAW-IP network driver
+[   16.568726] cdc_acm: probe of 1-1:1.7 failed with error -22
+[   16.568799] [USBF] usb_set_configuration: usb intf dev_add - 1-1:1.7
+[   16.569331] baseband_xmm_device_add_handler 
+[   16.569406] persist_enabled: 1
+[   16.569476] Add device 2 <Comneon HSIC Device>
+[   16.569606] enable autosuspend
+[   16.686436] baseband_xmm_power2_flashless_pm_ver_ge_1130_step2 }
+[   16.686581] baseband_xmm_power2_flashless_pm_ver_ge_1130_step3 {
+[   16.686653] XYZ=1000800500 X=1000 Y=800 Z=500
+[   16.779574] [ACM14]:acm_tty_open ttyACM0 +
+[   16.780790] [ACM14]:acm_tty_open ttyACM0 -
+[   16.836737] usb_net_raw_ip_init {
+[   16.836877] baseband_usb_open {
+[   16.837021] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf cdc53a00 id bf031400 g_i=0 max_intfs=3
+[   16.837154] baseband_usb_driver_probe(255) } -ENODEV
+[   16.837259] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39000 id bf031400 g_i=0 max_intfs=3
+[   16.837394] baseband_usb_driver_probe(261) }
+[   16.837574] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39200 id bf031400 g_i=0 max_intfs=3
+[   16.837708] baseband_usb_driver_probe(255) } -ENODEV
+[   16.837806] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39400 id bf031400 g_i=0 max_intfs=3
+[   16.837936] baseband_usb_driver_probe(255) } -ENODEV
+[   16.838090] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39600 id bf031400 g_i=0 max_intfs=3
+[   16.838224] baseband_usb_driver_probe(255) } -ENODEV
+[   16.838319] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39800 id bf031400 g_i=0 max_intfs=3
+[   16.838452] baseband_usb_driver_probe(255) } -ENODEV
+[   16.858017] usbcore: registered new interface driver baseband_usb_1519_20_3
+[   16.858127] endpoint[0] bulk in
+[   16.858292] endpoint[1] bulk out
+[   16.858382] baseband_usb_open }
+[   16.860042] registered baseband usb network device - dev ccfab800 name rmnet%d
+[   16.860760] baseband_usb_open {
+[   16.860900] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf cdc53a00 id bf031428 g_i=1 max_intfs=3
+[   16.861034] baseband_usb_driver_probe(255) } -ENODEV
+[   16.861198] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39200 id bf031428 g_i=1 max_intfs=3
+[   16.861333] baseband_usb_driver_probe(255) } -ENODEV
+[   16.861431] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39400 id bf031428 g_i=1 max_intfs=3
+[   16.861566] baseband_usb_driver_probe(261) }
+[   16.861738] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39600 id bf031428 g_i=1 max_intfs=3
+[   16.861872] baseband_usb_driver_probe(255) } -ENODEV
+[   16.861980] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39800 id bf031428 g_i=1 max_intfs=3
+[   16.862114] baseband_usb_driver_probe(255) } -ENODEV
+[   16.862596] usbcore: registered new interface driver baseband_usb_1519_20_5
+[   16.862671] endpoint[0] bulk in
+[   16.862800] endpoint[1] bulk out
+[   16.862870] baseband_usb_open }
+[   16.864400] registered baseband usb network device - dev ccfae800 name rmnet%d
+[   16.866516] baseband_usb_open {
+[   16.866652] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf cdc53a00 id bf031450 g_i=2 max_intfs=3
+[   16.866788] baseband_usb_driver_probe(255) } -ENODEV
+[   16.866951] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39200 id bf031450 g_i=2 max_intfs=3
+[   16.867086] baseband_usb_driver_probe(255) } -ENODEV
+[   16.867182] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39600 id bf031450 g_i=2 max_intfs=3
+[   16.867318] baseband_usb_driver_probe(255) } -ENODEV
+[   16.867470] baseband_usb_driver_probe(236) with suspend conunt fix (do not return BUSY) { intf ccc39800 id bf031450 g_i=2 max_intfs=3
+[   16.867605] baseband_usb_driver_probe(261) }
+[   16.868002] usbcore: registered new interface driver baseband_usb_1519_20_7
+[   16.868136] endpoint[0] bulk in
+[   16.868206] endpoint[1] bulk out
+[   16.868276] baseband_usb_open }
+[   16.887084] registered baseband usb network device - dev ccfb3800 name rmnet%d
+[   16.887426] [RAWIPv1] : usb_net_raw_ip_init - host_dbg_flag=0x0
+[   16.887561] usb_net_raw_ip_init }
+[   16.896571] init: cannot find '/system/bin/fusermount', disabling 'fusermount'
+[   17.696480] [ACM14]:acm_tty_open ttyACM0 +
+[   17.696589] [ACM14]:acm_tty_close ttyACM0 +
+[   17.696661] acm_tty_close: exit
+[   17.696795] baseband_xmm_power2_flashless_pm_ver_ge_1130_step3 - enum success
+[   17.696866] VP:baseband_xmm_power2_flashless_pm_ver_ge_1130_step3 - pm qos CPU back to normal
+[   17.697016] baseband_xmm_power2_flashless_pm_ver_ge_1130_step3 }
+[   18.881269] touch watchdog
+[   20.127554] [PWR_STORY][CPUIDLE]0 us, 4533069 us, 0 us, 5429674 us, 0 us, 5584314 us, 0 us, 5230855 us
+[   20.127698] [PWR_STORY][CPUHP]CPUs total active time:10029752,0,0,10091553
+[   21.691602] init: cannot find '/system/bin/fusermount', disabling 'fusermount'
+[   22.046461] usb_suspend_interface: cnt 0 -> 0 intf=ccc39800 &intf->dev=ccc39820 kobje=1-1:1.7 udev->state=7 intf->condition =2
+[   22.046605] baseband_usb_driver_suspend intf ccc39800
+[   22.046676] baseband_usb_driver_suspend: susp_count = 0 (suspending...)
+[   22.046859] usb_net_raw_ip_rx_urb_comp: rx urb cceb5220 - status -2
+[   22.046963] usb_submit_urb() failed - err -1
+[   22.047178] usb_suspend_interface: cnt 0 -> 0 intf=ccc39600 &intf->dev=ccc39620 kobje=1-1:1.6 udev->state=7 intf->condition =0
+[   22.047316] usb_suspend_interface: cnt 0 -> 0 intf=ccc39400 &intf->dev=ccc39420 kobje=1-1:1.5 udev->state=7 intf->condition =2
+[   22.047447] baseband_usb_driver_suspend intf ccc39400
+[   22.047518] baseband_usb_driver_suspend: susp_count = 0 (suspending...)
+[   22.047678] usb_net_raw_ip_rx_urb_comp: rx urb cceb5420 - status -2
+[   22.047773] usb_submit_urb() failed - err -1
+[   22.047915] usb_suspend_interface: cnt 0 -> 0 intf=ccc39200 &intf->dev=ccc39220 kobje=1-1:1.4 udev->state=7 intf->condition =0
+[   22.048053] usb_suspend_interface: cnt 0 -> 0 intf=ccc39000 &intf->dev=ccc39020 kobje=1-1:1.3 udev->state=7 intf->condition =2
+[   22.048186] baseband_usb_driver_suspend intf ccc39000
+[   22.048258] baseband_usb_driver_suspend: susp_count = 0 (suspending...)
+[   22.048413] usb_net_raw_ip_rx_urb_comp: rx urb cceb5620 - status -2
+[   22.048506] usb_submit_urb() failed - err -1
+[   22.048649] usb_suspend_interface: cnt 0 -> 0 intf=cdc53a00 &intf->dev=cdc53a20 kobje=1-1:1.2 udev->state=7 intf->condition =0
+[   22.048784] usb_suspend_interface: cnt 0 -> 0 intf=cdc53c00 &intf->dev=cdc53c20 kobje=1-1:1.1 udev->state=7 intf->condition =2
+[   22.048918] [ACM14]: acm_suspend ttyACM0 +
+[   22.048990] [ACM14]: acm_suspend ttyACM0 suspending.... port.count=1
+[   22.057972] [ACM14]: acm_suspend ttyACM0 -
+[   22.058064] usb_suspend_interface: cnt 0 -> 0 intf=cdc53e00 &intf->dev=cdc53e20 kobje=1-1:1.0 udev->state=7 intf->condition =2
+[   22.058257] [ACM14]: acm_suspend ttyACM0 +
+[   22.058332] [ACM14]: acm_suspend ttyACM0 susp_count=2 (already suspend)
+[   22.058479] tegra_ehci_hub_control: typereq: 2303 wValue: 2 USBMODE: 0, USBCMD: 18025, PORTSC: 1005, USBSTS: 8088 HOSTPC: 84000202 
+[   22.058611] tegra_ehci_hub_control hsic=true typeReq=2303 wValue=2 wIndex=1
+[   22.062746] [USBPHY] tegra_usb_phy_postsuspend
+[   22.062816] [USBPHY] tegra_usb_phy_postsuspend call postsuspend
+[   22.062945] [USBPHY] uhsic_phy_postsuspend
+[   22.063014] [USBPHY] uhsic_phy_postsuspend call uhsic_config->postsuspend
+[   22.063143] cardu_usb_hsic_postsupend
+[   22.063214] [XMM_v10]baseband_xmm_set_power_status{ status=4
+[   22.063283] L2 wake_unlock[baseband_xmm_power]
+[   22.063415] [XMM_v10]baseband_xmm_set_power_status } baseband_xmm_powerstate = 4
+[   22.063493] usb 1-1: usb auto-suspend
+[   23.268230] [TMS] cpu temp = 53.0, local temp = 42, gpio = 1 
+[   24.076465] usb_suspend_interface: cnt 0 -> 0 intf=cd10aa00 &intf->dev=cd10aa20 kobje=1-0:1.0 udev->state=7 intf->condition =2
+[   24.076677] hub 1-0:1.0: hub_suspend
+[   24.076821] tegra_ehci_bus_suspend
+[   24.076972] [USBHv1] tegra_ehci_bus_suspend call ehci_bus_suspend return 0
+[   25.139465] [PWR_STORY][CPUIDLE]0 us, 4533069 us, 0 us, 5429674 us, 0 us, 5584314 us, 0 us, 5230855 us
+[   25.139589] [PWR_STORY][CPUHP]CPUs total active time:15041642,0,0,10091553
+[   26.381258] touch watchdog
+[   26.992170] init: cannot find '/system/bin/fusermount', disabling 'fusermount'
+[   30.140121] [PWR_STORY][CPUIDLE]0 us, 4533069 us, 0 us, 5429674 us, 0 us, 5584314 us, 0 us, 5230855 us
+[   30.140265] [PWR_STORY][CPUHP]CPUs total active time:20042317,0,0,10091553
+[   32.352572] init: cannot find '/system/bin/fusermount', disabling 'fusermount'
+[   33.287828] [TMS] cpu temp = 53.75, local temp = 43, gpio = 1 
+[   33.845233] [LED] lp5521_led_blink_store +++, val = 1
+[   33.845437] [LED] lp5521_amber_blink +++
+[   33.860849] [LED] lp5521_amber_blink ---
+[   33.862378] [LED] lp5521_led_blink_store +++, val = 0
+[   33.862453] [LED] lp5521_dual_off +++
+[   33.865482] [LED] no LED command now in idle, disable chip & gpio.
+[   33.865616] [LED] lp5521_dual_off ---
+[   33.865779] [LED] lp5521_led_blink_store +++, val = 0
+[   33.865991] [LED] lp5521_amber_on +++
+[   33.877212] [LED] lp5521_amber_on ---
+[   33.881257] touch watchdog
+[   33.881903] [DISP] tegra_pwm_backlight_update_status brightness=0 ,duty_cycle=0
+[   33.907253] [R] request_suspend_state: wakeup (3->0) at 33900856003 (2012-07-14 06:26:35.610578002 UTC)
+[   33.907392] [R] request_suspend_state:  old_sleep=0  new_state=0   PM_SUSPEND_ON=0 
+[   33.908095] [LED] lp5521_backlight_on +++
+[   33.997308] [DVFS] each freq runs (ms): 0,0,0,31,0,0,0,0,100,0,0,0,5389,23649
+[   34.086532] [LED] lp5521_backlight_on ---
+[   34.163544] brightness orig = 86, transformed=48
+[   34.163627] [DISP] tegra_pwm_backlight_update_status brightness=48 ,duty_cycle=48
+[   34.197171] [COMP] Compass enable
+[   34.197775] [GYRO][PANASONIC] sample_rate_state=3
+[   34.197941] [GYRO][PANASONIC] Dont set sample_rate_state=3, when gyro sleep
+[   34.213179] [COMP][AKM8975] AKECS_GetCloseStatus:
+[   34.218703] [GSNR] Gsensor enable
+[   34.218782] [GSNR][BMA250] BMA_set_mode: mode = 0x00
+[   34.237299] (stk) :change to new rfkill state: 0
+[   34.237377] (stk) :wl127x_config_bt_on: Entering
+[   34.237447] (stk) :wl127x_config_bt_on, rfkilltool_on off
+[   34.238348] init: no such service 'hciattach'
+[   34.238493] (stc): st_register(4) 
+[   34.238566] (stc):  chnl_id list empty :4 
+[   34.238637] plat_chip_awake
+[   34.238709] st_kim_start_entering 1222 v3
+[   34.238778] (stk) : st_kim_start
+[   34.238910] 
+[   34.238912] [BT_GPS] nshutdown gpio new: 160
+[   34.239046] plat_chip_awake
+[   34.397094] [GYRO][PANASONIC] sample_rate_state=2
+[   34.397234] [GYRO][PANASONIC] Dont set sample_rate_state=2, when gyro sleep
+[   34.576835] mmc1: clock 0Hz busmode 1 powermode 1 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[   34.576967] enterprise_wifi_power: Powering on wifi
+[   34.666430] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[   34.686757] mmc1: Got cmd intr: TIMEOUT, CMD(52) ARG(0xc00)
+[   34.689237] mmc1: Got cmd intr: TIMEOUT, CMD(52) ARG(0x80000c08)
+[   34.691354] mmc1: clock 400000Hz busmode 1 powermode 2 cs 1 Vdd 21 width 0 timing 0 ddr 0
+[   34.693663] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[   34.695125] mmc1: Got cmd intr: TIMEOUT, CMD(8) ARG(0x1aa)
+[   34.706769] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[   34.707585] mmc1: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[   34.713325] (stk) :ldisc_install = 1
+[   34.715069] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   34.717789] mmc1: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 2 ddr 0
+[   34.717880] mmc1: clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 2 ddr 0
+[   34.718077] mmc1: clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 2 timing 2 ddr 0
+[   34.726496] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   34.726689] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   34.727193] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   34.729573] Wake32 for irq=340
+[   34.729821] Wake32 for irq=340
+[   34.729960] Enabling wake32
+[   34.762229] wl1271: loaded
+[   34.762343] mmc1: clock 0Hz busmode 1 powermode 0 cs 0 Vdd 0 width 0 timing 0 ddr 0
+[   34.763489] enterprise_wifi_power: Powering off wifi
+[   34.764446] init: cannot find '/system/bin/initial_regdom.sh', disabling 'initial_regdom'
+[   34.777697] tegra_uart tegra_uart.2: Setting clk_src pll_p
+[   34.777940] (stc): st_tty_open 
+[   34.778048] (stk) : line discipline installed 
+[   34.778633] (stk) :TIInit_10.6.15.bts
+[   34.877628] acc_open
+[   34.877721] acc_release
+[   35.165798] [VIB] vibrator_enable, vibration start and duration time = 1 ms
+[   35.167540] [VIB] vib_timer_func, vibration stop
+[   35.198273] [VIB] vibrator_enable, vibration start and duration time = 21 ms
+[   35.219455] [VIB] vib_timer_func, vibration stop
+[   35.486432] mmc1: clock 0Hz busmode 1 powermode 1 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[   35.486620] enterprise_wifi_power: Powering on wifi
+[   35.606553] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[   35.628185] mmc1: Got cmd intr: TIMEOUT, CMD(52) ARG(0xc00)
+[   35.630606] mmc1: Got cmd intr: TIMEOUT, CMD(52) ARG(0x80000c08)
+[   35.632757] mmc1: clock 400000Hz busmode 1 powermode 2 cs 1 Vdd 21 width 0 timing 0 ddr 0
+[   35.635061] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 21 width 0 timing 0 ddr 0
+[   35.636462] mmc1: Got cmd intr: TIMEOUT, CMD(8) ARG(0x1aa)
+[   35.642027] mmc1: clock 400000Hz busmode 1 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[   35.642766] mmc1: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 0 ddr 0
+[   35.651785] mmc1: clock 400000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 2 ddr 0
+[   35.651930] mmc1: clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 0 timing 2 ddr 0
+[   35.652129] mmc1: clock 50000000Hz busmode 2 powermode 2 cs 0 Vdd 7 width 2 timing 2 ddr 0
+[   35.825224] (stc): add_channel_to_table: id 4
+[   35.825364] (stc): st_register(2) 
+[   35.825435] (stc): add_channel_to_table: id 2
+[   35.825507] (stc): st_register(3) 
+[   35.825636] (stc): add_channel_to_table: id 3
+[   36.422269] [PWR_STORY][CPUIDLE]0 us, 4533069 us, 0 us, 5429674 us, 0 us, 5584314 us, 0 us, 5230855 us
+[   36.422413] [PWR_STORY][CPUHP]CPUs total active time:26324466,0,0,10091553
+[   36.775847] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000000: 00 00 00 00 19 00 00 00 00 00 00 00 00 00 00 00
+[   36.775936] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000010: 00 00 00 00 00 00 00 ec f6 00 0c 18 f8 fc 00 08
+[   36.776068] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000020: 10 f0 f8 00 0a 14 00 00 00 00 00 00 00 00 00 00
+[   36.776201] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   36.776332] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   36.776512] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000050: ee f4 f8 fe 05 ea f3 fa 01 06 e5 f1 fa 02 07 01
+[   36.776645] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000060: d9 01 80 00 1d 1f 22 26 27 29 25 1d 1f 22 26 27
+[   36.776775] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000070: 27 24 16 1d 1e 20 24 25 22 50 50 50 50 50 50 50
+[   36.776905] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000080: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
+[   36.776977] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000090: 50 50 50 50 50 01 02 02 02 02 00 02 17 17 17 1a
+[   36.777107] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 000000a0: 16 17 1a 17 00 00 00 00 00 00 00 00 00 00 00 00
+[   36.782052] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 000000b0: 00 00 00 00 10 1e 2d 00 9a 01 ae 01 c2 01 cc 01
+[   36.782188] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 000000c0: db 01 db 01 d1 01 80 80 80 80 80 80 80 00 00 00
+[   36.782332] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 000000d0: 00 00 00 00 1c 1e 21 23 25 50 25 18 1e 21 23 25
+[   36.782518] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 000000e0: 50 24 16 1c 1e 20 20 50 1e 50 50 50 50 50 50 50
+[   36.782650] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 000000f0: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50
+[   36.782779] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000100: 50 50 50 50 50 50 50 50 50 50 50 50 01 02 02 02
+[   36.782851] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000110: 02 00 02 10 10 10 10 10 10 10 00 00 00 00 00 00
+[   36.782982] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000120: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   36.783111] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000130: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[   36.783241] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000140: 00 00 00 00 00 00 00 00 00 00 00 10 10 10 10 10
+[   36.783369] wl1271: TEST_CMD_INI_FILE_RADIO_PARAM: 00000150: 10 10 1e 2d
+[   36.860631] [BATT] tps80032 VBUS_DETECT:1 OPA_MODE:0 BOOST_HW_PWR:0 at 36854229001 (2012-07-14 06:26:38.559836000 UTC)
+[   36.879107] [BATT] ioctl: battery level update: 67 at 36872706001 (2012-07-14 06:26:38.582428000 UTC)
+[   36.879266] [BATT] capacity=67%, ID=2, vol=3876, temp=343, curr=0, dis_curr=99, chg_src=1, chg_en=1, over_vchg=0, batt_state=1, batt_ol=0 at 36872868001 (2012-07-14 06:26:38.582592000 UTC)
+[   36.882718] wl1271: firmware booted (Rev 7.1.5.50.74)
+[   36.882908] [BATT] power_supply_changed: battery at 36876515001 (2012-07-14 06:26:38.586238000 UTC)
+[   36.883088] [BATT] err:htc_batt_ioctl: no matched ioctl cmd at 36876694001 (2012-07-14 06:26:38.586418000 UTC)
+[   36.890248] Unable to handle kernel NULL pointer dereference at virtual address 00000007
+[   36.890388] pgd = ccd88000
+[   36.890459] [00000007] *pgd=8bc02831, *pte=00000000, *ppte=00000000
+[   36.890735] Internal error: Oops: 17 [#1] PREEMPT SMP
+[   36.890866] last sysfs file: /sys/devices/platform/htc_battery/power_supply/battery/technology
+[   36.890999] Modules linked in: wl12xx_sdio raw_ip_net baseband_xmm_power2 baseband_usb_chr cdc_acm kineto_gan wl12xx btwilink gps_drv fm_drv(C) st_drv
+[   36.891982] CPU: 0    Tainted: G        WC   (2.6.39.4-cyanogenmod #19)
+[   36.892110] PC is at wl1271_op_conf_tx+0x54/0x214 [wl12xx]
+[   36.892251] LR is at __mutex_lock_slowpath+0x2e8/0x324
+[   36.892324] pc : [<bf0fd928>]    lr : [<c061fcd4>]    psr: 60070113
+[   36.892327] sp : ccf5fde0  ip : 22222222  fp : ccf5fe18
+[   36.892527] r10: 00000002  r9 : ffff03ff  r8 : 00000000
+[   36.892728] r7 : 00000001  r6 : ccf1d1ec  r5 : ccf1d1c0  r4 : ccc3e988
+[   36.892802] r3 : 00000001  r2 : ccf5fdd8  r1 : 22222222  r0 : bf11ba68
+[   36.892936] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+[   36.893070] Control: 10c5387d  Table: 8cd8804a  DAC: 00000015
+[   36.893143] 
+[   36.893145] LR: 0xc061fc54:
+[   36.893343] fc54  e59f00b0 e3a010fd ebea286b eaffffb8 e1a0200d e1a00004 e3c26d7f e1a0100d
+[   36.894036] fc74  e3c6603f e1a02006 ebeac593 e594300c e5846014 e1530007 03a03000 05843000
+[   36.894785] fc94  f57ff05f e3a03000 e2844004 e5843000 f57ff04f e320f004 e121f005 e1a0100d
+[   36.895473] fcb4  e3c13d7f e3c3303f e5933000 e3130002 0a000000 ebfffd45 e1a0000d ebeac629
+[   36.896167] fcd4  e1a0200d e3c23d7f e3c3303f e5932004 e2422001 e5832004 e5933000 e3130002
+[   36.896917] fcf4  0a000000 ebfffd39 e28dd014 e8bd8ff0 c0df3e90 c0e13d08 c0743fb4 e92d4ff0
+[   36.897667] fd14  e24dd014 e1a0100d e1a04000 e3c13d7f e3c3303f e5932004 e593600c e2822001
+[   36.898411] fd34  e5832004 e59f2388 e5922000 e3520000 1a00000e e5933004 e3c3333e e3c330ff
+[   36.899101] 
+[   36.899103] SP: 0xccf5fd60:
+[   36.899302] fd60  00000000 c00c77ec 00000000 00000002 ccf2a000 ccf2a01c ccd82a00 cd12bc50
+[   36.899979] fd80  ccb615c0 ffffffff ccf5fdcc ccf1d1ec 00000001 c0052f6c bf11ba68 22222222
+[   36.900725] fda0  ccf5fdd8 00000001 ccc3e988 ccf1d1c0 ccf1d1ec 00000001 00000000 ffff03ff
+[   36.901476] fdc0  00000002 ccf5fe18 22222222 ccf5fde0 c061fcd4 bf0fd928 60070113 ffffffff
+[   36.902221] fde0  96d419c8 00000008 22222222 22222222 ccf1d1ec ccc3e460 00000000 ccf1c380
+[   36.902903] fe00  00000001 ccc3e460 00000002 c05ff904 ccf5fe24 ccc3e988 00070066 0002000f
+[   36.903646] fe20  ccf5fed0 ccf1c380 ccc3e460 ccc3e000 ffffffff 00000001 00000000 00000000
+[   36.904390] fe40  ccf5fed0 c05f2134 ccc3e000 c0679b34 00001002 ccc3e048 cbc05e00 00000000
+[   36.905122] 
+[   36.905123] FP: 0xccf5fd98:
+[   36.905255] fd98  bf11ba68 22222222 ccf5fdd8 00000001 ccc3e988 ccf1d1c0 ccf1d1ec 00000001
+[   36.905978] fdb8  00000000 ffff03ff 00000002 ccf5fe18 22222222 ccf5fde0 c061fcd4 bf0fd928
+[   36.906642] fdd8  60070113 ffffffff 96d419c8 00000008 22222222 22222222 ccf1d1ec ccc3e460
+[   36.907368] fdf8  00000000 ccf1c380 00000001 ccc3e460 00000002 c05ff904 ccf5fe24 ccc3e988
+[   36.908094] fe18  00070066 0002000f ccf5fed0 ccf1c380 ccc3e460 ccc3e000 ffffffff 00000001
+[   36.908817] fe38  00000000 00000000 ccf5fed0 c05f2134 ccc3e000 c0679b34 00001002 ccc3e048
+[   36.909484] fe58  cbc05e00 00000000 cbc05e0c c04a25dc ccc3e000 00001003 00001002 00000001
+[   36.910208] fe78  cbc05e00 c049f6b0 ccc3e000 00001002 00000001 ccc3e000 cbc05e00 c04a2510
+[   36.910934] 
+[   36.910936] R2: 0xccf5fd58:
+[   36.911070] fd58  ccf2a000 00000002 00000000 c00c77ec 00000000 00000002 ccf2a000 ccf2a01c
+[   36.911797] fd78  ccd82a00 cd12bc50 ccb615c0 ffffffff ccf5fdcc ccf1d1ec 00000001 c0052f6c
+[   36.912525] fd98  bf11ba68 22222222 ccf5fdd8 00000001 ccc3e988 ccf1d1c0 ccf1d1ec 00000001
+[   36.913191] fdb8  00000000 ffff03ff 00000002 ccf5fe18 22222222 ccf5fde0 c061fcd4 bf0fd928
+[   36.913919] fdd8  60070113 ffffffff 96d419c8 00000008 22222222 22222222 ccf1d1ec ccc3e460
+[   36.914646] fdf8  00000000 ccf1c380 00000001 ccc3e460 00000002 c05ff904 ccf5fe24 ccc3e988
+[   36.915318] fe18  00070066 0002000f ccf5fed0 ccf1c380 ccc3e460 ccc3e000 ffffffff 00000001
+[   36.916048] fe38  00000000 00000000 ccf5fed0 c05f2134 ccc3e000 c0679b34 00001002 ccc3e048
+[   36.916770] 
+[   36.916772] R4: 0xccc3e908:
+[   36.916903] e908  c05e7fa8 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.917624] e928  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.918348] e948  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.919010] e968  00000000 00000000 00000000 cc234ae8 cc2389e8 00000000 00000000 00000000
+[   36.919737] e988  00000002 00000000 c0679ad0 00000000 00000000 00000000 00000000 00000000
+[   36.920466] e9a8  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.921190] e9c8  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.921856] e9e8  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.922522] 
+[   36.922523] R5: 0xccf1d140:
+[   36.922657] d140  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.923378] d160  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.924099] d180  ccf1d180 ccf1d180 00000001 00000000 c05e1208 00000000 ccf1cd20 ccf1cd74
+[   36.924823] d1a0  ccf1cd74 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.925493] d1c0  cbc0a000 ccf1c380 00000001 cd4e4200 bf00ec54 00000000 00000154 00000001
+[   36.926162] d1e0  00000000 00000000 00000001 00000000 00000000 00000000 ccf1d1f8 ccf1d1f8
+[   36.926889] d200  ccf5e000 00000000 ccf1d1ec 00008044 00014fc0 00040000 0000a000 00300000
+[   36.927618] d220  00000004 003004f8 00000000 00040404 05030111 20766552 2e312e37 30352e35
+[   36.928282] 
+[   36.928284] R6: 0xccf1d16c:
+[   36.928477] d16c  00000000 00000000 00000000 00000000 00000000 ccf1d180 ccf1d180 00000001
+[   36.929142] d18c  00000000 c05e1208 00000000 ccf1cd20 ccf1cd74 ccf1cd74 00000000 00000000
+[   36.929806] d1ac  00000000 00000000 00000000 00000000 00000000 cbc0a000 ccf1c380 00000001
+[   36.930526] d1cc  cd4e4200 bf00ec54 00000000 00000154 00000001 00000000 00000000 00000001
+[   36.931256] d1ec  00000000 00000000 00000000 ccf1d1f8 ccf1d1f8 ccf5e000 00000000 ccf1d1ec
+[   36.931920] d20c  00008044 00014fc0 00040000 0000a000 00300000 00000004 003004f8 00000000
+[   36.932646] d22c  00040404 05030111 20766552 2e312e37 30352e35 0034372e 00000000 00000000
+[   36.933366] d24c  00000000 00000000 00000007 00000001 00000005 00000032 0000004a 000407b4
+[   36.934043] 
+[   36.934044] R9: 0xffff037f:
+[   36.934235] 037c  e320f000 e88d4001 e14fe000 e58de008 e10f0000 e2200008 e16ff000 e20ee00f
+[   36.934960] 039c  e1a0000d e79fe10e e1b0f00e c00532a0 c0052ef0 c0052ef0 c0053080 c0052ef0
+[   36.935625] 03bc  c0052ef0 c0052ef0 c0052ef0 c0052ef0 c0052ef0 c0052ef0 c0052ef0 c0052ef0
+[   36.936350] 03dc  c0052ef0 c0052ef0 c0052ef0 e320f000 e320f000 e320f000 e320f000 e320f000
+[   36.937074] 03fc  e320f000 e25ef004 eafffffe e320f000 e320f000 e320f000 e320f000 e320f000
+[   36.937739] 041c  e320f000 c0053580 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.938461] 043c  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.939186] 045c  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.939918] 047c  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   36.940589] Process wpa_supplicant (pid: 471, stack limit = 0xccf5e2f0)
+[   36.940721] Stack: (0xccf5fde0 to 0xccf60000)
+[   36.940795] fde0: 96d419c8 00000008 22222222 22222222 ccf1d1ec ccc3e460 00000000 ccf1c380
+[   36.940929] fe00: 00000001 ccc3e460 00000002 c05ff904 ccf5fe24 ccc3e988 00070066 0002000f
+[   36.941062] fe20: ccf5fed0 ccf1c380 ccc3e460 ccc3e000 ffffffff 00000001 00000000 00000000
+[   36.941135] fe40: ccf5fed0 c05f2134 ccc3e000 c0679b34 00001002 ccc3e048 cbc05e00 00000000
+[   36.941269] fe60: cbc05e0c c04a25dc ccc3e000 00001003 00001002 00000001 cbc05e00 c049f6b0
+[   36.941403] fe80: ccc3e000 00001002 00000001 ccc3e000 cbc05e00 c04a2510 00000000 00008914
+[   36.941537] fea0: 00000001 c05169f8 00000020 00000000 bed3099c bed3099c c0f1c9e0 00000000
+[   36.941612] fec0: 6e616c77 00000030 00000000 00000000 00001003 00000000 00000000 00000000
+[   36.941744] fee0: 00001003 00000000 00000000 00000000 00000000 00008914 bed3099c 00008914
+[   36.941879] ff00: 00000005 c0053644 ccf5e000 00000000 012a3cf8 c048ff08 bed3099c cc458730
+[   36.942012] ff20: 00008914 c012f424 cc24db68 00000001 cc40ee48 cc250e40 00000000 00000008
+[   36.942086] ff40: cdc13628 cc2316e0 00000000 bed30864 00000129 c0053644 ccf5e000 00000000
+[   36.942219] ff60: cc446600 00000003 00000004 cc458730 bed3099c 00008914 00000005 c0053644
+[   36.942351] ff80: ccf5e000 c012f4d4 00000005 00000000 bed3099c 012a3d04 00000005 bed3099c
+[   36.942426] ffa0: 00000036 c00534c0 012a3d04 00000005 00000005 00008914 bed3099c bed30994
+[   36.942559] ffc0: 012a3d04 00000005 bed3099c 00000036 012a3bfa 00000005 012a3632 012a3cf8
+[   36.942692] ffe0: 0008c350 bed30978 40119e51 400fe7d0 80000010 00000005 00000017 001a7940
+[   36.942856] [<bf0fd928>] (wl1271_op_conf_tx+0x54/0x214 [wl12xx]) from [<c05ff904>] (ieee80211_set_wmm_default+0x188/0x1cc)
+[   36.943003] [<c05ff904>] (ieee80211_set_wmm_default+0x188/0x1cc) from [<c05f2134>] (ieee80211_do_open+0x3d4/0x694)
+[   36.943150] [<c05f2134>] (ieee80211_do_open+0x3d4/0x694) from [<c04a25dc>] (__dev_open+0x98/0xe0)
+[   36.943228] [<c04a25dc>] (__dev_open+0x98/0xe0) from [<c049f6b0>] (__dev_change_flags+0x8c/0x110)
+[   36.943363] [<c049f6b0>] (__dev_change_flags+0x8c/0x110) from [<c04a2510>] (dev_change_flags+0x10/0x44)
+[   36.943502] [<c04a2510>] (dev_change_flags+0x10/0x44) from [<c05169f8>] (devinet_ioctl+0x3ac/0x790)
+[   36.943643] [<c05169f8>] (devinet_ioctl+0x3ac/0x790) from [<c048ff08>] (sock_ioctl+0x1f4/0x244)
+[   36.943779] [<c048ff08>] (sock_ioctl+0x1f4/0x244) from [<c012f424>] (do_vfs_ioctl+0x500/0x57c)
+[   36.943856] [<c012f424>] (do_vfs_ioctl+0x500/0x57c) from [<c012f4d4>] (sys_ioctl+0x34/0x54)
+[   36.943991] [<c012f4d4>] (sys_ioctl+0x34/0x54) from [<c00534c0>] (ret_fast_syscall+0x0/0x30)
+[   36.944123] Code: e59f11c0 e1a02004 eb4612c9 e5953028 (e5d87007) 
+[   37.186513] ---[ end trace 6fcb132ac310d025 ]---
+[   37.186659] Kernel panic - not syncing: Fatal exception
+[   37.186769] [<c0059290>] (unwind_backtrace+0x0/0x12c) from [<c061df78>] (panic+0x78/0x1a4)
+[   37.186910] [<c061df78>] (panic+0x78/0x1a4) from [<c0056ba4>] (die+0x25c/0x2b0)
+[   37.187048] [<c0056ba4>] (die+0x25c/0x2b0) from [<c005a8b8>] (__do_kernel_fault+0x64/0x84)
+[   37.187124] [<c005a8b8>] (__do_kernel_fault+0x64/0x84) from [<c005aab8>] (do_page_fault+0x1e0/0x1f8)
+[   37.187280] [<c005aab8>] (do_page_fault+0x1e0/0x1f8) from [<c004d464>] (do_DataAbort+0x34/0x94)
+[   37.187417] [<c004d464>] (do_DataAbort+0x34/0x94) from [<c0052f6c>] (__dabt_svc+0x4c/0x60)
+[   37.187548] Exception stack(0xccf5fd98 to 0xccf5fde0)
+[   37.187619] fd80:                                                       bf11ba68 22222222
+[   37.187751] fda0: ccf5fdd8 00000001 ccc3e988 ccf1d1c0 ccf1d1ec 00000001 00000000 ffff03ff
+[   37.187885] fdc0: 00000002 ccf5fe18 22222222 ccf5fde0 c061fcd4 bf0fd928 60070113 ffffffff
+[   37.188016] [<c0052f6c>] (__dabt_svc+0x4c/0x60) from [<bf0fd928>] (wl1271_op_conf_tx+0x54/0x214 [wl12xx])
+[   37.188171] [<bf0fd928>] (wl1271_op_conf_tx+0x54/0x214 [wl12xx]) from [<c05ff904>] (ieee80211_set_wmm_default+0x188/0x1cc)
+[   37.188318] [<c05ff904>] (ieee80211_set_wmm_default+0x188/0x1cc) from [<c05f2134>] (ieee80211_do_open+0x3d4/0x694)
+[   37.188464] [<c05f2134>] (ieee80211_do_open+0x3d4/0x694) from [<c04a25dc>] (__dev_open+0x98/0xe0)
+[   37.188602] [<c04a25dc>] (__dev_open+0x98/0xe0) from [<c049f6b0>] (__dev_change_flags+0x8c/0x110)
+[   37.188739] [<c049f6b0>] (__dev_change_flags+0x8c/0x110) from [<c04a2510>] (dev_change_flags+0x10/0x44)
+[   37.188821] [<c04a2510>] (dev_change_flags+0x10/0x44) from [<c05169f8>] (devinet_ioctl+0x3ac/0x790)
+[   37.188961] [<c05169f8>] (devinet_ioctl+0x3ac/0x790) from [<c048ff08>] (sock_ioctl+0x1f4/0x244)
+[   37.189099] [<c048ff08>] (sock_ioctl+0x1f4/0x244) from [<c012f424>] (do_vfs_ioctl+0x500/0x57c)
+[   37.189233] [<c012f424>] (do_vfs_ioctl+0x500/0x57c) from [<c012f4d4>] (sys_ioctl+0x34/0x54)
+[   37.189369] [<c012f4d4>] (sys_ioctl+0x34/0x54) from [<c00534c0>] (ret_fast_syscall+0x0/0x30)
+[   37.189443] Rebooting in 10 seconds..
+[   41.381255] touch watchdog
+[   47.199601] Entering emergency_restart
+[   47.199673] Entering machine_emergency_restart
+[   47.199802] tegra_pm_restart(h,(null))
+[   47.199872] tegra_pm_restart: Going down for restart now.
+[   47.199943] tegra_pm_restart: mode 104
+[   47.200071] tegra_pm_restart: no command restart.
+[   47.200142] tegra_pm_restart: restart reason 0x776655AA.
+[   47.200274] [BATT]set_reboot_battery_level:record reboot_battery_first_level :0xbbc56643
+
+No errors detected
+
+PMIC status: start_on_event=none, last_off_event=pmu_poweroff

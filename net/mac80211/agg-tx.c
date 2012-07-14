@@ -54,8 +54,6 @@
  * @ampdu_action function will be called with the action
  * %IEEE80211_AMPDU_TX_STOP. In this case, the call must not fail,
  * and the driver must later call ieee80211_stop_tx_ba_cb_irqsafe().
- * Note that the sta can get destroyed before the BA tear down is
- * complete.
  */
 
 static void ieee80211_send_addba_request(struct ieee80211_sub_if_data *sdata,
@@ -70,22 +68,21 @@ static void ieee80211_send_addba_request(struct ieee80211_sub_if_data *sdata,
 
 	skb = dev_alloc_skb(sizeof(*mgmt) + local->hw.extra_tx_headroom);
 
-	if (!skb)
+	if (!skb) {
+		printk(KERN_ERR "%s: failed to allocate buffer "
+				"for addba request frame\n", sdata->name);
 		return;
-
+	}
 	skb_reserve(skb, local->hw.extra_tx_headroom);
 	mgmt = (struct ieee80211_mgmt *) skb_put(skb, 24);
 	memset(mgmt, 0, 24);
 	memcpy(mgmt->da, da, ETH_ALEN);
 	memcpy(mgmt->sa, sdata->vif.addr, ETH_ALEN);
 	if (sdata->vif.type == NL80211_IFTYPE_AP ||
-	    sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
-	    sdata->vif.type == NL80211_IFTYPE_MESH_POINT)
+	    sdata->vif.type == NL80211_IFTYPE_AP_VLAN)
 		memcpy(mgmt->bssid, sdata->vif.addr, ETH_ALEN);
 	else if (sdata->vif.type == NL80211_IFTYPE_STATION)
 		memcpy(mgmt->bssid, sdata->u.mgd.bssid, ETH_ALEN);
-	else if (sdata->vif.type == NL80211_IFTYPE_ADHOC)
-		memcpy(mgmt->bssid, sdata->u.ibss.bssid, ETH_ALEN);
 
 	mgmt->frame_control = cpu_to_le16(IEEE80211_FTYPE_MGMT |
 					  IEEE80211_STYPE_ACTION);
@@ -106,21 +103,22 @@ static void ieee80211_send_addba_request(struct ieee80211_sub_if_data *sdata,
 	mgmt->u.action.u.addba_req.start_seq_num =
 					cpu_to_le16(start_seq_num << 4);
 
-	ieee80211_tx_skb_tid(sdata, skb, tid);
+	ieee80211_tx_skb(sdata, skb);
 }
 
-void ieee80211_send_bar(struct ieee80211_vif *vif, u8 *ra, u16 tid, u16 ssn)
+void ieee80211_send_bar(struct ieee80211_sub_if_data *sdata, u8 *ra, u16 tid, u16 ssn)
 {
-	struct ieee80211_sub_if_data *sdata = vif_to_sdata(vif);
 	struct ieee80211_local *local = sdata->local;
 	struct sk_buff *skb;
 	struct ieee80211_bar *bar;
 	u16 bar_control = 0;
 
 	skb = dev_alloc_skb(sizeof(*bar) + local->hw.extra_tx_headroom);
-	if (!skb)
+	if (!skb) {
+		printk(KERN_ERR "%s: failed to allocate buffer for "
+			"bar frame\n", sdata->name);
 		return;
-
+	}
 	skb_reserve(skb, local->hw.extra_tx_headroom);
 	bar = (struct ieee80211_bar *)skb_put(skb, sizeof(*bar));
 	memset(bar, 0, sizeof(*bar));
@@ -130,23 +128,21 @@ void ieee80211_send_bar(struct ieee80211_vif *vif, u8 *ra, u16 tid, u16 ssn)
 	memcpy(bar->ta, sdata->vif.addr, ETH_ALEN);
 	bar_control |= (u16)IEEE80211_BAR_CTRL_ACK_POLICY_NORMAL;
 	bar_control |= (u16)IEEE80211_BAR_CTRL_CBMTID_COMPRESSED_BA;
-	bar_control |= (u16)(tid << IEEE80211_BAR_CTRL_TID_INFO_SHIFT);
+	bar_control |= (u16)(tid << 12);
 	bar->control = cpu_to_le16(bar_control);
 	bar->start_seq_num = cpu_to_le16(ssn);
 
 	IEEE80211_SKB_CB(skb)->flags |= IEEE80211_TX_INTFL_DONT_ENCRYPT;
-	ieee80211_tx_skb_tid(sdata, skb, tid);
+	ieee80211_tx_skb(sdata, skb);
 }
-EXPORT_SYMBOL(ieee80211_send_bar);
 
 void ieee80211_assign_tid_tx(struct sta_info *sta, int tid,
-			   struct tid_ampdu_tx *tid_tx)
+			     struct tid_ampdu_tx *tid_tx)
 {
 	lockdep_assert_held(&sta->ampdu_mlme.mtx);
 	lockdep_assert_held(&sta->lock);
 	rcu_assign_pointer(sta->ampdu_mlme.tid_tx[tid], tid_tx);
 }
-
 
 static void kfree_tid_tx(struct rcu_head *rcu_head)
 {
@@ -156,21 +152,23 @@ struct tid_ampdu_tx *tid_tx =
 kfree(tid_tx);
 }
 
-
 int ___ieee80211_stop_tx_ba_session(struct sta_info *sta, u16 tid,
 				    enum ieee80211_back_parties initiator,
 				    bool tx)
 {
 	struct ieee80211_local *local = sta->local;
-	struct tid_ampdu_tx *tid_tx = sta->ampdu_mlme.tid_tx[tid];
+	struct tid_ampdu_tx *tid_tx;
 	int ret;
 
 	lockdep_assert_held(&sta->ampdu_mlme.mtx);
 
-	if (!tid_tx)
-		return -ENOENT;
-
 	spin_lock_bh(&sta->lock);
+
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
+	if (!tid_tx) {
+		spin_unlock_bh(&sta->lock);
+		return -ENOENT;
+	}
 
 	/* if we're already stopping ignore any new requests to stop */
 	if (test_bit(HT_AGG_STATE_STOPPING, &tid_tx->state)) {
@@ -183,7 +181,6 @@ int ___ieee80211_stop_tx_ba_session(struct sta_info *sta, u16 tid,
 		ieee80211_assign_tid_tx(sta, tid, NULL);
 		spin_unlock_bh(&sta->lock);
 		call_rcu(&tid_tx->rcu_head, kfree_tid_tx);
-//		call_rcu(&tid_tx->rcu_head, kfree_tid_tx);
 		return 0;
 	}
 
@@ -197,7 +194,6 @@ int ___ieee80211_stop_tx_ba_session(struct sta_info *sta, u16 tid,
 #endif /* CONFIG_MAC80211_HT_DEBUG */
 
 	del_timer_sync(&tid_tx->addba_resp_timer);
-	del_timer_sync(&tid_tx->session_timer);
 
 	/*
 	 * After this packets are no longer handed right through
@@ -350,13 +346,13 @@ ieee80211_agg_splice_finish(struct ieee80211_local *local, u16 tid)
 
 void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 {
-	struct tid_ampdu_tx *tid_tx = sta->ampdu_mlme.tid_tx[tid];
+	struct tid_ampdu_tx *tid_tx;
 	struct ieee80211_local *local = sta->local;
 	struct ieee80211_sub_if_data *sdata = sta->sdata;
 	u16 start_seq_num;
 	int ret;
 
-	lockdep_assert_held(&sta->ampdu_mlme.mtx);
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 
 	/*
 	 * Start queuing up packets for this aggregation session.
@@ -399,7 +395,6 @@ void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 #endif
 
 	spin_lock_bh(&sta->lock);
-	sta->ampdu_mlme.last_addba_req_time[tid] = jiffies;
 	sta->ampdu_mlme.addba_req_num[tid]++;
 	spin_unlock_bh(&sta->lock);
 
@@ -408,28 +403,6 @@ void ieee80211_tx_ba_session_handle_start(struct sta_info *sta, int tid)
 				     tid_tx->dialog_token, start_seq_num,
 				     local->hw.max_tx_aggregation_subframes,
 				     tid_tx->timeout);
-}
-
-/*
- * After accepting the AddBA Response we activated a timer,
- * resetting it after each frame that we send.
- */
-static void sta_tx_agg_session_timer_expired(unsigned long data)
-{
-	/* not an elegant detour, but there is no choice as the timer passes
-	 * only one argument, and various sta_info are needed here, so init
-	 * flow in sta_info_create gives the TID as data, while the timer_to_id
-	 * array gives the sta through container_of */
-	u8 *ptid = (u8 *)data;
-	u8 *timer_to_id = ptid - *ptid;
-	struct sta_info *sta = container_of(timer_to_id, struct sta_info,
-					 timer_to_tid[0]);
-
-#ifdef CONFIG_MAC80211_HT_DEBUG
-	printk(KERN_DEBUG "tx session timer expired on tid %d\n", (u16)*ptid);
-#endif
-
-	ieee80211_stop_tx_ba_session(&sta->sta, *ptid);
 }
 
 int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
@@ -447,8 +420,7 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 		return -EINVAL;
 
 	if ((tid >= STA_TID_NUM) ||
-	    !(local->hw.flags & IEEE80211_HW_AMPDU_AGGREGATION) ||
-	    (local->hw.flags & IEEE80211_HW_TX_AMPDU_SETUP_IN_HW))
+	    !(local->hw.flags & IEEE80211_HW_AMPDU_AGGREGATION))
 		return -EINVAL;
 
 #ifdef CONFIG_MAC80211_HT_DEBUG
@@ -456,39 +428,22 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 	       pubsta->addr, tid);
 #endif /* CONFIG_MAC80211_HT_DEBUG */
 
+	/*
+	 * The aggregation code is not prepared to handle
+	 * anything but STA/AP due to the BSSID handling.
+	 * IBSS could work in the code but isn't supported
+	 * by drivers or the standard.
+	 */
 	if (sdata->vif.type != NL80211_IFTYPE_STATION &&
-	    sdata->vif.type != NL80211_IFTYPE_MESH_POINT &&
 	    sdata->vif.type != NL80211_IFTYPE_AP_VLAN &&
-	    sdata->vif.type != NL80211_IFTYPE_AP &&
-	    sdata->vif.type != NL80211_IFTYPE_ADHOC)
+	    sdata->vif.type != NL80211_IFTYPE_AP)
 		return -EINVAL;
 
-	if (test_sta_flag(sta, WLAN_STA_BLOCK_BA)) {
+	if (test_sta_flags(sta, WLAN_STA_BLOCK_BA)) {
 #ifdef CONFIG_MAC80211_HT_DEBUG
 		printk(KERN_DEBUG "BA sessions blocked. "
 		       "Denying BA session request\n");
 #endif
-		return -EINVAL;
-	}
-
-	/*
-	 * 802.11n-2009 11.5.1.1: If the initiating STA is an HT STA, is a
-	 * member of an IBSS, and has no other existing Block Ack agreement
-	 * with the recipient STA, then the initiating STA shall transmit a
-	 * Probe Request frame to the recipient STA and shall not transmit an
-	 * ADDBA Request frame unless it receives a Probe Response frame
-	 * from the recipient within dot11ADDBAFailureTimeout.
-	 *
-	 * The probe request mechanism for ADDBA is currently not implemented,
-	 * but we only build up Block Ack session with HT STAs. This information
-	 * is set when we receive a bss info from a probe response or a beacon.
-	 */
-	if (sta->sdata->vif.type == NL80211_IFTYPE_ADHOC &&
-	    !sta->sta.ht_cap.ht_supported) {
-#ifdef CONFIG_MAC80211_HT_DEBUG
-		printk(KERN_DEBUG "BA request denied - IBSS STA %pM"
-		       "does not advertise HT support\n", pubsta->addr);
-#endif /* CONFIG_MAC80211_HT_DEBUG */
 		return -EINVAL;
 	}
 
@@ -500,25 +455,7 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 		goto err_unlock_sta;
 	}
 
-	/*
-	 * if we have tried more than HT_AGG_BURST_RETRIES times we
-	 * will spread our requests in time to avoid stalling connection
-	 * for too long
-	 */
-	if (sta->ampdu_mlme.addba_req_num[tid] > HT_AGG_BURST_RETRIES &&
-	    time_before(jiffies, sta->ampdu_mlme.last_addba_req_time[tid] +
-			HT_AGG_RETRIES_PERIOD)) {
-#ifdef CONFIG_MAC80211_HT_DEBUG
-		printk(KERN_DEBUG "BA request denied - "
-		       "waiting a grace period after %d failed requests "
-		       "on tid %u\n",
-		       sta->ampdu_mlme.addba_req_num[tid], tid);
-#endif /* CONFIG_MAC80211_HT_DEBUG */
-		ret = -EBUSY;
-		goto err_unlock_sta;
-	}
-
-	tid_tx = sta->ampdu_mlme.tid_tx[tid];
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 	/* check if the TID is not in aggregation flow already */
 	if (tid_tx || sta->ampdu_mlme.tid_start_tx[tid]) {
 #ifdef CONFIG_MAC80211_HT_DEBUG
@@ -532,6 +469,11 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 	/* prepare A-MPDU MLME for Tx aggregation */
 	tid_tx = kzalloc(sizeof(struct tid_ampdu_tx), GFP_ATOMIC);
 	if (!tid_tx) {
+#ifdef CONFIG_MAC80211_HT_DEBUG
+		if (net_ratelimit())
+			printk(KERN_ERR "allocate tx mlme to tid %d failed\n",
+					tid);
+#endif
 		ret = -ENOMEM;
 		goto err_unlock_sta;
 	}
@@ -541,15 +483,10 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 
 	tid_tx->timeout = timeout;
 
-	/* response timer */
+	/* Tx timer */
 	tid_tx->addba_resp_timer.function = sta_addba_resp_timer_expired;
 	tid_tx->addba_resp_timer.data = (unsigned long)&sta->timer_to_tid[tid];
 	init_timer(&tid_tx->addba_resp_timer);
-
-	/* tx timer */
-	tid_tx->session_timer.function = sta_tx_agg_session_timer_expired;
-	tid_tx->session_timer.data = (unsigned long)&sta->timer_to_tid[tid];
-	init_timer(&tid_tx->session_timer);
 
 	/* assign a dialog token */
 	sta->ampdu_mlme.dialog_token_allocator++;
@@ -573,7 +510,11 @@ EXPORT_SYMBOL(ieee80211_start_tx_ba_session);
 static void ieee80211_agg_tx_operational(struct ieee80211_local *local,
 					 struct sta_info *sta, u16 tid)
 {
+	struct tid_ampdu_tx *tid_tx;
+
 	lockdep_assert_held(&sta->ampdu_mlme.mtx);
+
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 
 #ifdef CONFIG_MAC80211_HT_DEBUG
 	printk(KERN_DEBUG "Aggregation is on for tid %d\n", tid);
@@ -581,8 +522,7 @@ static void ieee80211_agg_tx_operational(struct ieee80211_local *local,
 
 	drv_ampdu_action(local, sta->sdata,
 			 IEEE80211_AMPDU_TX_OPERATIONAL,
-			 &sta->sta, tid, NULL,
-			 sta->ampdu_mlme.tid_tx[tid]->buf_size);
+			 &sta->sta, tid, NULL, tid_tx->buf_size);
 
 	/*
 	 * synchronize with TX path, while splicing the TX path
@@ -590,13 +530,13 @@ static void ieee80211_agg_tx_operational(struct ieee80211_local *local,
 	 */
 	spin_lock_bh(&sta->lock);
 
-	ieee80211_agg_splice_packets(local, sta->ampdu_mlme.tid_tx[tid], tid);
+	ieee80211_agg_splice_packets(local, tid_tx, tid);
 	/*
 	 * Now mark as operational. This will be visible
 	 * in the TX path, and lets it go lock-free in
 	 * the common case.
 	 */
-	set_bit(HT_AGG_STATE_OPERATIONAL, &sta->ampdu_mlme.tid_tx[tid]->state);
+	set_bit(HT_AGG_STATE_OPERATIONAL, &tid_tx->state);
 	ieee80211_agg_splice_finish(local, tid);
 
 	spin_unlock_bh(&sta->lock);
@@ -620,7 +560,7 @@ void ieee80211_start_tx_ba_cb(struct ieee80211_vif *vif, u8 *ra, u16 tid)
 	}
 
 	mutex_lock(&local->sta_mtx);
-	sta = sta_info_get_bss(sdata, ra);
+	sta = sta_info_get(sdata, ra);
 	if (!sta) {
 		mutex_unlock(&local->sta_mtx);
 #ifdef CONFIG_MAC80211_HT_DEBUG
@@ -630,7 +570,7 @@ void ieee80211_start_tx_ba_cb(struct ieee80211_vif *vif, u8 *ra, u16 tid)
 	}
 
 	mutex_lock(&sta->ampdu_mlme.mtx);
-	tid_tx = sta->ampdu_mlme.tid_tx[tid];
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 
 	if (WARN_ON(!tid_tx)) {
 #ifdef CONFIG_MAC80211_HT_DEBUG
@@ -658,9 +598,14 @@ void ieee80211_start_tx_ba_cb_irqsafe(struct ieee80211_vif *vif,
 	struct ieee80211_ra_tid *ra_tid;
 	struct sk_buff *skb = dev_alloc_skb(0);
 
-	if (unlikely(!skb))
+	if (unlikely(!skb)) {
+#ifdef CONFIG_MAC80211_HT_DEBUG
+		if (net_ratelimit())
+			printk(KERN_WARNING "%s: Not enough memory, "
+			       "dropping start BA session", sdata->name);
+#endif
 		return;
-
+	}
 	ra_tid = (struct ieee80211_ra_tid *) &skb->cb;
 	memcpy(&ra_tid->ra, ra, ETH_ALEN);
 	ra_tid->tid = tid;
@@ -703,7 +648,7 @@ int ieee80211_stop_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid)
 		return -EINVAL;
 
 	spin_lock_bh(&sta->lock);
-	tid_tx = sta->ampdu_mlme.tid_tx[tid];
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 
 	if (!tid_tx) {
 		ret = -ENOENT;
@@ -749,7 +694,7 @@ void ieee80211_stop_tx_ba_cb(struct ieee80211_vif *vif, u8 *ra, u8 tid)
 
 	mutex_lock(&local->sta_mtx);
 
-	sta = sta_info_get_bss(sdata, ra);
+	sta = sta_info_get(sdata, ra);
 	if (!sta) {
 #ifdef CONFIG_MAC80211_HT_DEBUG
 		printk(KERN_DEBUG "Could not find station: %pM\n", ra);
@@ -759,7 +704,7 @@ void ieee80211_stop_tx_ba_cb(struct ieee80211_vif *vif, u8 *ra, u8 tid)
 
 	mutex_lock(&sta->ampdu_mlme.mtx);
 	spin_lock_bh(&sta->lock);
-	tid_tx = sta->ampdu_mlme.tid_tx[tid];
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 
 	if (!tid_tx || !test_bit(HT_AGG_STATE_STOPPING, &tid_tx->state)) {
 #ifdef CONFIG_MAC80211_HT_DEBUG
@@ -806,9 +751,14 @@ void ieee80211_stop_tx_ba_cb_irqsafe(struct ieee80211_vif *vif,
 	struct ieee80211_ra_tid *ra_tid;
 	struct sk_buff *skb = dev_alloc_skb(0);
 
-	if (unlikely(!skb))
+	if (unlikely(!skb)) {
+#ifdef CONFIG_MAC80211_HT_DEBUG
+		if (net_ratelimit())
+			printk(KERN_WARNING "%s: Not enough memory, "
+			       "dropping stop BA session", sdata->name);
+#endif
 		return;
-
+	}
 	ra_tid = (struct ieee80211_ra_tid *) &skb->cb;
 	memcpy(&ra_tid->ra, ra, ETH_ALEN);
 	ra_tid->tid = tid;
@@ -835,7 +785,7 @@ void ieee80211_process_addba_resp(struct ieee80211_local *local,
 
 	mutex_lock(&sta->ampdu_mlme.mtx);
 
-	tid_tx = sta->ampdu_mlme.tid_tx[tid];
+	tid_tx = rcu_dereference_protected_tid_tx(sta, tid);
 	if (!tid_tx)
 		goto out;
 
@@ -867,14 +817,17 @@ void ieee80211_process_addba_resp(struct ieee80211_local *local,
 		goto out;
 	}
 
-	/*
-	 * IEEE 802.11-2007 7.3.1.14:
-	 * In an ADDBA Response frame, when the Status Code field
-	 * is set to 0, the Buffer Size subfield is set to a value
-	 * of at least 1.
-	 */
 	if (le16_to_cpu(mgmt->u.action.u.addba_resp.status)
-			== WLAN_STATUS_SUCCESS && buf_size) {
+			== WLAN_STATUS_SUCCESS) {
+		/*
+		 * IEEE 802.11-2007 7.3.1.14:
+		 * In an ADDBA Response frame, when the Status Code field
+		 * is set to 0, the Buffer Size subfield is set to a value
+		 * of at least 1.
+		 */
+		if (!buf_size)
+			goto out;
+
 		if (test_and_set_bit(HT_AGG_STATE_RESPONSE_RECEIVED,
 				     &tid_tx->state)) {
 			/* ignore duplicate response */
@@ -887,11 +840,6 @@ void ieee80211_process_addba_resp(struct ieee80211_local *local,
 			ieee80211_agg_tx_operational(local, sta, tid);
 
 		sta->ampdu_mlme.addba_req_num[tid] = 0;
-
-		if (tid_tx->timeout)
-			mod_timer(&tid_tx->session_timer,
-				  TU_TO_EXP_TIME(tid_tx->timeout));
-
 	} else {
 		___ieee80211_stop_tx_ba_session(sta, tid, WLAN_BACK_INITIATOR,
 						true);

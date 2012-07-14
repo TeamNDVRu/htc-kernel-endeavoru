@@ -73,7 +73,6 @@ static void work_free_rcu(struct rcu_head *head)
 
 	kfree(wk);
 }
-
 void free_work(struct ieee80211_work *wk)
 {
 	call_rcu(&wk->rcu_head, work_free_rcu);
@@ -102,8 +101,7 @@ static int ieee80211_compatible_rates(const u8 *supp_rates, int supp_rates_len,
 
 /* frame sending functions */
 
-static void ieee80211_add_ht_ie(struct ieee80211_sub_if_data *sdata,
-				struct sk_buff *skb, const u8 *ht_info_ie,
+static void ieee80211_add_ht_ie(struct sk_buff *skb, const u8 *ht_info_ie,
 				struct ieee80211_supported_band *sband,
 				struct ieee80211_channel *channel,
 				enum ieee80211_smps_mode smps)
@@ -111,10 +109,8 @@ static void ieee80211_add_ht_ie(struct ieee80211_sub_if_data *sdata,
 	struct ieee80211_ht_info *ht_info;
 	u8 *pos;
 	u32 flags = channel->flags;
-	u16 cap;
-	struct ieee80211_sta_ht_cap ht_cap;
-
-	BUILD_BUG_ON(sizeof(ht_cap) != sizeof(sband->ht_cap));
+	u16 cap = sband->ht_cap.cap;
+	__le16 tmp;
 
 	if (!sband->ht_cap.ht_supported)
 		return;
@@ -125,13 +121,9 @@ static void ieee80211_add_ht_ie(struct ieee80211_sub_if_data *sdata,
 	if (ht_info_ie[1] < sizeof(struct ieee80211_ht_info))
 		return;
 
-	memcpy(&ht_cap, &sband->ht_cap, sizeof(ht_cap));
-	ieee80211_apply_htcap_overrides(sdata, &ht_cap);
-
 	ht_info = (struct ieee80211_ht_info *)(ht_info_ie + 2);
 
 	/* determine capability flags */
-	cap = ht_cap.cap;
 
 	switch (ht_info->ht_param & IEEE80211_HT_PARAM_CHA_SEC_OFFSET) {
 	case IEEE80211_HT_PARAM_CHA_SEC_ABOVE:
@@ -169,8 +161,34 @@ static void ieee80211_add_ht_ie(struct ieee80211_sub_if_data *sdata,
 	}
 
 	/* reserve and fill IE */
+
 	pos = skb_put(skb, sizeof(struct ieee80211_ht_cap) + 2);
-	ieee80211_ie_build_ht_cap(pos, &ht_cap, cap);
+	*pos++ = WLAN_EID_HT_CAPABILITY;
+	*pos++ = sizeof(struct ieee80211_ht_cap);
+	memset(pos, 0, sizeof(struct ieee80211_ht_cap));
+
+	/* capability flags */
+	tmp = cpu_to_le16(cap);
+	memcpy(pos, &tmp, sizeof(u16));
+	pos += sizeof(u16);
+
+	/* AMPDU parameters */
+	*pos++ = sband->ht_cap.ampdu_factor |
+		 (sband->ht_cap.ampdu_density <<
+			IEEE80211_HT_AMPDU_PARM_DENSITY_SHIFT);
+
+	/* MCS set */
+	memcpy(pos, &sband->ht_cap.mcs, sizeof(sband->ht_cap.mcs));
+	pos += sizeof(sband->ht_cap.mcs);
+
+	/* extended capabilities */
+	pos += sizeof(__le16);
+
+	/* BF capabilities */
+	pos += sizeof(__le32);
+
+	/* antenna selection */
+	pos += sizeof(u8);
 }
 
 static void ieee80211_send_assoc(struct ieee80211_sub_if_data *sdata,
@@ -180,9 +198,8 @@ static void ieee80211_send_assoc(struct ieee80211_sub_if_data *sdata,
 	struct sk_buff *skb;
 	struct ieee80211_mgmt *mgmt;
 	u8 *pos, qos_info;
-	const u8 *ies;
 	size_t offset = 0, noffset;
-	int i, len, count, rates_len, supp_rates_len;
+	int i, count, rates_len, supp_rates_len;
 	u16 capab;
 	struct ieee80211_supported_band *sband;
 	u32 rates = 0;
@@ -219,9 +236,11 @@ static void ieee80211_send_assoc(struct ieee80211_sub_if_data *sdata,
 			wk->ie_len + /* extra IEs */
 			9, /* WMM */
 			GFP_KERNEL);
-	if (!skb)
+	if (!skb) {
+		printk(KERN_DEBUG "%s: failed to allocate buffer for assoc "
+		       "frame\n", sdata->name);
 		return;
-
+	}
 	skb_reserve(skb, local->hw.extra_tx_headroom);
 
 	capab = WLAN_CAPABILITY_ESS;
@@ -265,7 +284,7 @@ static void ieee80211_send_assoc(struct ieee80211_sub_if_data *sdata,
 	}
 
 	/* SSID */
-	ies = pos = skb_put(skb, 2 + wk->assoc.ssid_len);
+	pos = skb_put(skb, 2 + wk->assoc.ssid_len);
 	*pos++ = WLAN_EID_SSID;
 	*pos++ = wk->assoc.ssid_len;
 	memcpy(pos, wk->assoc.ssid, wk->assoc.ssid_len);
@@ -275,7 +294,6 @@ static void ieee80211_send_assoc(struct ieee80211_sub_if_data *sdata,
 	if (supp_rates_len > 8)
 		supp_rates_len = 8;
 
-	len = sband->n_bitrates;
 	pos = skb_put(skb, supp_rates_len + 2);
 	*pos++ = WLAN_EID_SUPP_RATES;
 	*pos++ = supp_rates_len;
@@ -347,7 +365,7 @@ static void ieee80211_send_assoc(struct ieee80211_sub_if_data *sdata,
 
 	if (wk->assoc.use_11n && wk->assoc.wmm_used &&
 	    local->hw.queues >= 4)
-		ieee80211_add_ht_ie(sdata, skb, wk->assoc.ht_information_ie,
+		ieee80211_add_ht_ie(skb, wk->assoc.ht_information_ie,
 				    sband, wk->chan, wk->assoc.smps);
 
 	/* if present, add any custom non-vendor IEs that go after HT */
@@ -449,7 +467,7 @@ ieee80211_direct_probe(struct ieee80211_work *wk)
 	 */
 	ieee80211_send_probe_req(sdata, NULL, wk->probe_auth.ssid,
 				 wk->probe_auth.ssid_len, NULL, 0,
-				 (u32) -1, true, false);
+				 (u32) -1, true);
 
 	wk->timeout = jiffies + IEEE80211_AUTH_TIMEOUT;
 	run_again(local, wk->timeout);
@@ -490,8 +508,7 @@ ieee80211_authenticate(struct ieee80211_work *wk)
 	       sdata->name, wk->filter_ta, wk->probe_auth.tries);
 
 	ieee80211_send_auth(sdata, 1, wk->probe_auth.algorithm, wk->ie,
-			    wk->ie_len, wk->filter_ta, wk->filter_ta, NULL, 0,
-			    0);
+			    wk->ie_len, wk->filter_ta, NULL, 0, 0);
 	wk->probe_auth.transaction = 2;
 
 	wk->timeout = jiffies + IEEE80211_AUTH_TIMEOUT;
@@ -609,7 +626,7 @@ static void ieee80211_auth_challenge(struct ieee80211_work *wk,
 		return;
 	ieee80211_send_auth(sdata, 3, wk->probe_auth.algorithm,
 			    elems.challenge - 2, elems.challenge_len + 2,
-			    wk->filter_ta, wk->filter_ta, wk->probe_auth.key,
+			    wk->filter_ta, wk->probe_auth.key,
 			    wk->probe_auth.key_len, wk->probe_auth.key_idx);
 	wk->probe_auth.transaction = 4;
 }
@@ -1076,14 +1093,13 @@ static void ieee80211_work_work(struct work_struct *work)
 			continue;
 		if (wk->chan != local->tmp_channel)
 			continue;
-		if (ieee80211_work_ct_coexists(wk->chan_type,
-					       local->tmp_channel_type))
+		if (!ieee80211_work_ct_coexists(wk->chan_type,
+						local->tmp_channel_type))
 			continue;
 		remain_off_channel = true;
 	}
 
 	if (!remain_off_channel && local->tmp_channel) {
-		bool on_oper_chan = ieee80211_cfg_on_oper_channel(local);
 		local->tmp_channel = NULL;
 		/* If tmp_channel wasn't operating channel, then
 		 * we need to go back on-channel.
@@ -1093,7 +1109,7 @@ static void ieee80211_work_work(struct work_struct *work)
 		 * we still need to do a hardware config.  Currently,
 		 * we cannot be here while scanning, however.
 		 */
-		if (ieee80211_cfg_on_oper_channel(local) && !on_oper_chan)
+		if (!ieee80211_cfg_on_oper_channel(local))
 			ieee80211_hw_config(local, 0);
 
 		/* At the least, we need to disable offchannel_ps,
