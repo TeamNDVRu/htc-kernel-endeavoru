@@ -1,0 +1,18 @@
+--- a/net/mac80211/cfg.c	2012-03-12 18:41:21.000000000 +0200
++++ b/net/mac80211/cfg.c	2012-04-10 17:01:43.000000000 +0300
+@@ -915,6 +918,15 @@
+ 	sta_apply_parameters(local, sta, params);
+ 
+ 	rcu_read_unlock();
++
++	if (!is_dummy &&
++	    (params->sta_flags_mask & BIT(NL80211_STA_FLAG_AUTHORIZED)) &&
++	    (params->sta_flags_set & BIT(NL80211_STA_FLAG_AUTHORIZED))) {
++		mutex_lock(&sdata->local->sta_mtx);
++		drv_sta_authorize(local, sdata, &sta->sta);
++		mutex_unlock(&sdata->local->sta_mtx);
++	}
++
+ 	if (is_dummy &&
+ 	    (params->sta_flags_mask & BIT(NL80211_STA_FLAG_PRE_ASSOC)) &&
+ 	    !(params->sta_flags_set & BIT(NL80211_STA_FLAG_PRE_ASSOC)))

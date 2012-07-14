@@ -1,0 +1,41 @@
+--- a/drivers/net/wireless/wl12xx/main.c	2012-03-12 18:41:21.000000000 +0200
++++ b/drivers/net/wireless/wl12xx/main.c	2012-04-10 17:01:42.000000000 +0300
+@@ -4396,6 +4396,23 @@
+ 	wl->active_sta_count--;
+ }
+ 
++static int wl12xx_sta_authorize(struct wl1271 *wl,
++				struct ieee80211_sta *sta)
++{
++	struct wl1271_station *wl_sta;
++	int ret;
++
++	wl_sta = (struct wl1271_station *)sta->drv_priv;
++	if (wl_sta->authorized)
++		return -EALREADY;
++
++	ret = wl1271_acx_set_ht_capabilities(wl, &sta->ht_cap, true,
++					     wl_sta->hlid);
++	wl_sta->authorized = true;
++
++	return ret;
++}
++
+ static int wl1271_op_sta_add_locked(struct ieee80211_hw *hw,
+ 				    struct ieee80211_vif *vif,
+ 				    struct ieee80211_sta *sta)
+@@ -4416,9 +4433,11 @@
+ 	if (ret < 0)
+ 		goto out;
+ 
+-	ret = wl1271_acx_set_ht_capabilities(wl, &sta->ht_cap, true, hlid);
+-	if (ret < 0)
+-		goto out;
++	if (sta->authorized) {
++		ret = wl12xx_sta_authorize(wl, sta);
++		if (ret < 0)
++			goto out;
++	}
+ 
+ 	wl_sta = (struct wl1271_station *)sta->drv_priv;
+ 	wl_sta->added = true;

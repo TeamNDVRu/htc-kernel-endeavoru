@@ -383,6 +383,16 @@ static inline void drv_sta_notify(struct ieee80211_local *local,
 	trace_drv_return_void(local);
 }
 
+static inline void drv_sta_authorize(struct ieee80211_local *local,
+				     struct ieee80211_sub_if_data *sdata,
+				     struct ieee80211_sta *sta)
+{
+	trace_drv_sta_authorize(local, sdata, sta);
+	if (local->ops->sta_authorize)
+		local->ops->sta_authorize(&local->hw, &sdata->vif, sta);
+	trace_drv_return_void(local);
+}
+
 static inline int drv_sta_add(struct ieee80211_local *local,
 			      struct ieee80211_sub_if_data *sdata,
 			      struct ieee80211_sta *sta)

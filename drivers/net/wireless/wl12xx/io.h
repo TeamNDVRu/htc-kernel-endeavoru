@@ -3,6 +3,7 @@
  *
  * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
  * Copyright (C) 2008-2010 Nokia Corporation
+ * Copyright (C) 2012 Sony Mobile Communications AB
  *
  * Contact: Luciano Coelho <luciano.coelho@nokia.com>
  *
@@ -155,6 +156,7 @@ static inline void wl1271_write32(struct wl1271 *wl, int addr, u32 val)
 
 static inline void wl1271_power_off(struct wl1271 *wl)
 {
+	wl->if_ops->disable_wkup(wl);
 	wl->if_ops->power(wl, false);
 	clear_bit(WL1271_FLAG_GPIO_POWER, &wl->flags);
 }
@@ -162,8 +164,10 @@ static inline void wl1271_power_off(struct wl1271 *wl)
 static inline int wl1271_power_on(struct wl1271 *wl)
 {
 	int ret = wl->if_ops->power(wl, true);
-	if (ret == 0)
+	if (ret == 0) {
+		wl->if_ops->enable_wkup(wl);
 		set_bit(WL1271_FLAG_GPIO_POWER, &wl->flags);
+	}
 
 	return ret;
 }

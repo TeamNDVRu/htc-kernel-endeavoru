@@ -1,0 +1,10 @@
+--- a/drivers/net/wireless/wl12xx/wl12xx.h	2012-03-12 18:41:21.000000000 +0200
++++ b/drivers/net/wireless/wl12xx/wl12xx.h	2012-04-10 17:01:42.000000000 +0300
+@@ -737,6 +740,7 @@
+ 
+ struct wl1271_station {
+ 	bool added;
++	bool authorized;
+ 	u8 hlid;
+ };
+ 

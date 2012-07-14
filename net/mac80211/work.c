@@ -7,6 +7,7 @@
  * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
  * Copyright 2007, Michael Wu <flamingice@sourmilk.net>
  * Copyright 2009, Johannes Berg <johannes@sipsolutions.net>
+ * Copyright (C) 2012 Sony Mobile Communications AB.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -647,8 +648,7 @@ ieee80211_rx_mgmt_auth(struct ieee80211_work *wk,
 	auth_transaction = le16_to_cpu(mgmt->u.auth.auth_transaction);
 	status_code = le16_to_cpu(mgmt->u.auth.status_code);
 
-	if (auth_alg != wk->probe_auth.algorithm ||
-	    auth_transaction != wk->probe_auth.transaction)
+	if (auth_transaction != wk->probe_auth.transaction)
 		return WORK_ACT_NONE;
 
 	if (status_code != WLAN_STATUS_SUCCESS) {
@@ -656,6 +656,9 @@ ieee80211_rx_mgmt_auth(struct ieee80211_work *wk,
 		       wk->sdata->name, mgmt->sa, status_code);
 		return WORK_ACT_DONE;
 	}
+
+	if (auth_alg != wk->probe_auth.algorithm)
+		return WORK_ACT_NONE;
 
 	switch (wk->probe_auth.algorithm) {
 	case WLAN_AUTH_OPEN:

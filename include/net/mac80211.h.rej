@@ -1,0 +1,10 @@
+--- a/include/net/mac80211.h	2012-03-12 18:41:21.000000000 +0200
++++ b/include/net/mac80211.h	2012-04-10 17:01:43.000000000 +0300
+@@ -957,6 +957,7 @@
+ 	bool wme;
+ 	u8 uapsd_queues;
+ 	u8 max_sp;
++	bool authorized;
+ 
+ 	/* must be last */
+ 	u8 drv_priv[0] __attribute__((__aligned__(sizeof(void *))));

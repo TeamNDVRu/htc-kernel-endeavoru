@@ -664,9 +664,12 @@ static void sta_apply_parameters(struct ieee80211_local *local,
 	set = params->sta_flags_set;
 
 	if (mask & BIT(NL80211_STA_FLAG_AUTHORIZED)) {
-		sta->flags &= ~WLAN_STA_AUTHORIZED;
-		if (set & BIT(NL80211_STA_FLAG_AUTHORIZED))
+//		sta->flags &= ~WLAN_STA_AUTHORIZED;
+//		sta->sta.authorized = false;
+		if (set & BIT(NL80211_STA_FLAG_AUTHORIZED)) {
 			sta->flags |= WLAN_STA_AUTHORIZED;
+//			sta->sta.authorized = true;
+		}
 	}
 
 	if (mask & BIT(NL80211_STA_FLAG_SHORT_PREAMBLE)) {
