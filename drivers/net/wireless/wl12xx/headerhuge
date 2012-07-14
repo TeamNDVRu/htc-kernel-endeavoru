@@ -1,0 +1,6243 @@
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2008-2010 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __ACX_H__
+#define __ACX_H__
+
+#include "wl12xx.h"
+#include "cmd.h"
+
+/*************************************************************************
+
+    Host Interrupt Register (WiLink -> Host)
+
+**************************************************************************/
+/* HW Initiated interrupt Watchdog timer expiration */
+#define WL1271_ACX_INTR_WATCHDOG           BIT(0)
+/* Init sequence is done (masked interrupt, detection through polling only ) */
+#define WL1271_ACX_INTR_INIT_COMPLETE      BIT(1)
+/* Event was entered to Event MBOX #A*/
+#define WL1271_ACX_INTR_EVENT_A            BIT(2)
+/* Event was entered to Event MBOX #B*/
+#define WL1271_ACX_INTR_EVENT_B            BIT(3)
+/* Command processing completion*/
+#define WL1271_ACX_INTR_CMD_COMPLETE       BIT(4)
+/* Signaling the host on HW wakeup */
+#define WL1271_ACX_INTR_HW_AVAILABLE       BIT(5)
+/* The MISC bit is used for aggregation of RX, TxComplete and TX rate update */
+#define WL1271_ACX_INTR_DATA               BIT(6)
+/* Trace message on MBOX #A */
+#define WL1271_ACX_INTR_TRACE_A            BIT(7)
+/* Trace message on MBOX #B */
+#define WL1271_ACX_INTR_TRACE_B            BIT(8)
+
+#define WL1271_ACX_INTR_ALL		   0xFFFFFFFF
+#define WL1271_ACX_ALL_EVENTS_VECTOR       (WL1271_ACX_INTR_WATCHDOG      | \
+					    WL1271_ACX_INTR_INIT_COMPLETE | \
+					    WL1271_ACX_INTR_EVENT_A       | \
+					    WL1271_ACX_INTR_EVENT_B       | \
+					    WL1271_ACX_INTR_CMD_COMPLETE  | \
+					    WL1271_ACX_INTR_HW_AVAILABLE  | \
+					    WL1271_ACX_INTR_DATA)
+
+#define WL1271_INTR_MASK                   (WL1271_ACX_INTR_WATCHDOG     | \
+					    WL1271_ACX_INTR_EVENT_A      | \
+					    WL1271_ACX_INTR_EVENT_B      | \
+					    WL1271_ACX_INTR_HW_AVAILABLE | \
+					    WL1271_ACX_INTR_DATA)
+
+/* Target's information element */
+struct acx_header {
+	struct wl1271_cmd_header cmd;
+
+	/* acx (or information element) header */
+	__le16 id;
+
+	/* payload length (not including headers */
+	__le16 len;
+} __packed;
+
+struct acx_error_counter {
+	struct acx_header header;
+
+	/* The number of PLCP errors since the last time this */
+	/* information element was interrogated. This field is */
+	/* automatically cleared when it is interrogated.*/
+	__le32 PLCP_error;
+
+	/* The number of FCS errors since the last time this */
+	/* information element was interrogated. This field is */
+	/* automatically cleared when it is interrogated.*/
+	__le32 FCS_error;
+
+	/* The number of MPDUs without PLCP header errors received*/
+	/* since the last time this information element was interrogated. */
+	/* This field is automatically cleared when it is interrogated.*/
+	__le32 valid_frame;
+
+	/* the number of missed sequence numbers in the squentially */
+	/* values of frames seq numbers */
+	__le32 seq_num_miss;
+} __packed;
+
+enum wl12xx_role {
+	WL1271_ROLE_STA = 0,
+	WL1271_ROLE_IBSS,
+	WL1271_ROLE_AP,
+	WL1271_ROLE_DEVICE,
+	WL1271_ROLE_P2P_CL,
+	WL1271_ROLE_P2P_GO,
+
+	WL12XX_INVALID_ROLE_TYPE = 0xff
+};
+
+enum wl1271_psm_mode {
+	/* Active mode */
+	WL1271_PSM_CAM = 0,
+
+	/* Power save mode */
+	WL1271_PSM_PS = 1,
+
+	/* Extreme low power */
+	WL1271_PSM_ELP = 2,
+};
+
+struct acx_sleep_auth {
+	struct acx_header header;
+
+	/* The sleep level authorization of the device. */
+	/* 0 - Always active*/
+	/* 1 - Power down mode: light / fast sleep*/
+	/* 2 - ELP mode: Deep / Max sleep*/
+	u8  sleep_auth;
+	u8  padding[3];
+} __packed;
+
+enum {
+	HOSTIF_PCI_MASTER_HOST_INDIRECT,
+	HOSTIF_PCI_MASTER_HOST_DIRECT,
+	HOSTIF_SLAVE,
+	HOSTIF_PKT_RING,
+	HOSTIF_DONTCARE = 0xFF
+};
+
+#define DEFAULT_UCAST_PRIORITY          0
+#define DEFAULT_RX_Q_PRIORITY           0
+#define DEFAULT_RXQ_PRIORITY            0 /* low 0 .. 15 high  */
+#define DEFAULT_RXQ_TYPE                0x07    /* All frames, Data/Ctrl/Mgmt */
+#define TRACE_BUFFER_MAX_SIZE           256
+
+#define  DP_RX_PACKET_RING_CHUNK_SIZE 1600
+#define  DP_TX_PACKET_RING_CHUNK_SIZE 1600
+#define  DP_RX_PACKET_RING_CHUNK_NUM 2
+#define  DP_TX_PACKET_RING_CHUNK_NUM 2
+#define  DP_TX_COMPLETE_TIME_OUT 20
+
+#define TX_MSDU_LIFETIME_MIN       0
+#define TX_MSDU_LIFETIME_MAX       3000
+#define TX_MSDU_LIFETIME_DEF       512
+#define RX_MSDU_LIFETIME_MIN       0
+#define RX_MSDU_LIFETIME_MAX       0xFFFFFFFF
+#define RX_MSDU_LIFETIME_DEF       512000
+
+struct acx_rx_msdu_lifetime {
+	struct acx_header header;
+
+	/*
+	 * The maximum amount of time, in TU, before the
+	 * firmware discards the MSDU.
+	 */
+	__le32 lifetime;
+} __packed;
+
+enum acx_slot_type {
+	SLOT_TIME_LONG = 0,
+	SLOT_TIME_SHORT = 1,
+	DEFAULT_SLOT_TIME = SLOT_TIME_SHORT,
+	MAX_SLOT_TIMES = 0xFF
+};
+
+#define STATION_WONE_INDEX 0
+
+struct acx_slot {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 wone_index; /* Reserved */
+	u8 slot_time;
+	u8 reserved[5];
+} __packed;
+
+
+#define ACX_MC_ADDRESS_GROUP_MAX	(8)
+#define ADDRESS_GROUP_MAX_LEN	        (ETH_ALEN * ACX_MC_ADDRESS_GROUP_MAX)
+
+struct acx_dot11_grp_addr_tbl {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 enabled;
+	u8 num_groups;
+	u8 pad[1];
+	u8 mac_table[ADDRESS_GROUP_MAX_LEN];
+} __packed;
+
+struct acx_rx_timeout {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 reserved;
+	__le16 ps_poll_timeout;
+	__le16 upsd_timeout;
+	u8 padding[2];
+} __packed;
+
+struct acx_rts_threshold {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 reserved;
+	__le16 threshold;
+} __packed;
+
+struct acx_beacon_filter_option {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 enable;
+	/*
+	 * The number of beacons without the unicast TIM
+	 * bit set that the firmware buffers before
+	 * signaling the host about ready frames.
+	 * When set to 0 and the filter is enabled, beacons
+	 * without the unicast TIM bit set are dropped.
+	 */
+	u8 max_num_beacons;
+	u8 pad[1];
+} __packed;
+
+/*
+ * ACXBeaconFilterEntry (not 221)
+ * Byte Offset     Size (Bytes)    Definition
+ * ===========     ============    ==========
+ * 0               1               IE identifier
+ * 1               1               Treatment bit mask
+ *
+ * ACXBeaconFilterEntry (221)
+ * Byte Offset     Size (Bytes)    Definition
+ * ===========     ============    ==========
+ * 0               1               IE identifier
+ * 1               1               Treatment bit mask
+ * 2               3               OUI
+ * 5               1               Type
+ * 6               2               Version
+ *
+ *
+ * Treatment bit mask - The information element handling:
+ * bit 0 - The information element is compared and transferred
+ * in case of change.
+ * bit 1 - The information element is transferred to the host
+ * with each appearance or disappearance.
+ * Note that both bits can be set at the same time.
+ */
+#define	BEACON_FILTER_TABLE_MAX_IE_NUM		       (32)
+#define BEACON_FILTER_TABLE_MAX_VENDOR_SPECIFIC_IE_NUM (6)
+#define BEACON_FILTER_TABLE_IE_ENTRY_SIZE	       (2)
+#define BEACON_FILTER_TABLE_EXTRA_VENDOR_SPECIFIC_IE_SIZE (6)
+#define BEACON_FILTER_TABLE_MAX_SIZE ((BEACON_FILTER_TABLE_MAX_IE_NUM * \
+			    BEACON_FILTER_TABLE_IE_ENTRY_SIZE) + \
+			   (BEACON_FILTER_TABLE_MAX_VENDOR_SPECIFIC_IE_NUM * \
+			    BEACON_FILTER_TABLE_EXTRA_VENDOR_SPECIFIC_IE_SIZE))
+
+struct acx_beacon_filter_ie_table {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 num_ie;
+	u8 pad[2];
+	u8 table[BEACON_FILTER_TABLE_MAX_SIZE];
+} __packed;
+
+struct acx_conn_monit_params {
+       struct acx_header header;
+
+	   u8 role_id;
+	   u8 padding[3];
+       __le32 synch_fail_thold; /* number of beacons missed */
+       __le32 bss_lose_timeout; /* number of TU's from synch fail */
+} __packed;
+
+struct acx_bt_wlan_coex {
+	struct acx_header header;
+
+	u8 enable;
+	u8 pad[3];
+} __packed;
+
+struct acx_bt_wlan_coex_param {
+	struct acx_header header;
+
+	__le32 params[CONF_SG_PARAMS_MAX];
+	u8 param_idx;
+	u8 padding[3];
+} __packed;
+
+struct acx_dco_itrim_params {
+	struct acx_header header;
+
+	u8 enable;
+	u8 padding[3];
+	__le32 timeout;
+} __packed;
+
+struct acx_energy_detection {
+	struct acx_header header;
+
+	/* The RX Clear Channel Assessment threshold in the PHY */
+	__le16 rx_cca_threshold;
+	u8 tx_energy_detection;
+	u8 pad;
+} __packed;
+
+struct acx_beacon_broadcast {
+	struct acx_header header;
+
+	u8 role_id;
+	/* Enables receiving of broadcast packets in PS mode */
+	u8 rx_broadcast_in_ps;
+
+	__le16 beacon_rx_timeout;
+	__le16 broadcast_timeout;
+
+	/* Consecutive PS Poll failures before updating the host */
+	u8 ps_poll_threshold;
+	u8 pad[1];
+} __packed;
+
+struct acx_event_mask {
+	struct acx_header header;
+
+	__le32 event_mask;
+	__le32 high_event_mask; /* Unused */
+} __packed;
+
+#define SCAN_PASSIVE		BIT(0)
+#define SCAN_5GHZ_BAND		BIT(1)
+#define SCAN_TRIGGERED		BIT(2)
+#define SCAN_PRIORITY_HIGH	BIT(3)
+
+/* When set, disable HW encryption */
+#define DF_ENCRYPTION_DISABLE      0x01
+#define DF_SNIFF_MODE_ENABLE       0x80
+
+struct acx_feature_config {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 padding[3];
+	__le32 options;
+	__le32 data_flow_options;
+} __packed;
+
+struct acx_current_tx_power {
+	struct acx_header header;
+
+	u8  role_id;
+	u8  current_tx_power;
+	u8  padding[2];
+} __packed;
+
+struct acx_wake_up_condition {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 wake_up_event; /* Only one bit can be set */
+	u8 listen_interval;
+	u8 pad[1];
+} __packed;
+
+struct acx_aid {
+	struct acx_header header;
+
+	/*
+	 * To be set when associated with an AP.
+	 */
+	u8 role_id;
+	u8 reserved;
+	__le16 aid;
+} __packed;
+
+enum acx_preamble_type {
+	ACX_PREAMBLE_LONG = 0,
+	ACX_PREAMBLE_SHORT = 1
+};
+
+struct acx_preamble {
+	struct acx_header header;
+
+	/*
+	 * When set, the WiLink transmits the frames with a short preamble and
+	 * when cleared, the WiLink transmits the frames with a long preamble.
+	 */
+	u8 role_id;
+	u8 preamble;
+	u8 padding[2];
+} __packed;
+
+enum acx_ctsprotect_type {
+	CTSPROTECT_DISABLE = 0,
+	CTSPROTECT_ENABLE = 1
+};
+
+struct acx_ctsprotect {
+	struct acx_header header;
+	u8 role_id;
+	u8 ctsprotect;
+	u8 padding[2];
+} __packed;
+
+struct acx_tx_statistics {
+	__le32 internal_desc_overflow;
+}  __packed;
+
+struct acx_rx_statistics {
+	__le32 out_of_mem;
+	__le32 hdr_overflow;
+	__le32 hw_stuck;
+	__le32 dropped;
+	__le32 fcs_err;
+	__le32 xfr_hint_trig;
+	__le32 path_reset;
+	__le32 reset_counter;
+} __packed;
+
+struct acx_dma_statistics {
+	__le32 rx_requested;
+	__le32 rx_errors;
+	__le32 tx_requested;
+	__le32 tx_errors;
+}  __packed;
+
+struct acx_isr_statistics {
+	/* host command complete */
+	__le32 cmd_cmplt;
+
+	/* fiqisr() */
+	__le32 fiqs;
+
+	/* (INT_STS_ND & INT_TRIG_RX_HEADER) */
+	__le32 rx_headers;
+
+	/* (INT_STS_ND & INT_TRIG_RX_CMPLT) */
+	__le32 rx_completes;
+
+	/* (INT_STS_ND & INT_TRIG_NO_RX_BUF) */
+	__le32 rx_mem_overflow;
+
+	/* (INT_STS_ND & INT_TRIG_S_RX_RDY) */
+	__le32 rx_rdys;
+
+	/* irqisr() */
+	__le32 irqs;
+
+	/* (INT_STS_ND & INT_TRIG_TX_PROC) */
+	__le32 tx_procs;
+
+	/* (INT_STS_ND & INT_TRIG_DECRYPT_DONE) */
+	__le32 decrypt_done;
+
+	/* (INT_STS_ND & INT_TRIG_DMA0) */
+	__le32 dma0_done;
+
+	/* (INT_STS_ND & INT_TRIG_DMA1) */
+	__le32 dma1_done;
+
+	/* (INT_STS_ND & INT_TRIG_TX_EXC_CMPLT) */
+	__le32 tx_exch_complete;
+
+	/* (INT_STS_ND & INT_TRIG_COMMAND) */
+	__le32 commands;
+
+	/* (INT_STS_ND & INT_TRIG_RX_PROC) */
+	__le32 rx_procs;
+
+	/* (INT_STS_ND & INT_TRIG_PM_802) */
+	__le32 hw_pm_mode_changes;
+
+	/* (INT_STS_ND & INT_TRIG_ACKNOWLEDGE) */
+	__le32 host_acknowledges;
+
+	/* (INT_STS_ND & INT_TRIG_PM_PCI) */
+	__le32 pci_pm;
+
+	/* (INT_STS_ND & INT_TRIG_ACM_WAKEUP) */
+	__le32 wakeups;
+
+	/* (INT_STS_ND & INT_TRIG_LOW_RSSI) */
+	__le32 low_rssi;
+} __packed;
+
+struct acx_wep_statistics {
+	/* WEP address keys configured */
+	__le32 addr_key_count;
+
+	/* default keys configured */
+	__le32 default_key_count;
+
+	__le32 reserved;
+
+	/* number of times that WEP key not found on lookup */
+	__le32 key_not_found;
+
+	/* number of times that WEP key decryption failed */
+	__le32 decrypt_fail;
+
+	/* WEP packets decrypted */
+	__le32 packets;
+
+	/* WEP decrypt interrupts */
+	__le32 interrupt;
+} __packed;
+
+#define ACX_MISSED_BEACONS_SPREAD 10
+
+struct acx_pwr_statistics {
+	/* the amount of enters into power save mode (both PD & ELP) */
+	__le32 ps_enter;
+
+	/* the amount of enters into ELP mode */
+	__le32 elp_enter;
+
+	/* the amount of missing beacon interrupts to the host */
+	__le32 missing_bcns;
+
+	/* the amount of wake on host-access times */
+	__le32 wake_on_host;
+
+	/* the amount of wake on timer-expire */
+	__le32 wake_on_timer_exp;
+
+	/* the number of packets that were transmitted with PS bit set */
+	__le32 tx_with_ps;
+
+	/* the number of packets that were transmitted with PS bit clear */
+	__le32 tx_without_ps;
+
+	/* the number of received beacons */
+	__le32 rcvd_beacons;
+
+	/* the number of entering into PowerOn (power save off) */
+	__le32 power_save_off;
+
+	/* the number of entries into power save mode */
+	__le16 enable_ps;
+
+	/*
+	 * the number of exits from power save, not including failed PS
+	 * transitions
+	 */
+	__le16 disable_ps;
+
+	/*
+	 * the number of times the TSF counter was adjusted because
+	 * of drift
+	 */
+	__le32 fix_tsf_ps;
+
+	/* Gives statistics about the spread continuous missed beacons.
+	 * The 16 LSB are dedicated for the PS mode.
+	 * The 16 MSB are dedicated for the PS mode.
+	 * cont_miss_bcns_spread[0] - single missed beacon.
+	 * cont_miss_bcns_spread[1] - two continuous missed beacons.
+	 * cont_miss_bcns_spread[2] - three continuous missed beacons.
+	 * ...
+	 * cont_miss_bcns_spread[9] - ten and more continuous missed beacons.
+	*/
+	__le32 cont_miss_bcns_spread[ACX_MISSED_BEACONS_SPREAD];
+
+	/* the number of beacons in awake mode */
+	__le32 rcvd_awake_beacons;
+} __packed;
+
+struct acx_mic_statistics {
+	__le32 rx_pkts;
+	__le32 calc_failure;
+} __packed;
+
+struct acx_aes_statistics {
+	__le32 encrypt_fail;
+	__le32 decrypt_fail;
+	__le32 encrypt_packets;
+	__le32 decrypt_packets;
+	__le32 encrypt_interrupt;
+	__le32 decrypt_interrupt;
+} __packed;
+
+struct acx_event_statistics {
+	__le32 heart_beat;
+	__le32 calibration;
+	__le32 rx_mismatch;
+	__le32 rx_mem_empty;
+	__le32 rx_pool;
+	__le32 oom_late;
+	__le32 phy_transmit_error;
+	__le32 tx_stuck;
+} __packed;
+
+struct acx_ps_statistics {
+	__le32 pspoll_timeouts;
+	__le32 upsd_timeouts;
+	__le32 upsd_max_sptime;
+	__le32 upsd_max_apturn;
+	__le32 pspoll_max_apturn;
+	__le32 pspoll_utilization;
+	__le32 upsd_utilization;
+} __packed;
+
+struct acx_rxpipe_statistics {
+	__le32 rx_prep_beacon_drop;
+	__le32 descr_host_int_trig_rx_data;
+	__le32 beacon_buffer_thres_host_int_trig_rx_data;
+	__le32 missed_beacon_host_int_trig_rx_data;
+	__le32 tx_xfr_host_int_trig_rx_data;
+} __packed;
+
+struct acx_statistics {
+	struct acx_header header;
+
+	struct acx_tx_statistics tx;
+	struct acx_rx_statistics rx;
+	struct acx_dma_statistics dma;
+	struct acx_isr_statistics isr;
+	struct acx_wep_statistics wep;
+	struct acx_pwr_statistics pwr;
+	struct acx_aes_statistics aes;
+	struct acx_mic_statistics mic;
+	struct acx_event_statistics event;
+	struct acx_ps_statistics ps;
+	struct acx_rxpipe_statistics rxpipe;
+} __packed;
+
+struct acx_rate_class {
+	__le32 enabled_rates;
+	u8 short_retry_limit;
+	u8 long_retry_limit;
+	u8 aflags;
+	u8 reserved;
+};
+
+struct acx_rate_policy {
+	struct acx_header header;
+
+	__le32 rate_policy_idx;
+	struct acx_rate_class rate_policy;
+} __packed;
+
+struct acx_ac_cfg {
+	struct acx_header header;
+	u8 role_id;
+	u8 ac;
+	u8 aifsn;
+	u8 cw_min;
+	__le16 cw_max;
+	__le16 tx_op_limit;
+} __packed;
+
+struct acx_tid_config {
+	struct acx_header header;
+	u8 role_id;
+	u8 queue_id;
+	u8 channel_type;
+	u8 tsid;
+	u8 ps_scheme;
+	u8 ack_policy;
+	u8 padding[2];
+	__le32 apsd_conf[2];
+} __packed;
+
+struct acx_frag_threshold {
+	struct acx_header header;
+	__le16 frag_threshold;
+	u8 padding[2];
+} __packed;
+
+struct acx_tx_config_options {
+	struct acx_header header;
+	__le16 tx_compl_timeout;     /* msec */
+	__le16 tx_compl_threshold;   /* number of packets */
+} __packed;
+
+struct wl12xx_acx_config_memory {
+	struct acx_header header;
+
+	u8 rx_mem_block_num;
+	u8 tx_min_mem_block_num;
+	u8 num_stations;
+	u8 num_ssid_profiles;
+	__le32 total_tx_descriptors;
+	u8 dyn_mem_enable;
+	u8 tx_free_req;
+	u8 rx_free_req;
+	u8 tx_min;
+	u8 fwlog_blocks;
+	u8 padding[3];
+} __packed;
+
+struct wl1271_acx_mem_map {
+	struct acx_header header;
+
+	__le32 code_start;
+	__le32 code_end;
+
+	__le32 wep_defkey_start;
+	__le32 wep_defkey_end;
+
+	__le32 sta_table_start;
+	__le32 sta_table_end;
+
+	__le32 packet_template_start;
+	__le32 packet_template_end;
+
+	/* Address of the TX result interface (control block) */
+	__le32 tx_result;
+	__le32 tx_result_queue_start;
+
+	__le32 queue_memory_start;
+	__le32 queue_memory_end;
+
+	__le32 packet_memory_pool_start;
+	__le32 packet_memory_pool_end;
+
+	__le32 debug_buffer1_start;
+	__le32 debug_buffer1_end;
+
+	__le32 debug_buffer2_start;
+	__le32 debug_buffer2_end;
+
+	/* Number of blocks FW allocated for TX packets */
+	__le32 num_tx_mem_blocks;
+
+	/* Number of blocks FW allocated for RX packets */
+	__le32 num_rx_mem_blocks;
+
+	/* the following 4 fields are valid in SLAVE mode only */
+	u8 *tx_cbuf;
+	u8 *rx_cbuf;
+	__le32 rx_ctrl;
+	__le32 tx_ctrl;
+} __packed;
+
+struct wl1271_acx_rx_config_opt {
+	struct acx_header header;
+
+	__le16 mblk_threshold;
+	__le16 threshold;
+	__le16 timeout;
+	u8 queue_type;
+	u8 reserved;
+} __packed;
+
+
+struct wl1271_acx_bet_enable {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 enable;
+	u8 max_consecutive;
+	u8 padding[1];
+} __packed;
+
+#define ACX_IPV4_VERSION 4
+#define ACX_IPV6_VERSION 6
+#define ACX_IPV4_ADDR_SIZE 4
+
+/* bitmap of enabled arp_filter features */
+#define ACX_ARP_FILTER_ARP_FILTERING	BIT(0)
+#define ACX_ARP_FILTER_AUTO_ARP		BIT(1)
+
+struct wl1271_acx_arp_filter {
+	struct acx_header header;
+	u8 role_id;
+	u8 version;         /* ACX_IPV4_VERSION, ACX_IPV6_VERSION */
+	u8 enable;          /* bitmap of enabled ARP filtering features */
+	u8 padding[1];
+	u8 address[16];     /* The configured device IP address - all ARP
+			       requests directed to this IP address will pass
+			       through. For IPv4, the first four bytes are
+			       used. */
+} __packed;
+
+struct wl1271_acx_pm_config {
+	struct acx_header header;
+
+	__le32 host_clk_settling_time;
+	u8 host_fast_wakeup_support;
+	u8 padding[3];
+} __packed;
+
+struct wl1271_acx_keep_alive_mode {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 enabled;
+	u8 padding[2];
+} __packed;
+
+enum {
+	ACX_KEEP_ALIVE_NO_TX = 0,
+	ACX_KEEP_ALIVE_PERIOD_ONLY
+};
+
+enum {
+	ACX_KEEP_ALIVE_TPL_INVALID = 0,
+	ACX_KEEP_ALIVE_TPL_VALID
+};
+
+struct wl1271_acx_keep_alive_config {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 index;
+	u8 tpl_validation;
+	u8 trigger;
+	__le32 period;
+} __packed;
+
+#define HOST_IF_CFG_RX_FIFO_ENABLE     BIT(0)
+#define HOST_IF_CFG_TX_EXTRA_BLKS_SWAP BIT(1)
+#define HOST_IF_CFG_TX_PAD_TO_SDIO_BLK BIT(3)
+
+struct wl1271_acx_host_config_bitmap {
+	struct acx_header header;
+
+	__le32 host_cfg_bitmap;
+} __packed;
+
+enum {
+	WL1271_ACX_TRIG_TYPE_LEVEL = 0,
+	WL1271_ACX_TRIG_TYPE_EDGE,
+};
+
+enum {
+	WL1271_ACX_TRIG_DIR_LOW = 0,
+	WL1271_ACX_TRIG_DIR_HIGH,
+	WL1271_ACX_TRIG_DIR_BIDIR,
+};
+
+enum {
+	WL1271_ACX_TRIG_ENABLE = 1,
+	WL1271_ACX_TRIG_DISABLE,
+};
+
+enum {
+	WL1271_ACX_TRIG_METRIC_RSSI_BEACON = 0,
+	WL1271_ACX_TRIG_METRIC_RSSI_DATA,
+	WL1271_ACX_TRIG_METRIC_SNR_BEACON,
+	WL1271_ACX_TRIG_METRIC_SNR_DATA,
+};
+
+enum {
+	WL1271_ACX_TRIG_IDX_RSSI = 0,
+	WL1271_ACX_TRIG_COUNT = 8,
+};
+
+struct wl1271_acx_rssi_snr_trigger {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 metric;
+	u8 type;
+	u8 dir;
+	__le16 threshold;
+	__le16 pacing; /* 0 - 60000 ms */
+	u8 hysteresis;
+	u8 index;
+	u8 enable;
+	u8 padding[1];
+};
+
+struct wl1271_acx_rssi_snr_avg_weights {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 padding[3];
+	u8 rssi_beacon;
+	u8 rssi_data;
+	u8 snr_beacon;
+	u8 snr_data;
+};
+
+
+/* special capability bit (not employed by the 802.11n spec) */
+#define WL12XX_HT_CAP_HT_OPERATION BIT(16)
+
+/*
+ * ACX_PEER_HT_CAP
+ * Configure HT capabilities - declare the capabilities of the peer
+ * we are connected to.
+ */
+struct wl1271_acx_ht_capabilities {
+	struct acx_header header;
+
+	/* bitmask of capability bits supported by the peer */
+	__le32 ht_capabilites;
+
+	/* Indicates to which link these capabilities apply. */
+	u8 hlid;
+
+	/*
+	 * This the maximum A-MPDU length supported by the AP. The FW may not
+	 * exceed this length when sending A-MPDUs
+	 */
+	u8 ampdu_max_length;
+
+	/* This is the minimal spacing required when sending A-MPDUs to the AP*/
+	u8 ampdu_min_spacing;
+
+	u8 padding;
+} __packed;
+
+/*
+ * ACX_HT_BSS_OPERATION
+ * Configure HT capabilities - AP rules for behavior in the BSS.
+ */
+struct wl1271_acx_ht_information {
+	struct acx_header header;
+
+	u8 role_id;
+
+	/* Values: 0 - RIFS not allowed, 1 - RIFS allowed */
+	u8 rifs_mode;
+
+	/* Values: 0 - 3 like in spec */
+	u8 ht_protection;
+
+	/* Values: 0 - GF protection not required, 1 - GF protection required */
+	u8 gf_protection;
+
+	/*Values: 0 - TX Burst limit not required, 1 - TX Burst Limit required*/
+	u8 ht_tx_burst_limit;
+
+	/*
+	 * Values: 0 - Dual CTS protection not required,
+	 *         1 - Dual CTS Protection required
+	 * Note: When this value is set to 1 FW will protect all TXOP with RTS
+	 * frame and will not use CTS-to-self regardless of the value of the
+	 * ACX_CTS_PROTECTION information element
+	 */
+	u8 dual_cts_protection;
+
+	u8 padding[2];
+} __packed;
+
+#define RX_BA_MAX_SESSIONS 2
+
+struct wl1271_acx_ba_initiator_policy {
+	struct acx_header header;
+
+	/* Specifies role Id, Range 0-7, 0xFF means ANY role. */
+	u8 role_id;
+
+	/*
+	 * Per TID setting for allowing TX BA. Set a bit to 1 to allow
+	 * TX BA sessions for the corresponding TID.
+	 */
+	u8 tid_bitmap;
+
+	/* Windows size in number of packets */
+	u8 win_size;
+
+	u8 padding1[1];
+
+	/* As initiator inactivity timeout in time units(TU) of 1024us */
+	u16 inactivity_timeout;
+
+	u8 padding[2];
+} __packed;
+
+struct wl1271_acx_ba_receiver_setup {
+	struct acx_header header;
+
+	/* Specifies link id, range 0-31 */
+	u8 hlid;
+
+	u8 tid;
+
+	u8 enable;
+
+	/* Windows size in number of packets */
+	u8 win_size;
+
+	/* BA session starting sequence number.  RANGE 0-FFF */
+	u16 ssn;
+
+	u8 padding[2];
+} __packed;
+
+struct wl12xx_acx_fw_tsf_information {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 padding1[3];
+	__le32 current_tsf_high;
+	__le32 current_tsf_low;
+	__le32 last_bttt_high;
+	__le32 last_tbtt_low;
+	u8 last_dtim_count;
+	u8 padding2[3];
+} __packed;
+
+struct wl1271_acx_ps_rx_streaming {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 tid;
+	u8 enable;
+
+	/* interval between triggers (10-100 msec) */
+	u8 period;
+
+	/* timeout before first trigger (0-200 msec) */
+	u8 timeout;
+	u8 padding[3];
+} __packed;
+
+struct wl1271_acx_ap_max_tx_retry {
+	struct acx_header header;
+
+	u8 role_id;
+	u8 padding_1;
+
+	/*
+	 * the number of frames transmission failures before
+	 * issuing the aging event.
+	 */
+	__le16 max_tx_retry;
+} __packed;
+
+struct wl1271_acx_config_ps {
+	struct acx_header header;
+
+	u8 exit_retries;
+	u8 enter_retries;
+	u8 padding[2];
+	__le32 null_data_rate;
+} __packed;
+
+struct wl1271_acx_inconnection_sta {
+	struct acx_header header;
+
+	u8 addr[ETH_ALEN];
+	u8 padding1[2];
+} __packed;
+
+/*
+ * ACX_FM_COEX_CFG
+ * set the FM co-existence parameters.
+ */
+struct wl1271_acx_fm_coex {
+	struct acx_header header;
+	/* enable(1) / disable(0) the FM Coex feature */
+	u8 enable;
+	/*
+	 * Swallow period used in COEX PLL swallowing mechanism.
+	 * 0xFF = use FW default
+	 */
+	u8 swallow_period;
+	/*
+	 * The N divider used in COEX PLL swallowing mechanism for Fref of
+	 * 38.4/19.2 Mhz. 0xFF = use FW default
+	 */
+	u8 n_divider_fref_set_1;
+	/*
+	 * The N divider used in COEX PLL swallowing mechanism for Fref of
+	 * 26/52 Mhz. 0xFF = use FW default
+	 */
+	u8 n_divider_fref_set_2;
+	/*
+	 * The M divider used in COEX PLL swallowing mechanism for Fref of
+	 * 38.4/19.2 Mhz. 0xFFFF = use FW default
+	 */
+	__le16 m_divider_fref_set_1;
+	/*
+	 * The M divider used in COEX PLL swallowing mechanism for Fref of
+	 * 26/52 Mhz. 0xFFFF = use FW default
+	 */
+	__le16 m_divider_fref_set_2;
+	/*
+	 * The time duration in uSec required for COEX PLL to stabilize.
+	 * 0xFFFFFFFF = use FW default
+	 */
+	__le32 coex_pll_stabilization_time;
+	/*
+	 * The time duration in uSec required for LDO to stabilize.
+	 * 0xFFFFFFFF = use FW default
+	 */
+	__le16 ldo_stabilization_time;
+	/*
+	 * The disturbed frequency band margin around the disturbed frequency
+	 * center (single sided).
+	 * For example, if 2 is configured, the following channels will be
+	 * considered disturbed channel:
+	 *   80 +- 0.1 MHz, 91 +- 0.1 MHz, 98 +- 0.1 MHz, 102 +- 0.1 MH
+	 * 0xFF = use FW default
+	 */
+	u8 fm_disturbed_band_margin;
+	/*
+	 * The swallow clock difference of the swallowing mechanism.
+	 * 0xFF = use FW default
+	 */
+	u8 swallow_clk_diff;
+} __packed;
+
+#define ACX_RATE_MGMT_ALL_PARAMS 0xff
+struct wl12xx_acx_set_rate_mgmt_params {
+	struct acx_header header;
+
+	u8 index; /* 0xff to configure all params */
+	u8 padding1;
+	__le16 rate_retry_score;
+	__le16 per_add;
+	__le16 per_th1;
+	__le16 per_th2;
+	__le16 max_per;
+	u8 inverse_curiosity_factor;
+	u8 tx_fail_low_th;
+	u8 tx_fail_high_th;
+	u8 per_alpha_shift;
+	u8 per_add_shift;
+	u8 per_beta1_shift;
+	u8 per_beta2_shift;
+	u8 rate_check_up;
+	u8 rate_check_down;
+	u8 rate_retry_policy[ACX_RATE_MGMT_NUM_OF_RATES];
+	u8 padding2[2];
+} __packed;
+
+struct wl12xx_acx_config_hangover {
+	struct acx_header header;
+
+	__le32 recover_time;
+	u8 hangover_period;
+	u8 dynamic_mode;
+	u8 early_termination_mode;
+	u8 max_period;
+	u8 min_period;
+	u8 increase_delta;
+	u8 decrease_delta;
+	u8 quiet_time;
+	u8 increase_time;
+	u8 window_size;
+	u8 padding[2];
+} __packed;
+
+enum {
+	ACX_WAKE_UP_CONDITIONS           = 0x0000,
+	ACX_MEM_CFG                      = 0x0001,
+	ACX_SLOT                         = 0x0002,
+	ACX_AC_CFG                       = 0x0003,
+	ACX_MEM_MAP                      = 0x0004,
+	ACX_AID                          = 0x0005,
+	ACX_MEDIUM_USAGE                 = 0x0006,
+	ACX_STATISTICS                   = 0x0007,
+	ACX_PWR_CONSUMPTION_STATISTICS   = 0x0008,
+	ACX_TID_CFG                      = 0x0009,
+	ACX_PS_RX_STREAMING              = 0x000A,
+	ACX_BEACON_FILTER_OPT            = 0x000B,
+	ACX_NOISE_HIST                   = 0x000C,
+	ACX_HDK_VERSION                  = 0x000D,
+	ACX_PD_THRESHOLD                 = 0x000E,
+	ACX_TX_CONFIG_OPT                = 0x000F,
+	ACX_CCA_THRESHOLD                = 0x0010,
+	ACX_EVENT_MBOX_MASK              = 0x0011,
+	ACX_CONN_MONIT_PARAMS            = 0x0012,
+	ACX_DISABLE_BROADCASTS           = 0x0013,
+	ACX_BCN_DTIM_OPTIONS             = 0x0014,
+	ACX_SG_ENABLE                    = 0x0015,
+	ACX_SG_CFG                       = 0x0016,
+	ACX_FM_COEX_CFG                  = 0x0017,
+	ACX_BEACON_FILTER_TABLE          = 0x0018,
+	ACX_ARP_IP_FILTER                = 0x0019,
+	ACX_ROAMING_STATISTICS_TBL       = 0x001A,
+	ACX_RATE_POLICY                  = 0x001B,
+	ACX_CTS_PROTECTION               = 0x001C,
+	ACX_SLEEP_AUTH                   = 0x001D,
+	ACX_PREAMBLE_TYPE                = 0x001E,
+	ACX_ERROR_CNT                    = 0x001F,
+	ACX_IBSS_FILTER                  = 0x0020,
+	ACX_SERVICE_PERIOD_TIMEOUT       = 0x0021,
+	ACX_TSF_INFO                     = 0x0022,
+	ACX_CONFIG_PS_WMM                = 0x0023,
+	ACX_ENABLE_RX_DATA_FILTER        = 0x0024,
+	ACX_SET_RX_DATA_FILTER           = 0x0025,
+	ACX_GET_DATA_FILTER_STATISTICS   = 0x0026,
+	ACX_RX_CONFIG_OPT                = 0x0027,
+	ACX_FRAG_CFG                     = 0x0028,
+	ACX_BET_ENABLE                   = 0x0029,
+	ACX_RSSI_SNR_TRIGGER             = 0x002A,
+	ACX_RSSI_SNR_WEIGHTS             = 0x002B,
+	ACX_KEEP_ALIVE_MODE              = 0x002C,
+	ACX_SET_KEEP_ALIVE_CONFIG        = 0x002D,
+	ACX_BA_SESSION_INIT_POLICY       = 0x002E,
+	ACX_BA_SESSION_RX_SETUP          = 0x002F,
+	ACX_PEER_HT_CAP                  = 0x0030,
+	ACX_HT_BSS_OPERATION             = 0x0031,
+	ACX_COEX_ACTIVITY                = 0x0032,
+	ACX_BURST_MODE                   = 0x0033,
+	ACX_SET_RATE_MGMT_PARAMS         = 0x0034,
+	ACX_GET_RATE_MGMT_PARAMS         = 0x0035,
+	ACX_SET_RATE_ADAPT_PARAMS        = 0x0036,
+	ACX_SET_DCO_ITRIM_PARAMS         = 0x0037,
+	ACX_GEN_FW_CMD                   = 0x0038,
+	ACX_HOST_IF_CFG_BITMAP           = 0x0039,
+	ACX_MAX_TX_FAILURE               = 0x003A,
+	ACX_UPDATE_INCONNECTION_STA_LIST = 0x003B,
+	DOT11_RX_MSDU_LIFE_TIME          = 0x003C,
+	DOT11_CUR_TX_PWR                 = 0x003D,
+	DOT11_RTS_THRESHOLD              = 0x003E,
+	DOT11_GROUP_ADDRESS_TBL          = 0x003F,
+	ACX_PM_CONFIG                    = 0x0040,
+	ACX_CONFIG_PS                    = 0x0041,
+	ACX_CONFIG_HANGOVER              = 0x0042,
+	ACX_FEATURE_CFG                  = 0x0043,
+	ACX_PROTECTION_CFG               = 0x0044,
+};
+
+
+int wl1271_acx_wake_up_conditions(struct wl1271 *wl,
+				  struct wl12xx_vif *wlvif,
+				  u8 wake_up_event, u8 listen_interval);
+int wl1271_acx_sleep_auth(struct wl1271 *wl, u8 sleep_auth);
+int wl1271_acx_tx_power(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			int power);
+int wl1271_acx_feature_cfg(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_acx_mem_map(struct wl1271 *wl,
+		       struct acx_header *mem_map, size_t len);
+int wl1271_acx_rx_msdu_life_time(struct wl1271 *wl);
+int wl1271_acx_slot(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+		    enum acx_slot_type slot_time);
+int wl1271_acx_group_address_tbl(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+				 bool enable, void *mc_list, u32 mc_list_len);
+int wl1271_acx_service_period_timeout(struct wl1271 *wl,
+				      struct wl12xx_vif *wlvif);
+int wl1271_acx_rts_threshold(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			     u32 rts_threshold);
+int wl1271_acx_dco_itrim_params(struct wl1271 *wl);
+int wl1271_acx_beacon_filter_opt(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+				 bool enable_filter);
+int wl1271_acx_beacon_filter_table(struct wl1271 *wl,
+				   struct wl12xx_vif *wlvif);
+int wl1271_acx_conn_monit_params(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+				 bool enable);
+int wl1271_acx_sg_enable(struct wl1271 *wl, bool enable);
+int wl12xx_acx_sg_cfg(struct wl1271 *wl);
+int wl1271_acx_cca_threshold(struct wl1271 *wl);
+int wl1271_acx_bcn_dtim_options(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_acx_aid(struct wl1271 *wl, struct wl12xx_vif *wlvif, u16 aid);
+int wl1271_acx_event_mbox_mask(struct wl1271 *wl, u32 event_mask);
+int wl1271_acx_set_preamble(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			    enum acx_preamble_type preamble);
+int wl1271_acx_cts_protect(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			   enum acx_ctsprotect_type ctsprotect);
+int wl1271_acx_statistics(struct wl1271 *wl, struct acx_statistics *stats);
+int wl1271_acx_sta_rate_policies(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_acx_ap_rate_policy(struct wl1271 *wl, struct conf_tx_rate_class *c,
+		      u8 idx);
+int wl1271_acx_ac_cfg(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+		      u8 ac, u8 cw_min, u16 cw_max, u8 aifsn, u16 txop);
+int wl1271_acx_tid_cfg(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+		       u8 queue_id, u8 channel_type,
+		       u8 tsid, u8 ps_scheme, u8 ack_policy,
+		       u32 apsd_conf0, u32 apsd_conf1);
+int wl1271_acx_frag_threshold(struct wl1271 *wl, u32 frag_threshold);
+int wl1271_acx_tx_config_options(struct wl1271 *wl);
+int wl12xx_acx_mem_cfg(struct wl1271 *wl);
+int wl1271_acx_init_mem_config(struct wl1271 *wl);
+int wl1271_acx_host_if_cfg_bitmap(struct wl1271 *wl, u32 host_cfg_bitmap);
+int wl1271_acx_init_rx_interrupt(struct wl1271 *wl);
+int wl1271_acx_smart_reflex(struct wl1271 *wl);
+int wl1271_acx_bet_enable(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			  bool enable);
+int wl1271_acx_arp_ip_filter(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			     u8 enable, __be32 address);
+int wl1271_acx_pm_config(struct wl1271 *wl);
+int wl1271_acx_keep_alive_mode(struct wl1271 *wl, struct wl12xx_vif *vif,
+			       bool enable);
+int wl1271_acx_keep_alive_config(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+				 u8 index, u8 tpl_valid);
+int wl1271_acx_rssi_snr_trigger(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+				bool enable, s16 thold, u8 hyst);
+int wl1271_acx_rssi_snr_avg_weights(struct wl1271 *wl,
+				    struct wl12xx_vif *wlvif);
+int wl1271_acx_set_ht_capabilities(struct wl1271 *wl,
+				    struct ieee80211_sta_ht_cap *ht_cap,
+				    bool allow_ht_operation, u8 hlid);
+int wl1271_acx_set_ht_information(struct wl1271 *wl,
+				   struct wl12xx_vif *wlvif,
+				   u16 ht_operation_mode);
+int wl12xx_acx_set_ba_initiator_policy(struct wl1271 *wl,
+				       struct wl12xx_vif *wlvif);
+int wl12xx_acx_set_ba_receiver_session(struct wl1271 *wl, u8 tid_index,
+				       u16 ssn, bool enable, u8 peer_hlid);
+int wl12xx_acx_tsf_info(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			u64 *mactime);
+int wl1271_acx_ps_rx_streaming(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			       bool enable);
+int wl1271_acx_ap_max_tx_retry(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl12xx_acx_config_ps(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_acx_set_inconnection_sta(struct wl1271 *wl, u8 *addr);
+int wl1271_acx_fm_coex(struct wl1271 *wl);
+int wl12xx_acx_set_rate_mgmt_params(struct wl1271 *wl);
+int wl12xx_acx_config_hangover(struct wl1271 *wl);
+
+#endif /* __WL1271_ACX_H__ */
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2008-2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __BOOT_H__
+#define __BOOT_H__
+
+#include "wl12xx.h"
+
+int wl1271_boot(struct wl1271 *wl);
+int wl1271_load_firmware(struct wl1271 *wl);
+
+#define WL1271_NO_SUBBANDS 8
+#define WL1271_NO_POWER_LEVELS 4
+#define WL1271_FW_VERSION_MAX_LEN 20
+
+struct wl1271_static_data {
+	u8 mac_address[ETH_ALEN];
+	u8 padding[2];
+	u8 fw_version[WL1271_FW_VERSION_MAX_LEN];
+	u32 hw_version;
+	u8 tx_power_table[WL1271_NO_SUBBANDS][WL1271_NO_POWER_LEVELS];
+};
+
+/* number of times we try to read the INIT interrupt */
+#define INIT_LOOP 20000
+
+/* delay between retries */
+#define INIT_LOOP_DELAY 50
+
+#define WU_COUNTER_PAUSE_VAL 0x3FF
+#define WELP_ARM_COMMAND_VAL 0x4
+
+#define OCP_REG_POLARITY     0x0064
+#define OCP_REG_CLK_TYPE     0x0448
+#define OCP_REG_CLK_POLARITY 0x0cb2
+#define OCP_REG_CLK_PULL     0x0cb4
+
+#define CMD_MBOX_ADDRESS     0x407B4
+
+#define POLARITY_LOW         BIT(1)
+#define NO_PULL              (BIT(14) | BIT(15))
+
+#define FREF_CLK_TYPE_BITS     0xfffffe7f
+#define CLK_REQ_PRCM           0x100
+#define FREF_CLK_POLARITY_BITS 0xfffff8ff
+#define CLK_REQ_OUTN_SEL       0x700
+
+/* PLL configuration algorithm for wl128x */
+#define SYS_CLK_CFG_REG              0x2200
+/* Bit[0]   -  0-TCXO,  1-FREF */
+#define MCS_PLL_CLK_SEL_FREF         BIT(0)
+/* Bit[3:2] - 01-TCXO, 10-FREF */
+#define WL_CLK_REQ_TYPE_FREF         BIT(3)
+#define WL_CLK_REQ_TYPE_PG2          (BIT(3) | BIT(2))
+/* Bit[4]   -  0-TCXO,  1-FREF */
+#define PRCM_CM_EN_MUX_WLAN_FREF     BIT(4)
+
+#define TCXO_ILOAD_INT_REG           0x2264
+#define TCXO_CLK_DETECT_REG          0x2266
+
+#define TCXO_DET_FAILED              BIT(4)
+
+#define FREF_ILOAD_INT_REG           0x2084
+#define FREF_CLK_DETECT_REG          0x2086
+#define FREF_CLK_DETECT_FAIL         BIT(4)
+
+/* Use this reg for masking during driver access */
+#define WL_SPARE_REG                 0x2320
+#define WL_SPARE_VAL                 BIT(2)
+/* Bit[6:5:3] -  mask wl write SYS_CLK_CFG[8:5:2:4] */
+#define WL_SPARE_MASK_8526           (BIT(6) | BIT(5) | BIT(3))
+
+#define PLL_LOCK_COUNTERS_REG        0xD8C
+#define PLL_LOCK_COUNTERS_COEX       0x0F
+#define PLL_LOCK_COUNTERS_MCS        0xF0
+#define MCS_PLL_OVERRIDE_REG         0xD90
+#define MCS_PLL_CONFIG_REG           0xD92
+#define MCS_SEL_IN_FREQ_MASK         0x0070
+#define MCS_SEL_IN_FREQ_SHIFT        4
+#define MCS_PLL_CONFIG_REG_VAL       0x73
+#define MCS_PLL_ENABLE_HP            (BIT(0) | BIT(1))
+
+#define MCS_PLL_M_REG                0xD94
+#define MCS_PLL_N_REG                0xD96
+#define MCS_PLL_M_REG_VAL            0xC8
+#define MCS_PLL_N_REG_VAL            0x07
+
+#define SDIO_IO_DS                   0xd14
+
+/* SDIO/wSPI DS configuration values */
+enum {
+	HCI_IO_DS_8MA = 0,
+	HCI_IO_DS_4MA = 1, /* default */
+	HCI_IO_DS_6MA = 2,
+	HCI_IO_DS_2MA = 3,
+};
+
+/* end PLL configuration algorithm for wl128x */
+
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __CMD_H__
+#define __CMD_H__
+
+#include "wl12xx.h"
+
+struct acx_header;
+
+int wl1271_cmd_send(struct wl1271 *wl, u16 id, void *buf, size_t len,
+		    size_t res_len);
+int wl1271_cmd_general_parms(struct wl1271 *wl);
+int wl128x_cmd_general_parms(struct wl1271 *wl);
+int wl1271_cmd_radio_parms(struct wl1271 *wl);
+int wl128x_cmd_radio_parms(struct wl1271 *wl);
+int wl1271_cmd_ext_radio_parms(struct wl1271 *wl);
+int wl12xx_cmd_role_enable(struct wl1271 *wl, u8 *addr, u8 role_type,
+			   u8 *role_id);
+int wl12xx_cmd_role_disable(struct wl1271 *wl, u8 *role_id);
+int wl12xx_cmd_role_start_sta(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl12xx_cmd_role_stop_sta(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl12xx_cmd_role_start_ap(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl12xx_cmd_role_stop_ap(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl12xx_cmd_role_start_ibss(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl12xx_start_dev(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl12xx_stop_dev(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_cmd_test(struct wl1271 *wl, void *buf, size_t buf_len, u8 answer);
+int wl1271_cmd_interrogate(struct wl1271 *wl, u16 id, void *buf, size_t len);
+int wl1271_cmd_configure(struct wl1271 *wl, u16 id, void *buf, size_t len);
+int wl1271_cmd_data_path(struct wl1271 *wl, bool enable);
+int wl1271_cmd_ps_mode(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+		       u8 ps_mode, u16 auto_ps_timeout);
+int wl1271_cmd_read_memory(struct wl1271 *wl, u32 addr, void *answer,
+			   size_t len);
+int wl1271_cmd_template_set(struct wl1271 *wl, u8 role_id,
+			    u16 template_id, void *buf, size_t buf_len,
+			    int index, u32 rates);
+int wl12xx_cmd_build_null_data(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_cmd_build_ps_poll(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			     u16 aid);
+int wl12xx_cmd_build_probe_req(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			       u8 role_id, u8 band,
+			       const u8 *ssid, size_t ssid_len,
+			       const u8 *ie, size_t ie_len);
+struct sk_buff *wl1271_cmd_build_ap_probe_req(struct wl1271 *wl,
+					      struct wl12xx_vif *wlvif,
+					      struct sk_buff *skb);
+int wl1271_cmd_build_arp_rsp(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_build_qos_null_data(struct wl1271 *wl, struct ieee80211_vif *vif);
+int wl12xx_cmd_build_klv_null_data(struct wl1271 *wl,
+				   struct wl12xx_vif *wlvif);
+int wl12xx_cmd_set_default_wep_key(struct wl1271 *wl, u8 id, u8 hlid);
+int wl1271_cmd_set_sta_key(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			   u16 action, u8 id, u8 key_type,
+			   u8 key_size, const u8 *key, const u8 *addr,
+			   u32 tx_seq_32, u16 tx_seq_16);
+int wl1271_cmd_set_ap_key(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			  u16 action, u8 id, u8 key_type,
+			  u8 key_size, const u8 *key, u8 hlid, u32 tx_seq_32,
+			  u16 tx_seq_16);
+int wl12xx_cmd_set_peer_state(struct wl1271 *wl, u8 hlid);
+int wl12xx_roc(struct wl1271 *wl, struct wl12xx_vif *wlvif, u8 role_id);
+int wl12xx_croc(struct wl1271 *wl, u8 role_id);
+int wl12xx_cmd_add_peer(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			struct ieee80211_sta *sta, u8 hlid);
+int wl12xx_cmd_remove_peer(struct wl1271 *wl, u8 hlid);
+int wl12xx_cmd_config_fwlog(struct wl1271 *wl);
+int wl12xx_cmd_start_fwlog(struct wl1271 *wl);
+int wl12xx_cmd_stop_fwlog(struct wl1271 *wl);
+int wl12xx_cmd_channel_switch(struct wl1271 *wl,
+			      struct wl12xx_vif *wlvif,
+			      struct ieee80211_channel_switch *ch_switch);
+int wl12xx_cmd_stop_channel_switch(struct wl1271 *wl);
+int wl12xx_allocate_link(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			 u8 *hlid);
+void wl12xx_free_link(struct wl1271 *wl, struct wl12xx_vif *wlvif, u8 *hlid);
+
+enum wl1271_commands {
+	CMD_INTERROGATE	= 1, /* use this to read information elements */
+	CMD_CONFIGURE	= 2, /* use this to write information elements */
+	CMD_ENABLE_RX	= 3,
+	CMD_ENABLE_TX	= 4,
+	CMD_DISABLE_RX	= 5,
+	CMD_DISABLE_TX	= 6,
+	CMD_SCAN	= 7,
+	CMD_STOP_SCAN	= 8,
+	CMD_SET_KEYS	= 9,
+	CMD_READ_MEMORY	= 10,
+	CMD_WRITE_MEMORY	= 11,
+	CMD_SET_TEMPLATE	= 12,
+	CMD_TEST		= 13,
+	CMD_NOISE_HIST		= 14,
+	CMD_QUIET_ELEMENT_SET_STATE = 15,
+	CMD_SET_BCN_MODE	= 16,
+
+	CMD_MEASUREMENT		= 17,
+	CMD_STOP_MEASUREMENT	= 18,
+	CMD_SET_PS_MODE		= 19,
+	CMD_CHANNEL_SWITCH	= 20,
+	CMD_STOP_CHANNEL_SWICTH = 21,
+	CMD_AP_DISCOVERY	= 22,
+	CMD_STOP_AP_DISCOVERY	= 23,
+	CMD_HEALTH_CHECK	= 24,
+	CMD_DEBUG		= 25,
+	CMD_TRIGGER_SCAN_TO	= 26,
+	CMD_CONNECTION_SCAN_CFG	= 27,
+	CMD_CONNECTION_SCAN_SSID_CFG	= 28,
+	CMD_START_PERIODIC_SCAN	= 29,
+	CMD_STOP_PERIODIC_SCAN	= 30,
+	CMD_SET_PEER_STATE	= 31,
+	CMD_REMAIN_ON_CHANNEL	= 32,
+	CMD_CANCEL_REMAIN_ON_CHANNEL	= 33,
+	CMD_CONFIG_FWLOGGER		= 34,
+	CMD_START_FWLOGGER			= 35,
+	CMD_STOP_FWLOGGER			= 36,
+
+	/* Access point commands */
+	CMD_ADD_PEER		= 37,
+	CMD_REMOVE_PEER		= 38,
+
+	/* Role API */
+	CMD_ROLE_ENABLE		= 39,
+	CMD_ROLE_DISABLE	= 40,
+	CMD_ROLE_START		= 41,
+	CMD_ROLE_STOP		= 42,
+
+	/* DFS */
+	CMD_START_RADAR_DETECTION	= 43,
+	CMD_STOP_RADAR_DETECTION	= 44,
+
+	/* WIFI Direct */
+	CMD_WFD_START_DISCOVERY	= 45,
+	CMD_WFD_STOP_DISCOVERY	= 46,
+	CMD_WFD_ATTRIBUTE_CONFIG	= 47,
+	CMD_NOP			= 48,
+	CMD_LAST_COMMAND,
+
+	MAX_COMMAND_ID = 0xFFFF,
+};
+
+#define MAX_CMD_PARAMS 572
+
+enum {
+	CMD_TEMPL_KLV_IDX_NULL_DATA = 0,
+	CMD_TEMPL_KLV_IDX_MAX = 4
+};
+
+enum cmd_templ {
+	CMD_TEMPL_NULL_DATA = 0,
+	CMD_TEMPL_BEACON,
+	CMD_TEMPL_CFG_PROBE_REQ_2_4,
+	CMD_TEMPL_CFG_PROBE_REQ_5,
+	CMD_TEMPL_PROBE_RESPONSE,
+	CMD_TEMPL_QOS_NULL_DATA,
+	CMD_TEMPL_PS_POLL,
+	CMD_TEMPL_KLV,
+	CMD_TEMPL_DISCONNECT,
+	CMD_TEMPL_PROBE_REQ_2_4, /* for firmware internal use only */
+	CMD_TEMPL_PROBE_REQ_5,   /* for firmware internal use only */
+	CMD_TEMPL_BAR,           /* for firmware internal use only */
+	CMD_TEMPL_CTS,           /*
+				  * For CTS-to-self (FastCTS) mechanism
+				  * for BT/WLAN coexistence (SoftGemini). */
+	CMD_TEMPL_AP_BEACON,
+	CMD_TEMPL_AP_PROBE_RESPONSE,
+	CMD_TEMPL_ARP_RSP,
+	CMD_TEMPL_DEAUTH_AP,
+	CMD_TEMPL_TEMPORARY,
+	CMD_TEMPL_LINK_MEASUREMENT_REPORT,
+
+	CMD_TEMPL_MAX = 0xff
+};
+
+/* unit ms */
+#define WL1271_COMMAND_TIMEOUT     2000
+#define WL1271_CMD_TEMPL_DFLT_SIZE 252
+#define WL1271_CMD_TEMPL_MAX_SIZE  512
+#define WL1271_EVENT_TIMEOUT       750
+
+struct wl1271_cmd_header {
+	__le16 id;
+	__le16 status;
+	/* payload */
+	u8 data[0];
+} __packed;
+
+#define WL1271_CMD_MAX_PARAMS 572
+
+struct wl1271_command {
+	struct wl1271_cmd_header header;
+	u8  parameters[WL1271_CMD_MAX_PARAMS];
+} __packed;
+
+enum {
+	CMD_MAILBOX_IDLE		=  0,
+	CMD_STATUS_SUCCESS		=  1,
+	CMD_STATUS_UNKNOWN_CMD		=  2,
+	CMD_STATUS_UNKNOWN_IE		=  3,
+	CMD_STATUS_REJECT_MEAS_SG_ACTIVE	= 11,
+	CMD_STATUS_RX_BUSY		= 13,
+	CMD_STATUS_INVALID_PARAM		= 14,
+	CMD_STATUS_TEMPLATE_TOO_LARGE		= 15,
+	CMD_STATUS_OUT_OF_MEMORY		= 16,
+	CMD_STATUS_STA_TABLE_FULL		= 17,
+	CMD_STATUS_RADIO_ERROR		= 18,
+	CMD_STATUS_WRONG_NESTING		= 19,
+	CMD_STATUS_TIMEOUT		= 21, /* Driver internal use.*/
+	CMD_STATUS_FW_RESET		= 22, /* Driver internal use.*/
+	CMD_STATUS_TEMPLATE_OOM		= 23,
+	CMD_STATUS_NO_RX_BA_SESSION	= 24,
+	MAX_COMMAND_STATUS		= 0xff
+};
+
+#define CMDMBOX_HEADER_LEN 4
+#define CMDMBOX_INFO_ELEM_HEADER_LEN 4
+
+enum {
+	BSS_TYPE_IBSS = 0,
+	BSS_TYPE_STA_BSS = 2,
+	BSS_TYPE_AP_BSS = 3,
+	MAX_BSS_TYPE = 0xFF
+};
+
+#define WL1271_JOIN_CMD_CTRL_TX_FLUSH     0x80 /* Firmware flushes all Tx */
+#define WL1271_JOIN_CMD_TX_SESSION_OFFSET 1
+#define WL1271_JOIN_CMD_BSS_TYPE_5GHZ 0x10
+
+struct wl12xx_cmd_role_enable {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 role_type;
+	u8 mac_address[ETH_ALEN];
+} __packed;
+
+struct wl12xx_cmd_role_disable {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 padding[3];
+} __packed;
+
+enum wl12xx_band {
+	WL12XX_BAND_2_4GHZ		= 0,
+	WL12XX_BAND_5GHZ		= 1,
+	WL12XX_BAND_JAPAN_4_9_GHZ	= 2,
+	WL12XX_BAND_DEFAULT		= WL12XX_BAND_2_4GHZ,
+	WL12XX_BAND_INVALID		= 0x7E,
+	WL12XX_BAND_MAX_RADIO		= 0x7F,
+};
+
+struct wl12xx_cmd_role_start {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 band;
+	u8 channel;
+	u8 padding;
+
+	union {
+		struct {
+			u8 hlid;
+			u8 session;
+			u8 padding_1[54];
+		} __packed device;
+		/* sta & p2p_cli use the same struct */
+		struct {
+			u8 bssid[ETH_ALEN];
+			u8 hlid; /* data hlid */
+			u8 session;
+			__le32 remote_rates; /* remote supported rates */
+
+			/*
+			 * The target uses this field to determine the rate at
+			 * which to transmit control frame responses (such as
+			 * ACK or CTS frames).
+			 */
+			__le32 basic_rate_set;
+			__le32 local_rates; /* local supported rates */
+
+			u8 ssid_type;
+			u8 ssid_len;
+			u8 ssid[IEEE80211_MAX_SSID_LEN];
+
+			__le16 beacon_interval; /* in TBTTs */
+		} __packed sta;
+		struct {
+			u8 bssid[ETH_ALEN];
+			u8 hlid; /* data hlid */
+			u8 dtim_interval;
+			__le32 remote_rates; /* remote supported rates */
+
+			__le32 basic_rate_set;
+			__le32 local_rates; /* local supported rates */
+
+			u8 ssid_type;
+			u8 ssid_len;
+			u8 ssid[IEEE80211_MAX_SSID_LEN];
+
+			__le16 beacon_interval; /* in TBTTs */
+
+			u8 padding_1[4];
+		} __packed ibss;
+		/* ap & p2p_go use the same struct */
+		struct {
+			__le16 aging_period; /* in secs */
+			u8 beacon_expiry; /* in ms */
+			u8 bss_index;
+			/* The host link id for the AP's global queue */
+			u8 global_hlid;
+			/* The host link id for the AP's broadcast queue */
+			u8 broadcast_hlid;
+
+			__le16 beacon_interval; /* in TBTTs */
+
+			__le32 basic_rate_set;
+			__le32 local_rates; /* local supported rates */
+
+			u8 dtim_interval;
+
+			u8 ssid_type;
+			u8 ssid_len;
+			u8 ssid[IEEE80211_MAX_SSID_LEN];
+
+			u8 reset_tsf;
+
+			u8 padding_1[4];
+		} __packed ap;
+	};
+} __packed;
+
+struct wl12xx_cmd_role_stop {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 disc_type; /* only STA and P2P_CLI */
+	__le16 reason; /* only STA and P2P_CLI */
+} __packed;
+
+struct cmd_enabledisable_path {
+	struct wl1271_cmd_header header;
+
+	u8 channel;
+	u8 padding[3];
+} __packed;
+
+#define WL1271_RATE_AUTOMATIC  0
+
+struct wl1271_cmd_template_set {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 template_type;
+	__le16 len;
+	u8 index;  /* relevant only for KLV_TEMPLATE type */
+	u8 padding[3];
+
+	__le32 enabled_rates;
+	u8 short_retry_limit;
+	u8 long_retry_limit;
+	u8 aflags;
+	u8 reserved;
+
+	u8 template_data[WL1271_CMD_TEMPL_MAX_SIZE];
+} __packed;
+
+#define TIM_ELE_ID    5
+#define PARTIAL_VBM_MAX    251
+
+struct wl1271_tim {
+	u8 identity;
+	u8 length;
+	u8 dtim_count;
+	u8 dtim_period;
+	u8 bitmap_ctrl;
+	u8 pvb_field[PARTIAL_VBM_MAX]; /* Partial Virtual Bitmap */
+} __packed;
+
+enum wl1271_cmd_ps_mode {
+	STATION_AUTO_PS_MODE,   /* Dynamic Power Save */
+	STATION_ACTIVE_MODE,
+	STATION_POWER_SAVE_MODE
+};
+
+struct wl1271_cmd_ps_params {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 ps_mode; /* STATION_* */
+	u16 auto_ps_timeout;
+} __packed;
+
+/* HW encryption keys */
+#define NUM_ACCESS_CATEGORIES_COPY 4
+
+enum wl1271_cmd_key_action {
+	KEY_ADD_OR_REPLACE = 1,
+	KEY_REMOVE         = 2,
+	KEY_SET_ID         = 3,
+	MAX_KEY_ACTION     = 0xffff,
+};
+
+enum wl1271_cmd_lid_key_type {
+	UNICAST_LID_TYPE     = 0,
+	BROADCAST_LID_TYPE   = 1,
+	WEP_DEFAULT_LID_TYPE = 2
+};
+
+enum wl1271_cmd_key_type {
+	KEY_NONE = 0,
+	KEY_WEP  = 1,
+	KEY_TKIP = 2,
+	KEY_AES  = 3,
+	KEY_GEM  = 4,
+};
+
+struct wl1271_cmd_set_keys {
+	struct wl1271_cmd_header header;
+
+	/*
+	 * Indicates whether the HLID is a unicast key set
+	 * or broadcast key set. A special value 0xFF is
+	 * used to indicate that the HLID is on WEP-default
+	 * (multi-hlids). of type wl1271_cmd_lid_key_type.
+	 */
+	u8 hlid;
+
+	/*
+	 * In WEP-default network (hlid == 0xFF) used to
+	 * indicate which network STA/IBSS/AP role should be
+	 * changed
+	 */
+	u8 lid_key_type;
+
+	/*
+	 * Key ID - For TKIP and AES key types, this field
+	 * indicates the value that should be inserted into
+	 * the KeyID field of frames transmitted using this
+	 * key entry. For broadcast keys the index use as a
+	 * marker for TX/RX key.
+	 * For WEP default network (HLID=0xFF), this field
+	 * indicates the ID of the key to add or remove.
+	 */
+	u8 key_id;
+	u8 reserved_1;
+
+	/* key_action_e */
+	__le16 key_action;
+
+	/* key size in bytes */
+	u8 key_size;
+
+	/* key_type_e */
+	u8 key_type;
+
+	/* This field holds the security key data to add to the STA table */
+	u8 key[MAX_KEY_SIZE];
+	__le16 ac_seq_num16[NUM_ACCESS_CATEGORIES_COPY];
+	__le32 ac_seq_num32[NUM_ACCESS_CATEGORIES_COPY];
+} __packed;
+
+struct wl1271_cmd_test_header {
+	u8 id;
+	u8 padding[3];
+} __packed;
+
+enum wl1271_channel_tune_bands {
+	WL1271_CHANNEL_TUNE_BAND_2_4,
+	WL1271_CHANNEL_TUNE_BAND_5,
+	WL1271_CHANNEL_TUNE_BAND_4_9
+};
+
+#define WL1271_PD_REFERENCE_POINT_BAND_B_G  0
+
+#define TEST_CMD_INI_FILE_RADIO_PARAM       0x19
+#define TEST_CMD_INI_FILE_GENERAL_PARAM     0x1E
+#define TEST_CMD_INI_FILE_RF_EXTENDED_PARAM 0x26
+
+struct wl1271_general_parms_cmd {
+	struct wl1271_cmd_header header;
+
+	struct wl1271_cmd_test_header test;
+
+	struct wl1271_ini_general_params general_params;
+
+	u8 sr_debug_table[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+	u8 sr_sen_n_p;
+	u8 sr_sen_n_p_gain;
+	u8 sr_sen_nrn;
+	u8 sr_sen_prn;
+	u8 padding[3];
+} __packed;
+
+struct wl128x_general_parms_cmd {
+	struct wl1271_cmd_header header;
+
+	struct wl1271_cmd_test_header test;
+
+	struct wl128x_ini_general_params general_params;
+
+	u8 sr_debug_table[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+	u8 sr_sen_n_p;
+	u8 sr_sen_n_p_gain;
+	u8 sr_sen_nrn;
+	u8 sr_sen_prn;
+	u8 padding[3];
+} __packed;
+
+struct wl1271_radio_parms_cmd {
+	struct wl1271_cmd_header header;
+
+	struct wl1271_cmd_test_header test;
+
+	/* Static radio parameters */
+	struct wl1271_ini_band_params_2 static_params_2;
+	struct wl1271_ini_band_params_5 static_params_5;
+
+	/* Dynamic radio parameters */
+	struct wl1271_ini_fem_params_2 dyn_params_2;
+	u8 padding2;
+	struct wl1271_ini_fem_params_5 dyn_params_5;
+	u8 padding3[2];
+} __packed;
+
+struct wl128x_radio_parms_cmd {
+	struct wl1271_cmd_header header;
+
+	struct wl1271_cmd_test_header test;
+
+	/* Static radio parameters */
+	struct wl128x_ini_band_params_2 static_params_2;
+	struct wl128x_ini_band_params_5 static_params_5;
+
+	u8 fem_vendor_and_options;
+
+	/* Dynamic radio parameters */
+	struct wl128x_ini_fem_params_2 dyn_params_2;
+	u8 padding2;
+	struct wl128x_ini_fem_params_5 dyn_params_5;
+} __packed;
+
+struct wl1271_ext_radio_parms_cmd {
+	struct wl1271_cmd_header header;
+
+	struct wl1271_cmd_test_header test;
+
+	u8 tx_per_channel_power_compensation_2[CONF_TX_PWR_COMPENSATION_LEN_2];
+	u8 tx_per_channel_power_compensation_5[CONF_TX_PWR_COMPENSATION_LEN_5];
+	u8 padding[3];
+} __packed;
+
+/*
+ * There are three types of disconnections:
+ *
+ * DISCONNECT_IMMEDIATE: the fw doesn't send any frames
+ * DISCONNECT_DEAUTH:    the fw generates a DEAUTH request with the reason
+ *                       we have passed
+ * DISCONNECT_DISASSOC:  the fw generates a DESASSOC request with the reason
+ *                       we have passed
+ */
+enum wl1271_disconnect_type {
+	DISCONNECT_IMMEDIATE,
+	DISCONNECT_DEAUTH,
+	DISCONNECT_DISASSOC
+};
+
+#define WL1271_CMD_STA_STATE_CONNECTED  1
+
+struct wl12xx_cmd_set_peer_state {
+	struct wl1271_cmd_header header;
+
+	u8 hlid;
+	u8 state;
+	u8 padding[2];
+} __packed;
+
+struct wl12xx_cmd_roc {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 channel;
+	u8 band;
+	u8 padding;
+};
+
+struct wl12xx_cmd_croc {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+	u8 padding[3];
+};
+
+enum wl12xx_ssid_type {
+	WL12XX_SSID_TYPE_PUBLIC = 0,
+	WL12XX_SSID_TYPE_HIDDEN = 1,
+	WL12XX_SSID_TYPE_ANY = 2,
+};
+
+enum wl1271_psd_type {
+	WL1271_PSD_LEGACY = 0,
+	WL1271_PSD_UPSD_TRIGGER = 1,
+	WL1271_PSD_LEGACY_PSPOLL = 2,
+	WL1271_PSD_SAPSD = 3
+};
+
+struct wl12xx_cmd_add_peer {
+	struct wl1271_cmd_header header;
+
+	u8 addr[ETH_ALEN];
+	u8 hlid;
+	u8 aid;
+	u8 psd_type[NUM_ACCESS_CATEGORIES_COPY];
+	__le32 supported_rates;
+	u8 bss_index;
+	u8 sp_len;
+	u8 wmm;
+	u8 padding1;
+} __packed;
+
+struct wl12xx_cmd_remove_peer {
+	struct wl1271_cmd_header header;
+
+	u8 hlid;
+	u8 reason_opcode;
+	u8 send_deauth_flag;
+	u8 padding1;
+} __packed;
+
+/*
+ * Continuous mode - packets are transferred to the host periodically
+ * via the data path.
+ * On demand - Log messages are stored in a cyclic buffer in the
+ * firmware, and only transferred to the host when explicitly requested
+ */
+enum wl12xx_fwlogger_log_mode {
+	WL12XX_FWLOG_CONTINUOUS,
+	WL12XX_FWLOG_ON_DEMAND
+};
+
+/* Include/exclude timestamps from the log messages */
+enum wl12xx_fwlogger_timestamp {
+	WL12XX_FWLOG_TIMESTAMP_DISABLED,
+	WL12XX_FWLOG_TIMESTAMP_ENABLED
+};
+
+/*
+ * Logs can be routed to the debug pinouts (where available), to the host bus
+ * (SDIO/SPI), or dropped
+ */
+enum wl12xx_fwlogger_output {
+	WL12XX_FWLOG_OUTPUT_NONE,
+	WL12XX_FWLOG_OUTPUT_DBG_PINS,
+	WL12XX_FWLOG_OUTPUT_HOST,
+};
+
+struct wl12xx_cmd_config_fwlog {
+	struct wl1271_cmd_header header;
+
+	/* See enum wl12xx_fwlogger_log_mode */
+	u8 logger_mode;
+
+	/* Minimum log level threshold */
+	u8 log_severity;
+
+	/* Include/exclude timestamps from the log messages */
+	u8 timestamp;
+
+	/* See enum wl1271_fwlogger_output */
+	u8 output;
+
+	/* Regulates the frequency of log messages */
+	u8 threshold;
+
+	u8 padding[3];
+} __packed;
+
+struct wl12xx_cmd_start_fwlog {
+	struct wl1271_cmd_header header;
+} __packed;
+
+struct wl12xx_cmd_stop_fwlog {
+	struct wl1271_cmd_header header;
+} __packed;
+
+struct wl12xx_cmd_channel_switch {
+	struct wl1271_cmd_header header;
+
+	u8 role_id;
+
+	/* The new serving channel */
+	u8 channel;
+	/* Relative time of the serving channel switch in TBTT units */
+	u8 switch_time;
+	/* Stop the role TX, should expect it after radar detection */
+	u8 stop_tx;
+	/* The target channel tx status 1-stopped 0-open*/
+	u8 post_switch_tx_disable;
+
+	u8 padding[3];
+} __packed;
+
+struct wl12xx_cmd_stop_channel_switch {
+	struct wl1271_cmd_header header;
+} __packed;
+
+#endif /* __WL1271_CMD_H__ */
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __CONF_H__
+#define __CONF_H__
+
+enum {
+	CONF_HW_BIT_RATE_1MBPS   = BIT(0),
+	CONF_HW_BIT_RATE_2MBPS   = BIT(1),
+	CONF_HW_BIT_RATE_5_5MBPS = BIT(2),
+	CONF_HW_BIT_RATE_6MBPS   = BIT(3),
+	CONF_HW_BIT_RATE_9MBPS   = BIT(4),
+	CONF_HW_BIT_RATE_11MBPS  = BIT(5),
+	CONF_HW_BIT_RATE_12MBPS  = BIT(6),
+	CONF_HW_BIT_RATE_18MBPS  = BIT(7),
+	CONF_HW_BIT_RATE_22MBPS  = BIT(8),
+	CONF_HW_BIT_RATE_24MBPS  = BIT(9),
+	CONF_HW_BIT_RATE_36MBPS  = BIT(10),
+	CONF_HW_BIT_RATE_48MBPS  = BIT(11),
+	CONF_HW_BIT_RATE_54MBPS  = BIT(12),
+	CONF_HW_BIT_RATE_MCS_0   = BIT(13),
+	CONF_HW_BIT_RATE_MCS_1   = BIT(14),
+	CONF_HW_BIT_RATE_MCS_2   = BIT(15),
+	CONF_HW_BIT_RATE_MCS_3   = BIT(16),
+	CONF_HW_BIT_RATE_MCS_4   = BIT(17),
+	CONF_HW_BIT_RATE_MCS_5   = BIT(18),
+	CONF_HW_BIT_RATE_MCS_6   = BIT(19),
+	CONF_HW_BIT_RATE_MCS_7   = BIT(20)
+};
+
+enum {
+	CONF_HW_RATE_INDEX_1MBPS   = 0,
+	CONF_HW_RATE_INDEX_2MBPS   = 1,
+	CONF_HW_RATE_INDEX_5_5MBPS = 2,
+	CONF_HW_RATE_INDEX_6MBPS   = 3,
+	CONF_HW_RATE_INDEX_9MBPS   = 4,
+	CONF_HW_RATE_INDEX_11MBPS  = 5,
+	CONF_HW_RATE_INDEX_12MBPS  = 6,
+	CONF_HW_RATE_INDEX_18MBPS  = 7,
+	CONF_HW_RATE_INDEX_22MBPS  = 8,
+	CONF_HW_RATE_INDEX_24MBPS  = 9,
+	CONF_HW_RATE_INDEX_36MBPS  = 10,
+	CONF_HW_RATE_INDEX_48MBPS  = 11,
+	CONF_HW_RATE_INDEX_54MBPS  = 12,
+	CONF_HW_RATE_INDEX_MAX     = CONF_HW_RATE_INDEX_54MBPS,
+};
+
+enum {
+	CONF_HW_RXTX_RATE_MCS7_SGI = 0,
+	CONF_HW_RXTX_RATE_MCS7,
+	CONF_HW_RXTX_RATE_MCS6,
+	CONF_HW_RXTX_RATE_MCS5,
+	CONF_HW_RXTX_RATE_MCS4,
+	CONF_HW_RXTX_RATE_MCS3,
+	CONF_HW_RXTX_RATE_MCS2,
+	CONF_HW_RXTX_RATE_MCS1,
+	CONF_HW_RXTX_RATE_MCS0,
+	CONF_HW_RXTX_RATE_54,
+	CONF_HW_RXTX_RATE_48,
+	CONF_HW_RXTX_RATE_36,
+	CONF_HW_RXTX_RATE_24,
+	CONF_HW_RXTX_RATE_22,
+	CONF_HW_RXTX_RATE_18,
+	CONF_HW_RXTX_RATE_12,
+	CONF_HW_RXTX_RATE_11,
+	CONF_HW_RXTX_RATE_9,
+	CONF_HW_RXTX_RATE_6,
+	CONF_HW_RXTX_RATE_5_5,
+	CONF_HW_RXTX_RATE_2,
+	CONF_HW_RXTX_RATE_1,
+	CONF_HW_RXTX_RATE_MAX,
+	CONF_HW_RXTX_RATE_UNSUPPORTED = 0xff
+};
+
+/* Rates between and including these are MCS rates */
+#define CONF_HW_RXTX_RATE_MCS_MIN CONF_HW_RXTX_RATE_MCS7_SGI
+#define CONF_HW_RXTX_RATE_MCS_MAX CONF_HW_RXTX_RATE_MCS0
+
+enum {
+	CONF_SG_DISABLE = 0,
+	CONF_SG_PROTECTIVE,
+	CONF_SG_OPPORTUNISTIC
+};
+
+enum {
+	/*
+	 * Configure the min and max time BT gains the antenna
+	 * in WLAN / BT master basic rate
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_ACL_BT_MASTER_MIN_BR = 0,
+	CONF_SG_ACL_BT_MASTER_MAX_BR,
+
+	/*
+	 * Configure the min and max time BT gains the antenna
+	 * in WLAN / BT slave basic rate
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_ACL_BT_SLAVE_MIN_BR,
+	CONF_SG_ACL_BT_SLAVE_MAX_BR,
+
+	/*
+	 * Configure the min and max time BT gains the antenna
+	 * in WLAN / BT master EDR
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_ACL_BT_MASTER_MIN_EDR,
+	CONF_SG_ACL_BT_MASTER_MAX_EDR,
+
+	/*
+	 * Configure the min and max time BT gains the antenna
+	 * in WLAN / BT slave EDR
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_ACL_BT_SLAVE_MIN_EDR,
+	CONF_SG_ACL_BT_SLAVE_MAX_EDR,
+
+	/*
+	 * The maximum time WLAN can gain the antenna
+	 * in WLAN PSM / BT master/slave BR
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_ACL_WLAN_PS_MASTER_BR,
+	CONF_SG_ACL_WLAN_PS_SLAVE_BR,
+
+	/*
+	 * The maximum time WLAN can gain the antenna
+	 * in WLAN PSM / BT master/slave EDR
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_ACL_WLAN_PS_MASTER_EDR,
+	CONF_SG_ACL_WLAN_PS_SLAVE_EDR,
+
+	/* TODO: explain these values */
+	CONF_SG_ACL_WLAN_ACTIVE_MASTER_MIN_BR,
+	CONF_SG_ACL_WLAN_ACTIVE_MASTER_MAX_BR,
+	CONF_SG_ACL_WLAN_ACTIVE_SLAVE_MIN_BR,
+	CONF_SG_ACL_WLAN_ACTIVE_SLAVE_MAX_BR,
+	CONF_SG_ACL_WLAN_ACTIVE_MASTER_MIN_EDR,
+	CONF_SG_ACL_WLAN_ACTIVE_MASTER_MAX_EDR,
+	CONF_SG_ACL_WLAN_ACTIVE_SLAVE_MIN_EDR,
+	CONF_SG_ACL_WLAN_ACTIVE_SLAVE_MAX_EDR,
+
+	CONF_SG_ACL_ACTIVE_SCAN_WLAN_BR,
+	CONF_SG_ACL_ACTIVE_SCAN_WLAN_EDR,
+	CONF_SG_ACL_PASSIVE_SCAN_BT_BR,
+	CONF_SG_ACL_PASSIVE_SCAN_WLAN_BR,
+	CONF_SG_ACL_PASSIVE_SCAN_BT_EDR,
+	CONF_SG_ACL_PASSIVE_SCAN_WLAN_EDR,
+
+	/*
+	 * Compensation percentage of probe requests when scan initiated
+	 * during BT voice/ACL link.
+	 *
+	 * Range: 0 - 255 (%)
+	 */
+	CONF_SG_AUTO_SCAN_PROBE_REQ,
+
+	/*
+	 * Compensation percentage of probe requests when active scan initiated
+	 * during BT voice
+	 *
+	 * Range: 0 - 255 (%)
+	 */
+	CONF_SG_ACTIVE_SCAN_DURATION_FACTOR_HV3,
+
+	/*
+	 * Compensation percentage of WLAN active scan window if initiated
+	 * during BT A2DP
+	 *
+	 * Range: 0 - 1000 (%)
+	 */
+	CONF_SG_ACTIVE_SCAN_DURATION_FACTOR_A2DP,
+
+	/*
+	 * Compensation percentage of WLAN passive scan window if initiated
+	 * during BT A2DP BR
+	 *
+	 * Range: 0 - 1000 (%)
+	 */
+	CONF_SG_PASSIVE_SCAN_DURATION_FACTOR_A2DP_BR,
+
+	/*
+	 * Compensation percentage of WLAN passive scan window if initiated
+	 * during BT A2DP EDR
+	 *
+	 * Range: 0 - 1000 (%)
+	 */
+	CONF_SG_PASSIVE_SCAN_DURATION_FACTOR_A2DP_EDR,
+
+	/*
+	 * Compensation percentage of WLAN passive scan window if initiated
+	 * during BT voice
+	 *
+	 * Range: 0 - 1000 (%)
+	 */
+	CONF_SG_PASSIVE_SCAN_DURATION_FACTOR_HV3,
+
+	/* TODO: explain these values */
+	CONF_SG_CONSECUTIVE_HV3_IN_PASSIVE_SCAN,
+	CONF_SG_BCN_HV3_COLLISION_THRESH_IN_PASSIVE_SCAN,
+	CONF_SG_TX_RX_PROTECTION_BWIDTH_IN_PASSIVE_SCAN,
+
+	/*
+	 * Defines whether the SG will force WLAN host to enter/exit PSM
+	 *
+	 * Range: 1 - SG can force, 0 - host handles PSM
+	 */
+	CONF_SG_STA_FORCE_PS_IN_BT_SCO,
+
+	/*
+	 * Defines antenna configuration (single/dual antenna)
+	 *
+	 * Range: 0 - single antenna, 1 - dual antenna
+	 */
+	CONF_SG_ANTENNA_CONFIGURATION,
+
+	/*
+	 * The threshold (percent) of max consecutive beacon misses before
+	 * increasing priority of beacon reception.
+	 *
+	 * Range: 0 - 100 (%)
+	 */
+	CONF_SG_BEACON_MISS_PERCENT,
+
+	/*
+	 * Protection time of the DHCP procedure.
+	 *
+	 * Range: 0 - 100000 (ms)
+	 */
+	CONF_SG_DHCP_TIME,
+
+	/*
+	 * RX guard time before the beginning of a new BT voice frame during
+	 * which no new WLAN trigger frame is transmitted.
+	 *
+	 * Range: 0 - 100000 (us)
+	 */
+	CONF_SG_RXT,
+
+	/*
+	 * TX guard time before the beginning of a new BT voice frame during
+	 * which no new WLAN frame is transmitted.
+	 *
+	 * Range: 0 - 100000 (us)
+	 */
+
+	CONF_SG_TXT,
+
+	/*
+	 * Enable adaptive RXT/TXT algorithm. If disabled, the host values
+	 * will be utilized.
+	 *
+	 * Range: 0 - disable, 1 - enable
+	 */
+	CONF_SG_ADAPTIVE_RXT_TXT,
+
+	/* TODO: explain this value */
+	CONF_SG_GENERAL_USAGE_BIT_MAP,
+
+	/*
+	 * Number of consecutive BT voice frames not interrupted by WLAN
+	 *
+	 * Range: 0 - 100
+	 */
+	CONF_SG_HV3_MAX_SERVED,
+
+	/*
+	 * The used WLAN legacy service period during active BT ACL link
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_PS_POLL_TIMEOUT,
+
+	/*
+	 * The used WLAN UPSD service period during active BT ACL link
+	 *
+	 * Range: 0 - 255 (ms)
+	 */
+	CONF_SG_UPSD_TIMEOUT,
+
+	CONF_SG_CONSECUTIVE_CTS_THRESHOLD,
+	CONF_SG_STA_RX_WINDOW_AFTER_DTIM,
+	CONF_SG_STA_CONNECTION_PROTECTION_TIME,
+
+	/* AP params */
+	CONF_AP_BEACON_MISS_TX,
+	CONF_AP_RX_WINDOW_AFTER_BEACON,
+	CONF_AP_BEACON_WINDOW_INTERVAL,
+	CONF_AP_CONNECTION_PROTECTION_TIME,
+	CONF_AP_BT_ACL_VAL_BT_SERVE_TIME,
+	CONF_AP_BT_ACL_VAL_WL_SERVE_TIME,
+
+	/* CTS Diluting params */
+	CONF_SG_CTS_DILUTED_BAD_RX_PACKETS_TH,
+	CONF_SG_CTS_CHOP_IN_DUAL_ANT_SCO_MASTER,
+
+	CONF_SG_TEMP_PARAM_1,
+	CONF_SG_TEMP_PARAM_2,
+	CONF_SG_TEMP_PARAM_3,
+	CONF_SG_TEMP_PARAM_4,
+	CONF_SG_TEMP_PARAM_5,
+	CONF_SG_TEMP_PARAM_6,
+	CONF_SG_TEMP_PARAM_7,
+	CONF_SG_TEMP_PARAM_8,
+	CONF_SG_TEMP_PARAM_9,
+	CONF_SG_TEMP_PARAM_10,
+
+	CONF_SG_PARAMS_MAX,
+	CONF_SG_PARAMS_ALL = 0xff
+};
+
+struct conf_sg_settings {
+	u32 params[CONF_SG_PARAMS_MAX];
+	u8 state;
+};
+
+enum conf_rx_queue_type {
+	CONF_RX_QUEUE_TYPE_LOW_PRIORITY,  /* All except the high priority */
+	CONF_RX_QUEUE_TYPE_HIGH_PRIORITY, /* Management and voice packets */
+};
+
+struct conf_rx_settings {
+	/*
+	 * The maximum amount of time, in TU, before the
+	 * firmware discards the MSDU.
+	 *
+	 * Range: 0 - 0xFFFFFFFF
+	 */
+	u32 rx_msdu_life_time;
+
+	/*
+	 * Packet detection threshold in the PHY.
+	 *
+	 * FIXME: details unknown.
+	 */
+	u32 packet_detection_threshold;
+
+	/*
+	 * The longest time the STA will wait to receive traffic from the AP
+	 * after a PS-poll has been transmitted.
+	 *
+	 * Range: 0 - 200000
+	 */
+	u16 ps_poll_timeout;
+	/*
+	 * The longest time the STA will wait to receive traffic from the AP
+	 * after a frame has been sent from an UPSD enabled queue.
+	 *
+	 * Range: 0 - 200000
+	 */
+	u16 upsd_timeout;
+
+	/*
+	 * The number of octets in an MPDU, below which an RTS/CTS
+	 * handshake is not performed.
+	 *
+	 * Range: 0 - 4096
+	 */
+	u16 rts_threshold;
+
+	/*
+	 * The RX Clear Channel Assessment threshold in the PHY
+	 * (the energy threshold).
+	 *
+	 * Range: ENABLE_ENERGY_D  == 0x140A
+	 *        DISABLE_ENERGY_D == 0xFFEF
+	 */
+	u16 rx_cca_threshold;
+
+	/*
+	 * Occupied Rx mem-blocks number which requires interrupting the host
+	 * (0 = no buffering, 0xffff = disabled).
+	 *
+	 * Range: u16
+	 */
+	u16 irq_blk_threshold;
+
+	/*
+	 * Rx packets number which requires interrupting the host
+	 * (0 = no buffering).
+	 *
+	 * Range: u16
+	 */
+	u16 irq_pkt_threshold;
+
+	/*
+	 * Max time in msec the FW may delay RX-Complete interrupt.
+	 *
+	 * Range: 1 - 100
+	 */
+	u16 irq_timeout;
+
+	/*
+	 * The RX queue type.
+	 *
+	 * Range: RX_QUEUE_TYPE_RX_LOW_PRIORITY, RX_QUEUE_TYPE_RX_HIGH_PRIORITY,
+	 */
+	u8 queue_type;
+};
+
+#define CONF_TX_MAX_RATE_CLASSES       10
+
+#define CONF_TX_RATE_MASK_UNSPECIFIED  0
+#define CONF_TX_RATE_MASK_BASIC        (CONF_HW_BIT_RATE_1MBPS | \
+					CONF_HW_BIT_RATE_2MBPS)
+#define CONF_TX_RATE_RETRY_LIMIT       10
+
+/* basic rates for p2p operations (probe req/resp, etc.) */
+#define CONF_TX_RATE_MASK_BASIC_P2P    (CONF_HW_BIT_RATE_6MBPS | \
+	CONF_HW_BIT_RATE_12MBPS | CONF_HW_BIT_RATE_24MBPS)
+
+/*
+ * Rates supported for data packets when operating as AP. Note the absence
+ * of the 22Mbps rate. There is a FW limitation on 12 rates so we must drop
+ * one. The rate dropped is not mandatory under any operating mode.
+ */
+#define CONF_TX_AP_ENABLED_RATES       (CONF_HW_BIT_RATE_1MBPS | \
+	CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS |      \
+	CONF_HW_BIT_RATE_6MBPS | CONF_HW_BIT_RATE_9MBPS |        \
+	CONF_HW_BIT_RATE_11MBPS | CONF_HW_BIT_RATE_12MBPS |      \
+	CONF_HW_BIT_RATE_18MBPS | CONF_HW_BIT_RATE_24MBPS |      \
+	CONF_HW_BIT_RATE_36MBPS | CONF_HW_BIT_RATE_48MBPS |      \
+	CONF_HW_BIT_RATE_54MBPS)
+
+#define CONF_TX_CCK_RATES  (CONF_HW_BIT_RATE_1MBPS |		\
+	CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS |	\
+	CONF_HW_BIT_RATE_11MBPS)
+
+#define CONF_TX_OFDM_RATES (CONF_HW_BIT_RATE_6MBPS |             \
+	CONF_HW_BIT_RATE_12MBPS | CONF_HW_BIT_RATE_24MBPS |      \
+	CONF_HW_BIT_RATE_36MBPS | CONF_HW_BIT_RATE_48MBPS |      \
+	CONF_HW_BIT_RATE_54MBPS)
+
+#define CONF_TX_MCS_RATES (CONF_HW_BIT_RATE_MCS_0 |              \
+	CONF_HW_BIT_RATE_MCS_1 | CONF_HW_BIT_RATE_MCS_2 |        \
+	CONF_HW_BIT_RATE_MCS_3 | CONF_HW_BIT_RATE_MCS_4 |        \
+	CONF_HW_BIT_RATE_MCS_5 | CONF_HW_BIT_RATE_MCS_6 |        \
+	CONF_HW_BIT_RATE_MCS_7)
+
+/*
+ * Default rates for management traffic when operating in AP mode. This
+ * should be configured according to the basic rate set of the AP
+ */
+#define CONF_TX_AP_DEFAULT_MGMT_RATES  (CONF_HW_BIT_RATE_1MBPS | \
+	CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS)
+
+/* default rates for working as IBSS (11b and OFDM) */
+#define CONF_TX_IBSS_DEFAULT_RATES  (CONF_HW_BIT_RATE_1MBPS |       \
+		CONF_HW_BIT_RATE_2MBPS | CONF_HW_BIT_RATE_5_5MBPS | \
+		CONF_HW_BIT_RATE_11MBPS | CONF_TX_OFDM_RATES);
+
+struct conf_tx_rate_class {
+
+	/*
+	 * The rates enabled for this rate class.
+	 *
+	 * Range: CONF_HW_BIT_RATE_* bit mask
+	 */
+	u32 enabled_rates;
+
+	/*
+	 * The dot11 short retry limit used for TX retries.
+	 *
+	 * Range: u8
+	 */
+	u8 short_retry_limit;
+
+	/*
+	 * The dot11 long retry limit used for TX retries.
+	 *
+	 * Range: u8
+	 */
+	u8 long_retry_limit;
+
+	/*
+	 * Flags controlling the attributes of TX transmission.
+	 *
+	 * Range: bit 0: Truncate - when set, FW attempts to send a frame stop
+	 *               when the total valid per-rate attempts have
+	 *               been exhausted; otherwise transmissions
+	 *               will continue at the lowest available rate
+	 *               until the appropriate one of the
+	 *               short_retry_limit, long_retry_limit,
+	 *               dot11_max_transmit_msdu_life_time, or
+	 *               max_tx_life_time, is exhausted.
+	 *            1: Preamble Override - indicates if the preamble type
+	 *               should be used in TX.
+	 *            2: Preamble Type - the type of the preamble to be used by
+	 *               the policy (0 - long preamble, 1 - short preamble.
+	 */
+	u8 aflags;
+};
+
+#define CONF_TX_MAX_AC_COUNT 4
+
+/* Slot number setting to start transmission at PIFS interval */
+#define CONF_TX_AIFS_PIFS 1
+/* Slot number setting to start transmission at DIFS interval normal
+ * DCF access */
+#define CONF_TX_AIFS_DIFS 2
+
+
+enum conf_tx_ac {
+	CONF_TX_AC_BE = 0,         /* best effort / legacy */
+	CONF_TX_AC_BK = 1,         /* background */
+	CONF_TX_AC_VI = 2,         /* video */
+	CONF_TX_AC_VO = 3,         /* voice */
+	CONF_TX_AC_CTS2SELF = 4,   /* fictitious AC, follows AC_VO */
+	CONF_TX_AC_ANY_TID = 0x1f
+};
+
+struct conf_tx_ac_category {
+	/*
+	 * The AC class identifier.
+	 *
+	 * Range: enum conf_tx_ac
+	 */
+	u8 ac;
+
+	/*
+	 * The contention window minimum size (in slots) for the access
+	 * class.
+	 *
+	 * Range: u8
+	 */
+	u8 cw_min;
+
+	/*
+	 * The contention window maximum size (in slots) for the access
+	 * class.
+	 *
+	 * Range: u8
+	 */
+	u16 cw_max;
+
+	/*
+	 * The AIF value (in slots) for the access class.
+	 *
+	 * Range: u8
+	 */
+	u8 aifsn;
+
+	/*
+	 * The TX Op Limit (in microseconds) for the access class.
+	 *
+	 * Range: u16
+	 */
+	u16 tx_op_limit;
+};
+
+#define CONF_TX_MAX_TID_COUNT 8
+
+/* Allow TX BA on all TIDs but 6,7. These are currently reserved in the FW */
+#define CONF_TX_BA_ENABLED_TID_BITMAP 0x3F
+
+enum {
+	CONF_CHANNEL_TYPE_DCF = 0,   /* DC/LEGACY*/
+	CONF_CHANNEL_TYPE_EDCF = 1,  /* EDCA*/
+	CONF_CHANNEL_TYPE_HCCA = 2,  /* HCCA*/
+};
+
+enum {
+	CONF_PS_SCHEME_LEGACY = 0,
+	CONF_PS_SCHEME_UPSD_TRIGGER = 1,
+	CONF_PS_SCHEME_LEGACY_PSPOLL = 2,
+	CONF_PS_SCHEME_SAPSD = 3,
+};
+
+enum {
+	CONF_ACK_POLICY_LEGACY = 0,
+	CONF_ACK_POLICY_NO_ACK = 1,
+	CONF_ACK_POLICY_BLOCK = 2,
+};
+
+
+struct conf_tx_tid {
+	u8 queue_id;
+	u8 channel_type;
+	u8 tsid;
+	u8 ps_scheme;
+	u8 ack_policy;
+	u32 apsd_conf[2];
+};
+
+struct conf_tx_settings {
+	/*
+	 * The TX ED value for TELEC Enable/Disable.
+	 *
+	 * Range: 0, 1
+	 */
+	u8 tx_energy_detection;
+
+	/*
+	 * Configuration for rate classes for TX (currently only one
+	 * rate class supported). Used in non-AP mode.
+	 */
+	struct conf_tx_rate_class sta_rc_conf;
+
+	/*
+	 * Configuration for access categories for TX rate control.
+	 */
+	u8 ac_conf_count;
+	struct conf_tx_ac_category ac_conf[CONF_TX_MAX_AC_COUNT];
+
+	/*
+	 * AP-mode - allow this number of TX retries to a station before an
+	 * event is triggered from FW.
+	 * In AP-mode the hlids of unreachable stations are given in the
+	 * "sta_tx_retry_exceeded" member in the event mailbox.
+	 */
+	u8 max_tx_retries;
+
+	/*
+	 * AP-mode - after this number of seconds a connected station is
+	 * considered inactive.
+	 */
+	u16 ap_aging_period;
+
+	/*
+	 * Configuration for TID parameters.
+	 */
+	u8 tid_conf_count;
+	struct conf_tx_tid tid_conf[CONF_TX_MAX_TID_COUNT];
+
+	/*
+	 * The TX fragmentation threshold.
+	 *
+	 * Range: u16
+	 */
+	u16 frag_threshold;
+
+	/*
+	 * Max time in msec the FW may delay frame TX-Complete interrupt.
+	 *
+	 * Range: u16
+	 */
+	u16 tx_compl_timeout;
+
+	/*
+	 * Completed TX packet count which requires to issue the TX-Complete
+	 * interrupt.
+	 *
+	 * Range: u16
+	 */
+	u16 tx_compl_threshold;
+
+	/*
+	 * The rate used for control messages and scanning on the 2.4GHz band
+	 *
+	 * Range: CONF_HW_BIT_RATE_* bit mask
+	 */
+	u32 basic_rate;
+
+	/*
+	 * The rate used for control messages and scanning on the 5GHz band
+	 *
+	 * Range: CONF_HW_BIT_RATE_* bit mask
+	 */
+	u32 basic_rate_5;
+
+	/*
+	 * TX retry limits for templates
+	 */
+	u8 tmpl_short_retry_limit;
+	u8 tmpl_long_retry_limit;
+
+	/* Time in ms for Tx watchdog timer to expire */
+	u32 tx_watchdog_timeout;
+};
+
+enum {
+	CONF_WAKE_UP_EVENT_BEACON    = 0x01, /* Wake on every Beacon*/
+	CONF_WAKE_UP_EVENT_DTIM      = 0x02, /* Wake on every DTIM*/
+	CONF_WAKE_UP_EVENT_N_DTIM    = 0x04, /* Wake every Nth DTIM */
+	CONF_WAKE_UP_EVENT_N_BEACONS = 0x08, /* Wake every Nth beacon */
+	CONF_WAKE_UP_EVENT_BITS_MASK = 0x0F
+};
+
+#define CONF_MAX_BCN_FILT_IE_COUNT 32
+
+#define CONF_BCN_RULE_PASS_ON_CHANGE         BIT(0)
+#define CONF_BCN_RULE_PASS_ON_APPEARANCE     BIT(1)
+
+#define CONF_BCN_IE_OUI_LEN    3
+#define CONF_BCN_IE_VER_LEN    2
+
+struct conf_bcn_filt_rule {
+	/*
+	 * IE number to which to associate a rule.
+	 *
+	 * Range: u8
+	 */
+	u8 ie;
+
+	/*
+	 * Rule to associate with the specific ie.
+	 *
+	 * Range: CONF_BCN_RULE_PASS_ON_*
+	 */
+	u8 rule;
+
+	/*
+	 * OUI for the vendor specifie IE (221)
+	 */
+	u8 oui[CONF_BCN_IE_OUI_LEN];
+
+	/*
+	 * Type for the vendor specifie IE (221)
+	 */
+	u8 type;
+
+	/*
+	 * Version for the vendor specifie IE (221)
+	 */
+	u8 version[CONF_BCN_IE_VER_LEN];
+};
+
+#define CONF_MAX_RSSI_SNR_TRIGGERS 8
+
+enum {
+	CONF_TRIG_METRIC_RSSI_BEACON = 0,
+	CONF_TRIG_METRIC_RSSI_DATA,
+	CONF_TRIG_METRIC_SNR_BEACON,
+	CONF_TRIG_METRIC_SNR_DATA
+};
+
+enum {
+	CONF_TRIG_EVENT_TYPE_LEVEL = 0,
+	CONF_TRIG_EVENT_TYPE_EDGE
+};
+
+enum {
+	CONF_TRIG_EVENT_DIR_LOW = 0,
+	CONF_TRIG_EVENT_DIR_HIGH,
+	CONF_TRIG_EVENT_DIR_BIDIR
+};
+
+struct conf_sig_weights {
+
+	/*
+	 * RSSI from beacons average weight.
+	 *
+	 * Range: u8
+	 */
+	u8 rssi_bcn_avg_weight;
+
+	/*
+	 * RSSI from data average weight.
+	 *
+	 * Range: u8
+	 */
+	u8 rssi_pkt_avg_weight;
+
+	/*
+	 * SNR from beacons average weight.
+	 *
+	 * Range: u8
+	 */
+	u8 snr_bcn_avg_weight;
+
+	/*
+	 * SNR from data average weight.
+	 *
+	 * Range: u8
+	 */
+	u8 snr_pkt_avg_weight;
+};
+
+enum conf_bcn_filt_mode {
+	CONF_BCN_FILT_MODE_DISABLED = 0,
+	CONF_BCN_FILT_MODE_ENABLED = 1
+};
+
+enum conf_bet_mode {
+	CONF_BET_MODE_DISABLE = 0,
+	CONF_BET_MODE_ENABLE = 1,
+};
+
+struct conf_conn_settings {
+	/*
+	 * Firmware wakeup conditions configuration. The host may set only
+	 * one bit.
+	 *
+	 * Range: CONF_WAKE_UP_EVENT_*
+	 */
+	u8 wake_up_event;
+
+	/*
+	 * Listen interval for beacons or Dtims.
+	 *
+	 * Range: 0 for beacon and Dtim wakeup
+	 *        1-10 for x Dtims
+	 *        1-255 for x beacons
+	 */
+	u8 listen_interval;
+
+	/*
+	 * Firmware wakeup conditions during suspend
+	 * Range: CONF_WAKE_UP_EVENT_*
+	 */
+	u8 suspend_wake_up_event;
+
+	/*
+	 * Listen interval during suspend.
+	 * Currently will be in DTIMs (1-10)
+	 *
+	 */
+	u8 suspend_listen_interval;
+
+	/*
+	 * Enable or disable the beacon filtering.
+	 *
+	 * Range: CONF_BCN_FILT_MODE_*
+	 */
+	enum conf_bcn_filt_mode bcn_filt_mode;
+
+	/*
+	 * Configure Beacon filter pass-thru rules.
+	 */
+	u8 bcn_filt_ie_count;
+	struct conf_bcn_filt_rule bcn_filt_ie[CONF_MAX_BCN_FILT_IE_COUNT];
+
+	/*
+	 * The number of consecutive beacons to lose, before the firmware
+	 * becomes out of synch.
+	 *
+	 * Range: u32
+	 */
+	u32 synch_fail_thold;
+
+	/*
+	 * After out-of-synch, the number of TU's to wait without a further
+	 * received beacon (or probe response) before issuing the BSS_EVENT_LOSE
+	 * event.
+	 *
+	 * Range: u32
+	 */
+	u32 bss_lose_timeout;
+
+	/*
+	 * Beacon receive timeout.
+	 *
+	 * Range: u32
+	 */
+	u32 beacon_rx_timeout;
+
+	/*
+	 * Broadcast receive timeout.
+	 *
+	 * Range: u32
+	 */
+	u32 broadcast_timeout;
+
+	/*
+	 * Enable/disable reception of broadcast packets in power save mode
+	 *
+	 * Range: 1 - enable, 0 - disable
+	 */
+	u8 rx_broadcast_in_ps;
+
+	/*
+	 * Consecutive PS Poll failures before sending event to driver
+	 *
+	 * Range: u8
+	 */
+	u8 ps_poll_threshold;
+
+	/*
+	 * Configuration of signal average weights.
+	 */
+	struct conf_sig_weights sig_weights;
+
+	/*
+	 * Specifies if beacon early termination procedure is enabled or
+	 * disabled.
+	 *
+	 * Range: CONF_BET_MODE_*
+	 */
+	u8 bet_enable;
+
+	/*
+	 * Specifies the maximum number of consecutive beacons that may be
+	 * early terminated. After this number is reached at least one full
+	 * beacon must be correctly received in FW before beacon ET
+	 * resumes.
+	 *
+	 * Range 0 - 255
+	 */
+	u8 bet_max_consecutive;
+
+	/*
+	 * Specifies the maximum number of times to try PSM entry if it fails
+	 * (if sending the appropriate null-func message fails.)
+	 *
+	 * Range 0 - 255
+	 */
+	u8 psm_entry_retries;
+
+	/*
+	 * Specifies the maximum number of times to try PSM exit if it fails
+	 * (if sending the appropriate null-func message fails.)
+	 *
+	 * Range 0 - 255
+	 */
+	u8 psm_exit_retries;
+
+	/*
+	 * Specifies the maximum number of times to try transmit the PSM entry
+	 * null-func frame for each PSM entry attempt
+	 *
+	 * Range 0 - 255
+	 */
+	u8 psm_entry_nullfunc_retries;
+
+	/*
+	 * Specifies the dynamic PS timeout in ms that will be used
+	 * by the FW when in AUTO_PS mode
+	 */
+	u16 dynamic_ps_timeout;
+
+	/*
+	 * Specifies whether dynamic PS should be disabled and PSM forced.
+	 * This is required for certain WiFi certification tests.
+	 */
+	u8 forced_ps;
+
+	/*
+	 *
+	 * Specifies the interval of the connection keep-alive null-func
+	 * frame in ms.
+	 *
+	 * Range: 1000 - 3600000
+	 */
+	u32 keep_alive_interval;
+
+	/*
+	 * Maximum listen interval supported by the driver in units of beacons.
+	 *
+	 * Range: u16
+	 */
+	u8 max_listen_interval;
+};
+
+enum {
+	CONF_REF_CLK_19_2_E,
+	CONF_REF_CLK_26_E,
+	CONF_REF_CLK_38_4_E,
+	CONF_REF_CLK_52_E,
+	CONF_REF_CLK_38_4_M_XTAL,
+	CONF_REF_CLK_26_M_XTAL,
+};
+
+enum single_dual_band_enum {
+	CONF_SINGLE_BAND,
+	CONF_DUAL_BAND
+};
+
+#define CONF_RSSI_AND_PROCESS_COMPENSATION_SIZE 15
+#define CONF_NUMBER_OF_SUB_BANDS_5  7
+#define CONF_NUMBER_OF_RATE_GROUPS  6
+#define CONF_NUMBER_OF_CHANNELS_2_4 14
+#define CONF_NUMBER_OF_CHANNELS_5   35
+
+struct conf_itrim_settings {
+	/* enable dco itrim */
+	u8 enable;
+
+	/* moderation timeout in microsecs from the last TX */
+	u32 timeout;
+};
+
+struct conf_pm_config_settings {
+	/*
+	 * Host clock settling time
+	 *
+	 * Range: 0 - 30000 us
+	 */
+	u32 host_clk_settling_time;
+
+	/*
+	 * Host fast wakeup support
+	 *
+	 * Range: true, false
+	 */
+	bool host_fast_wakeup_support;
+};
+
+struct conf_roam_trigger_settings {
+	/*
+	 * The minimum interval between two trigger events.
+	 *
+	 * Range: 0 - 60000 ms
+	 */
+	u16 trigger_pacing;
+
+	/*
+	 * The weight for rssi/beacon average calculation
+	 *
+	 * Range: 0 - 255
+	 */
+	u8 avg_weight_rssi_beacon;
+
+	/*
+	 * The weight for rssi/data frame average calculation
+	 *
+	 * Range: 0 - 255
+	 */
+	u8 avg_weight_rssi_data;
+
+	/*
+	 * The weight for snr/beacon average calculation
+	 *
+	 * Range: 0 - 255
+	 */
+	u8 avg_weight_snr_beacon;
+
+	/*
+	 * The weight for snr/data frame average calculation
+	 *
+	 * Range: 0 - 255
+	 */
+	u8 avg_weight_snr_data;
+};
+
+struct conf_scan_settings {
+	/*
+	 * The minimum time to wait on each channel for active scans
+	 *
+	 * Range: u32 tu/1000
+	 */
+	u32 min_dwell_time_active;
+
+	/*
+	 * The maximum time to wait on each channel for active scans
+	 *
+	 * Range: u32 tu/1000
+	 */
+	u32 max_dwell_time_active;
+
+	/*
+	 * The minimum time to wait on each channel for passive scans
+	 *
+	 * Range: u32 tu/1000
+	 */
+	u32 min_dwell_time_passive;
+
+	/*
+	 * The maximum time to wait on each channel for passive scans
+	 *
+	 * Range: u32 tu/1000
+	 */
+	u32 max_dwell_time_passive;
+
+	/*
+	 * Number of probe requests to transmit on each active scan channel
+	 *
+	 * Range: u8
+	 */
+	u16 num_probe_reqs;
+
+	/*
+	 * Scan trigger (split scan) timeout. The FW will split the scan
+	 * operation into slices of the given time and allow the FW to schedule
+	 * other tasks in between.
+	 *
+	 * Range: u32 Microsecs
+	 */
+	u32 split_scan_timeout;
+};
+
+struct conf_sched_scan_settings {
+	/* minimum time to wait on the channel for active scans (in TUs) */
+	u16 min_dwell_time_active;
+
+	/* maximum time to wait on the channel for active scans (in TUs) */
+	u16 max_dwell_time_active;
+
+	/* time to wait on the channel for passive scans (in TUs) */
+	u32 dwell_time_passive;
+
+	/* time to wait on the channel for DFS scans (in TUs) */
+	u32 dwell_time_dfs;
+
+	/* number of probe requests to send on each channel in active scans */
+	u8 num_probe_reqs;
+
+	/* RSSI threshold to be used for filtering */
+	s8 rssi_threshold;
+
+	/* SNR threshold to be used for filtering */
+	s8 snr_threshold;
+};
+
+/* these are number of channels on the band divided by two, rounded up */
+#define CONF_TX_PWR_COMPENSATION_LEN_2 7
+#define CONF_TX_PWR_COMPENSATION_LEN_5 18
+
+struct conf_rf_settings {
+	/*
+	 * Per channel power compensation for 2.4GHz
+	 *
+	 * Range: s8
+	 */
+	u8 tx_per_channel_power_compensation_2[CONF_TX_PWR_COMPENSATION_LEN_2];
+
+	/*
+	 * Per channel power compensation for 5GHz
+	 *
+	 * Range: s8
+	 */
+	u8 tx_per_channel_power_compensation_5[CONF_TX_PWR_COMPENSATION_LEN_5];
+};
+
+struct conf_ht_setting {
+	u8 rx_ba_win_size;
+	u8 tx_ba_win_size;
+	u16 inactivity_timeout;
+
+	/* bitmap of enabled TIDs for TX BA sessions */
+	u8 tx_ba_tid_bitmap;
+};
+
+struct conf_memory_settings {
+	/* Number of stations supported in IBSS mode */
+	u8 num_stations;
+
+	/* Number of ssid profiles used in IBSS mode */
+	u8 ssid_profiles;
+
+	/* Number of memory buffers allocated to rx pool */
+	u8 rx_block_num;
+
+	/* Minimum number of blocks allocated to tx pool */
+	u8 tx_min_block_num;
+
+	/* Disable/Enable dynamic memory */
+	u8 dynamic_memory;
+
+	/*
+	 * Minimum required free tx memory blocks in order to assure optimum
+	 * performance
+	 *
+	 * Range: 0-120
+	 */
+	u8 min_req_tx_blocks;
+
+	/*
+	 * Minimum required free rx memory blocks in order to assure optimum
+	 * performance
+	 *
+	 * Range: 0-120
+	 */
+	u8 min_req_rx_blocks;
+
+	/*
+	 * Minimum number of mem blocks (free+used) guaranteed for TX
+	 *
+	 * Range: 0-120
+	 */
+	u8 tx_min;
+};
+
+struct conf_fm_coex {
+	u8 enable;
+	u8 swallow_period;
+	u8 n_divider_fref_set_1;
+	u8 n_divider_fref_set_2;
+	u16 m_divider_fref_set_1;
+	u16 m_divider_fref_set_2;
+	u32 coex_pll_stabilization_time;
+	u16 ldo_stabilization_time;
+	u8 fm_disturbed_band_margin;
+	u8 swallow_clk_diff;
+};
+
+struct conf_rx_streaming_settings {
+	/*
+	 * RX Streaming duration (in msec) from last tx/rx
+	 *
+	 * Range: u32
+	 */
+	u32 duration;
+
+	/*
+	 * Bitmap of tids to be polled during RX streaming.
+	 * (Note: it doesn't look like it really matters)
+	 *
+	 * Range: 0x1-0xff
+	 */
+	u8 queues;
+
+	/*
+	 * RX Streaming interval.
+	 * (Note:this value is also used as the rx streaming timeout)
+	 * Range: 0 (disabled), 10 - 100
+	 */
+	u8 interval;
+
+	/*
+	 * enable rx streaming also when there is no coex activity
+	 */
+	u8 always;
+};
+
+struct conf_fwlog {
+	/* Continuous or on-demand */
+	u8 mode;
+
+	/*
+	 * Number of memory blocks dedicated for the FW logger
+	 *
+	 * Range: 1-3, or 0 to disable the FW logger
+	 */
+	u8 mem_blocks;
+
+	/* Minimum log level threshold */
+	u8 severity;
+
+	/* Include/exclude timestamps from the log messages */
+	u8 timestamp;
+
+	/* See enum wl1271_fwlogger_output */
+	u8 output;
+
+	/* Regulates the frequency of log messages */
+	u8 threshold;
+};
+
+#define ACX_RATE_MGMT_NUM_OF_RATES 13
+struct conf_rate_policy_settings {
+	u16 rate_retry_score;
+	u16 per_add;
+	u16 per_th1;
+	u16 per_th2;
+	u16 max_per;
+	u8 inverse_curiosity_factor;
+	u8 tx_fail_low_th;
+	u8 tx_fail_high_th;
+	u8 per_alpha_shift;
+	u8 per_add_shift;
+	u8 per_beta1_shift;
+	u8 per_beta2_shift;
+	u8 rate_check_up;
+	u8 rate_check_down;
+	u8 rate_retry_policy[ACX_RATE_MGMT_NUM_OF_RATES];
+};
+
+struct conf_hangover_settings {
+	u32 recover_time;
+	u8 hangover_period;
+	u8 dynamic_mode;
+	u8 early_termination_mode;
+	u8 max_period;
+	u8 min_period;
+	u8 increase_delta;
+	u8 decrease_delta;
+	u8 quiet_time;
+	u8 increase_time;
+	u8 window_size;
+};
+
+struct conf_drv_settings {
+	struct conf_sg_settings sg;
+	struct conf_rx_settings rx;
+	struct conf_tx_settings tx;
+	struct conf_conn_settings conn;
+	struct conf_itrim_settings itrim;
+	struct conf_pm_config_settings pm_config;
+	struct conf_roam_trigger_settings roam_trigger;
+	struct conf_scan_settings scan;
+	struct conf_sched_scan_settings sched_scan;
+	struct conf_rf_settings rf;
+	struct conf_ht_setting ht;
+	struct conf_memory_settings mem_wl127x;
+	struct conf_memory_settings mem_wl128x;
+	struct conf_fm_coex fm_coex;
+	struct conf_rx_streaming_settings rx_streaming;
+	struct conf_fwlog fwlog;
+	struct conf_rate_policy_settings rate;
+	struct conf_hangover_settings hangover;
+	u8 hci_io_ds;
+};
+
+#endif
+/*
+ * This file is part of wl12xx
+ *
+ * Copyright (C) 2011 Texas Instruments. All rights reserved.
+ * Copyright (C) 2008-2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <coelho@ti.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __DEBUG_H__
+#define __DEBUG_H__
+
+#include <linux/bitops.h>
+#include <linux/printk.h>
+
+#define DRIVER_NAME "wl12xx"
+#define DRIVER_PREFIX DRIVER_NAME ": "
+
+enum {
+	DEBUG_NONE	= 0,
+	DEBUG_IRQ	= BIT(0),
+	DEBUG_SPI	= BIT(1),
+	DEBUG_BOOT	= BIT(2),
+	DEBUG_MAILBOX	= BIT(3),
+	DEBUG_TESTMODE	= BIT(4),
+	DEBUG_EVENT	= BIT(5),
+	DEBUG_TX	= BIT(6),
+	DEBUG_RX	= BIT(7),
+	DEBUG_SCAN	= BIT(8),
+	DEBUG_CRYPT	= BIT(9),
+	DEBUG_PSM	= BIT(10),
+	DEBUG_MAC80211	= BIT(11),
+	DEBUG_CMD	= BIT(12),
+	DEBUG_ACX	= BIT(13),
+	DEBUG_SDIO	= BIT(14),
+	DEBUG_FILTERS   = BIT(15),
+	DEBUG_ADHOC     = BIT(16),
+	DEBUG_AP	= BIT(17),
+	DEBUG_PROBE	= BIT(18),
+	DEBUG_MASTER	= (DEBUG_ADHOC | DEBUG_AP),
+	DEBUG_ALL	= ~0,
+};
+
+extern u32 wl12xx_debug_level;
+
+#define DEBUG_DUMP_LIMIT 1024
+
+#define wl1271_error(fmt, arg...) \
+	pr_err(DRIVER_PREFIX "ERROR " fmt "\n", ##arg)
+
+#define wl1271_warning(fmt, arg...) \
+	pr_warning(DRIVER_PREFIX "WARNING " fmt "\n", ##arg)
+
+#define wl1271_notice(fmt, arg...) \
+	pr_info(DRIVER_PREFIX fmt "\n", ##arg)
+
+#define wl1271_info(fmt, arg...) \
+	pr_info(DRIVER_PREFIX fmt "\n", ##arg)
+
+#define wl1271_debug(level, fmt, arg...) \
+	do { \
+		if (level & wl12xx_debug_level) \
+			pr_debug(DRIVER_PREFIX fmt "\n", ##arg); \
+	} while (0)
+
+/* TODO: use pr_debug_hex_dump when it becomes available */
+#define wl1271_dump(level, prefix, buf, len)	\
+	do { \
+		if (level & wl12xx_debug_level) \
+			print_hex_dump(KERN_DEBUG, DRIVER_PREFIX prefix, \
+				       DUMP_PREFIX_OFFSET, 16, 1,	\
+				       buf,				\
+				       min_t(size_t, len, DEBUG_DUMP_LIMIT), \
+				       0);				\
+	} while (0)
+
+#define wl1271_dump_ascii(level, prefix, buf, len)	\
+	do { \
+		if (level & wl12xx_debug_level) \
+			print_hex_dump(KERN_DEBUG, DRIVER_PREFIX prefix, \
+				       DUMP_PREFIX_OFFSET, 16, 1,	\
+				       buf,				\
+				       min_t(size_t, len, DEBUG_DUMP_LIMIT), \
+				       true);				\
+	} while (0)
+
+#endif /* __DEBUG_H__ */
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __DEBUGFS_H__
+#define __DEBUGFS_H__
+
+#include "wl12xx.h"
+
+int wl1271_debugfs_init(struct wl1271 *wl);
+void wl1271_debugfs_exit(struct wl1271 *wl);
+void wl1271_debugfs_reset(struct wl1271 *wl);
+
+#endif /* WL1271_DEBUGFS_H */
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2008-2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __EVENT_H__
+#define __EVENT_H__
+
+/*
+ * Mbox events
+ *
+ * The event mechanism is based on a pair of event buffers (buffers A and
+ * B) at fixed locations in the target's memory. The host processes one
+ * buffer while the other buffer continues to collect events. If the host
+ * is not processing events, an interrupt is issued to signal that a buffer
+ * is ready. Once the host is done with processing events from one buffer,
+ * it signals the target (with an ACK interrupt) that the event buffer is
+ * free.
+ */
+
+enum {
+	RSSI_SNR_TRIGGER_0_EVENT_ID              = BIT(0),
+	RSSI_SNR_TRIGGER_1_EVENT_ID              = BIT(1),
+	RSSI_SNR_TRIGGER_2_EVENT_ID              = BIT(2),
+	RSSI_SNR_TRIGGER_3_EVENT_ID              = BIT(3),
+	RSSI_SNR_TRIGGER_4_EVENT_ID              = BIT(4),
+	RSSI_SNR_TRIGGER_5_EVENT_ID              = BIT(5),
+	RSSI_SNR_TRIGGER_6_EVENT_ID              = BIT(6),
+	RSSI_SNR_TRIGGER_7_EVENT_ID              = BIT(7),
+	MEASUREMENT_START_EVENT_ID		 = BIT(8),
+	MEASUREMENT_COMPLETE_EVENT_ID		 = BIT(9),
+	SCAN_COMPLETE_EVENT_ID			 = BIT(10),
+	WFD_DISCOVERY_COMPLETE_EVENT_ID		 = BIT(11),
+	AP_DISCOVERY_COMPLETE_EVENT_ID		 = BIT(12),
+	RESERVED1			         = BIT(13),
+	PSPOLL_DELIVERY_FAILURE_EVENT_ID	 = BIT(14),
+	ROLE_STOP_COMPLETE_EVENT_ID		 = BIT(15),
+	RADAR_DETECTED_EVENT_ID                  = BIT(16),
+	CHANNEL_SWITCH_COMPLETE_EVENT_ID	 = BIT(17),
+	BSS_LOSE_EVENT_ID			 = BIT(18),
+	REGAINED_BSS_EVENT_ID			 = BIT(19),
+	MAX_TX_RETRY_EVENT_ID			 = BIT(20),
+	DUMMY_PACKET_EVENT_ID			 = BIT(21),
+	SOFT_GEMINI_SENSE_EVENT_ID		 = BIT(22),
+	CHANGE_AUTO_MODE_TIMEOUT_EVENT_ID	 = BIT(23),
+	SOFT_GEMINI_AVALANCHE_EVENT_ID		 = BIT(24),
+	PLT_RX_CALIBRATION_COMPLETE_EVENT_ID	 = BIT(25),
+	INACTIVE_STA_EVENT_ID			 = BIT(26),
+	PEER_REMOVE_COMPLETE_EVENT_ID		 = BIT(27),
+	PERIODIC_SCAN_COMPLETE_EVENT_ID		 = BIT(28),
+	PERIODIC_SCAN_REPORT_EVENT_ID		 = BIT(29),
+	BA_SESSION_RX_CONSTRAINT_EVENT_ID	 = BIT(30),
+	REMAIN_ON_CHANNEL_COMPLETE_EVENT_ID	 = BIT(31),
+	EVENT_MBOX_ALL_EVENT_ID			 = 0x7fffffff,
+};
+
+enum {
+	EVENT_ENTER_POWER_SAVE_FAIL = 0,
+	EVENT_ENTER_POWER_SAVE_SUCCESS,
+};
+
+#define NUM_OF_RSSI_SNR_TRIGGERS 8
+
+struct event_mailbox {
+	__le32 events_vector;
+	__le32 events_mask;
+	__le32 reserved_1;
+	__le32 reserved_2;
+
+	u8 number_of_scan_results;
+	u8 scan_tag;
+	u8 completed_scan_status;
+	u8 reserved_3;
+
+	u8 soft_gemini_sense_info;
+	u8 soft_gemini_protective_info;
+	s8 rssi_snr_trigger_metric[NUM_OF_RSSI_SNR_TRIGGERS];
+	u8 change_auto_mode_timeout;
+	u8 scheduled_scan_status;
+	u8 reserved4;
+	/* tuned channel (roc) */
+	u8 roc_channel;
+
+	__le16 hlid_removed_bitmap;
+
+	/* bitmap of aged stations (by HLID) */
+	__le16 sta_aging_status;
+
+	/* bitmap of stations (by HLID) which exceeded max tx retries */
+	__le16 sta_tx_retry_exceeded;
+
+	/* discovery completed results */
+	u8 discovery_tag;
+	u8 number_of_preq_results;
+	u8 number_of_prsp_results;
+	u8 reserved_5;
+
+	/* rx ba constraint */
+	u8 role_id; /* 0xFF means any role. */
+	u8 rx_ba_allowed;
+	u8 reserved_6[2];
+
+	/* Channel switch results */
+
+	u8 channel_switch_role_id;
+	u8 channel_switch_status;
+	u8 reserved_7[2];
+
+	u8 ps_poll_delivery_failure_role_ids;
+	u8 stopped_role_ids;
+	u8 started_role_ids;
+
+	u8 reserved_8[9];
+} __packed;
+
+int wl1271_event_unmask(struct wl1271 *wl);
+void wl1271_event_mbox_config(struct wl1271 *wl);
+int wl1271_event_handle(struct wl1271 *wl, u8 mbox);
+
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2010 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __INI_H__
+#define __INI_H__
+
+#define GENERAL_SETTINGS_DRPW_LPD 0xc0
+#define SCRATCH_ENABLE_LPD        BIT(25)
+
+#define WL1271_INI_MAX_SMART_REFLEX_PARAM 16
+
+struct wl1271_ini_general_params {
+	u8 ref_clock;
+	u8 settling_time;
+	u8 clk_valid_on_wakeup;
+	u8 dc2dc_mode;
+	u8 dual_mode_select;
+	u8 tx_bip_fem_auto_detect;
+	u8 tx_bip_fem_manufacturer;
+	u8 general_settings;
+	u8 sr_state;
+	u8 srf1[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+	u8 srf2[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+	u8 srf3[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+} __packed;
+
+#define WL128X_INI_MAX_SETTINGS_PARAM 4
+
+struct wl128x_ini_general_params {
+	u8 ref_clock;
+	u8 settling_time;
+	u8 clk_valid_on_wakeup;
+	u8 tcxo_ref_clock;
+	u8 tcxo_settling_time;
+	u8 tcxo_valid_on_wakeup;
+	u8 tcxo_ldo_voltage;
+	u8 xtal_itrim_val;
+	u8 platform_conf;
+	u8 dual_mode_select;
+	u8 tx_bip_fem_auto_detect;
+	u8 tx_bip_fem_manufacturer;
+	u8 general_settings[WL128X_INI_MAX_SETTINGS_PARAM];
+	u8 sr_state;
+	u8 srf1[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+	u8 srf2[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+	u8 srf3[WL1271_INI_MAX_SMART_REFLEX_PARAM];
+} __packed;
+
+#define WL1271_INI_RSSI_PROCESS_COMPENS_SIZE 15
+
+struct wl1271_ini_band_params_2 {
+	u8 rx_trace_insertion_loss;
+	u8 tx_trace_loss;
+	u8 rx_rssi_process_compens[WL1271_INI_RSSI_PROCESS_COMPENS_SIZE];
+} __packed;
+
+#define WL1271_INI_CHANNEL_COUNT_2 14
+
+struct wl128x_ini_band_params_2 {
+	u8 rx_trace_insertion_loss;
+	u8 tx_trace_loss[WL1271_INI_CHANNEL_COUNT_2];
+	u8 rx_rssi_process_compens[WL1271_INI_RSSI_PROCESS_COMPENS_SIZE];
+} __packed;
+
+#define WL1271_INI_RATE_GROUP_COUNT 6
+
+struct wl1271_ini_fem_params_2 {
+	__le16 tx_bip_ref_pd_voltage;
+	u8 tx_bip_ref_power;
+	u8 tx_bip_ref_offset;
+	u8 tx_per_rate_pwr_limits_normal[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_degraded[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_extreme[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_per_chan_pwr_limits_11b[WL1271_INI_CHANNEL_COUNT_2];
+	u8 tx_per_chan_pwr_limits_ofdm[WL1271_INI_CHANNEL_COUNT_2];
+	u8 tx_pd_vs_rate_offsets[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_ibias[WL1271_INI_RATE_GROUP_COUNT];
+	u8 rx_fem_insertion_loss;
+	u8 degraded_low_to_normal_thr;
+	u8 normal_to_degraded_high_thr;
+} __packed;
+
+#define WL128X_INI_RATE_GROUP_COUNT 7
+/* low and high temperatures */
+#define WL128X_INI_PD_VS_TEMPERATURE_RANGES 2
+
+struct wl128x_ini_fem_params_2 {
+	__le16 tx_bip_ref_pd_voltage;
+	u8 tx_bip_ref_power;
+	u8 tx_bip_ref_offset;
+	u8 tx_per_rate_pwr_limits_normal[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_degraded[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_extreme[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_per_chan_pwr_limits_11b[WL1271_INI_CHANNEL_COUNT_2];
+	u8 tx_per_chan_pwr_limits_ofdm[WL1271_INI_CHANNEL_COUNT_2];
+	u8 tx_pd_vs_rate_offsets[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_ibias[WL128X_INI_RATE_GROUP_COUNT + 1];
+	u8 tx_pd_vs_chan_offsets[WL1271_INI_CHANNEL_COUNT_2];
+	u8 tx_pd_vs_temperature[WL128X_INI_PD_VS_TEMPERATURE_RANGES];
+	u8 rx_fem_insertion_loss;
+	u8 degraded_low_to_normal_thr;
+	u8 normal_to_degraded_high_thr;
+} __packed;
+
+#define WL1271_INI_CHANNEL_COUNT_5 35
+#define WL1271_INI_SUB_BAND_COUNT_5 7
+
+struct wl1271_ini_band_params_5 {
+	u8 rx_trace_insertion_loss[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_trace_loss[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 rx_rssi_process_compens[WL1271_INI_RSSI_PROCESS_COMPENS_SIZE];
+} __packed;
+
+struct wl128x_ini_band_params_5 {
+	u8 rx_trace_insertion_loss[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_trace_loss[WL1271_INI_CHANNEL_COUNT_5];
+	u8 rx_rssi_process_compens[WL1271_INI_RSSI_PROCESS_COMPENS_SIZE];
+} __packed;
+
+struct wl1271_ini_fem_params_5 {
+	__le16 tx_bip_ref_pd_voltage[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_bip_ref_power[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_bip_ref_offset[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_per_rate_pwr_limits_normal[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_degraded[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_extreme[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_per_chan_pwr_limits_ofdm[WL1271_INI_CHANNEL_COUNT_5];
+	u8 tx_pd_vs_rate_offsets[WL1271_INI_RATE_GROUP_COUNT];
+	u8 tx_ibias[WL1271_INI_RATE_GROUP_COUNT];
+	u8 rx_fem_insertion_loss[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 degraded_low_to_normal_thr;
+	u8 normal_to_degraded_high_thr;
+} __packed;
+
+struct wl128x_ini_fem_params_5 {
+	__le16 tx_bip_ref_pd_voltage[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_bip_ref_power[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_bip_ref_offset[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 tx_per_rate_pwr_limits_normal[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_degraded[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_per_rate_pwr_limits_extreme[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_per_chan_pwr_limits_ofdm[WL1271_INI_CHANNEL_COUNT_5];
+	u8 tx_pd_vs_rate_offsets[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_ibias[WL128X_INI_RATE_GROUP_COUNT];
+	u8 tx_pd_vs_chan_offsets[WL1271_INI_CHANNEL_COUNT_5];
+	u8 tx_pd_vs_temperature[WL1271_INI_SUB_BAND_COUNT_5 *
+		WL128X_INI_PD_VS_TEMPERATURE_RANGES];
+	u8 rx_fem_insertion_loss[WL1271_INI_SUB_BAND_COUNT_5];
+	u8 degraded_low_to_normal_thr;
+	u8 normal_to_degraded_high_thr;
+} __packed;
+
+/* NVS data structure */
+#define WL1271_INI_NVS_SECTION_SIZE		     468
+#define WL1271_INI_FEM_MODULE_COUNT                  2
+
+#define WL1271_INI_LEGACY_NVS_FILE_SIZE              800
+
+struct wl1271_nvs_file {
+	/* NVS section - must be first! */
+	u8 nvs[WL1271_INI_NVS_SECTION_SIZE];
+
+	/* INI section */
+	struct wl1271_ini_general_params general_params;
+	u8 padding1;
+	struct wl1271_ini_band_params_2 stat_radio_params_2;
+	u8 padding2;
+	struct {
+		struct wl1271_ini_fem_params_2 params;
+		u8 padding;
+	} dyn_radio_params_2[WL1271_INI_FEM_MODULE_COUNT];
+	struct wl1271_ini_band_params_5 stat_radio_params_5;
+	u8 padding3;
+	struct {
+		struct wl1271_ini_fem_params_5 params;
+		u8 padding;
+	} dyn_radio_params_5[WL1271_INI_FEM_MODULE_COUNT];
+} __packed;
+
+struct wl128x_nvs_file {
+	/* NVS section - must be first! */
+	u8 nvs[WL1271_INI_NVS_SECTION_SIZE];
+
+	/* INI section */
+	struct wl128x_ini_general_params general_params;
+	u8 fem_vendor_and_options;
+	struct wl128x_ini_band_params_2 stat_radio_params_2;
+	u8 padding2;
+	struct {
+		struct wl128x_ini_fem_params_2 params;
+		u8 padding;
+	} dyn_radio_params_2[WL1271_INI_FEM_MODULE_COUNT];
+	struct wl128x_ini_band_params_5 stat_radio_params_5;
+	u8 padding3;
+	struct {
+		struct wl128x_ini_fem_params_5 params;
+		u8 padding;
+	} dyn_radio_params_5[WL1271_INI_FEM_MODULE_COUNT];
+} __packed;
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __INIT_H__
+#define __INIT_H__
+
+#include "wl12xx.h"
+
+int wl1271_hw_init_power_auth(struct wl1271 *wl);
+int wl1271_init_templates_config(struct wl1271 *wl);
+int wl1271_init_pta(struct wl1271 *wl);
+int wl1271_init_energy_detection(struct wl1271 *wl);
+int wl1271_chip_specific_init(struct wl1271 *wl);
+int wl1271_hw_init(struct wl1271 *wl);
+int wl1271_init_vif_specific(struct wl1271 *wl, struct ieee80211_vif *vif);
+int wl1271_init_ap_rates(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+int wl1271_ap_init_templates(struct wl1271 *wl, struct ieee80211_vif *vif);
+
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2008-2010 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __IO_H__
+#define __IO_H__
+
+#include <linux/irqreturn.h>
+#include "reg.h"
+
+#define HW_ACCESS_MEMORY_MAX_RANGE	0x1FFC0
+
+#define HW_PARTITION_REGISTERS_ADDR     0x1FFC0
+#define HW_PART0_SIZE_ADDR              (HW_PARTITION_REGISTERS_ADDR)
+#define HW_PART0_START_ADDR             (HW_PARTITION_REGISTERS_ADDR + 4)
+#define HW_PART1_SIZE_ADDR              (HW_PARTITION_REGISTERS_ADDR + 8)
+#define HW_PART1_START_ADDR             (HW_PARTITION_REGISTERS_ADDR + 12)
+#define HW_PART2_SIZE_ADDR              (HW_PARTITION_REGISTERS_ADDR + 16)
+#define HW_PART2_START_ADDR             (HW_PARTITION_REGISTERS_ADDR + 20)
+#define HW_PART3_START_ADDR             (HW_PARTITION_REGISTERS_ADDR + 24)
+
+#define HW_ACCESS_REGISTER_SIZE         4
+
+#define HW_ACCESS_PRAM_MAX_RANGE	0x3c000
+
+extern struct wl1271_partition_set wl12xx_part_table[PART_TABLE_LEN];
+
+struct wl1271;
+
+void wl1271_disable_interrupts(struct wl1271 *wl);
+void wl1271_enable_interrupts(struct wl1271 *wl);
+
+void wl1271_io_reset(struct wl1271 *wl);
+void wl1271_io_init(struct wl1271 *wl);
+
+/* Raw target IO, address is not translated */
+static inline void wl1271_raw_write(struct wl1271 *wl, int addr, void *buf,
+				    size_t len, bool fixed)
+{
+	wl->if_ops->write(wl->dev, addr, buf, len, fixed);
+}
+
+static inline void wl1271_raw_read(struct wl1271 *wl, int addr, void *buf,
+				   size_t len, bool fixed)
+{
+	wl->if_ops->read(wl->dev, addr, buf, len, fixed);
+}
+
+static inline u32 wl1271_raw_read32(struct wl1271 *wl, int addr)
+{
+	wl1271_raw_read(wl, addr, &wl->buffer_32,
+			    sizeof(wl->buffer_32), false);
+
+	return le32_to_cpu(wl->buffer_32);
+}
+
+static inline void wl1271_raw_write32(struct wl1271 *wl, int addr, u32 val)
+{
+	wl->buffer_32 = cpu_to_le32(val);
+	wl1271_raw_write(wl, addr, &wl->buffer_32,
+			     sizeof(wl->buffer_32), false);
+}
+
+/* Translated target IO */
+static inline int wl1271_translate_addr(struct wl1271 *wl, int addr)
+{
+	/*
+	 * To translate, first check to which window of addresses the
+	 * particular address belongs. Then subtract the starting address
+	 * of that window from the address. Then, add offset of the
+	 * translated region.
+	 *
+	 * The translated regions occur next to each other in physical device
+	 * memory, so just add the sizes of the preceding address regions to
+	 * get the offset to the new region.
+	 *
+	 * Currently, only the two first regions are addressed, and the
+	 * assumption is that all addresses will fall into either of those
+	 * two.
+	 */
+	if ((addr >= wl->part.reg.start) &&
+	    (addr < wl->part.reg.start + wl->part.reg.size))
+		return addr - wl->part.reg.start + wl->part.mem.size;
+	else
+		return addr - wl->part.mem.start;
+}
+
+static inline void wl1271_read(struct wl1271 *wl, int addr, void *buf,
+			       size_t len, bool fixed)
+{
+	int physical;
+
+	physical = wl1271_translate_addr(wl, addr);
+
+	wl1271_raw_read(wl, physical, buf, len, fixed);
+}
+
+static inline void wl1271_write(struct wl1271 *wl, int addr, void *buf,
+				size_t len, bool fixed)
+{
+	int physical;
+
+	physical = wl1271_translate_addr(wl, addr);
+
+	wl1271_raw_write(wl, physical, buf, len, fixed);
+}
+
+static inline void wl1271_read_hwaddr(struct wl1271 *wl, int hwaddr,
+				      void *buf, size_t len, bool fixed)
+{
+	int physical;
+	int addr;
+
+	/* Addresses are stored internally as addresses to 32 bytes blocks */
+	addr = hwaddr << 5;
+
+	physical = wl1271_translate_addr(wl, addr);
+
+	wl1271_raw_read(wl, physical, buf, len, fixed);
+}
+
+static inline u32 wl1271_read32(struct wl1271 *wl, int addr)
+{
+	return wl1271_raw_read32(wl, wl1271_translate_addr(wl, addr));
+}
+
+static inline void wl1271_write32(struct wl1271 *wl, int addr, u32 val)
+{
+	wl1271_raw_write32(wl, wl1271_translate_addr(wl, addr), val);
+}
+
+static inline void wl1271_power_off(struct wl1271 *wl)
+{
+	wl->if_ops->power(wl->dev, false);
+	clear_bit(WL1271_FLAG_GPIO_POWER, &wl->flags);
+}
+
+static inline int wl1271_power_on(struct wl1271 *wl)
+{
+	int ret = wl->if_ops->power(wl->dev, true);
+	if (ret == 0)
+		set_bit(WL1271_FLAG_GPIO_POWER, &wl->flags);
+
+	return ret;
+}
+
+
+/* Top Register IO */
+void wl1271_top_reg_write(struct wl1271 *wl, int addr, u16 val);
+u16 wl1271_top_reg_read(struct wl1271 *wl, int addr);
+
+int wl1271_set_partition(struct wl1271 *wl,
+			 struct wl1271_partition_set *p);
+
+bool wl1271_set_block_size(struct wl1271 *wl);
+
+/* Functions from wl1271_main.c */
+
+int wl1271_tx_dummy_packet(struct wl1271 *wl);
+
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2008-2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __PS_H__
+#define __PS_H__
+
+#include "wl12xx.h"
+#include "acx.h"
+
+int wl1271_ps_set_mode(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+		       enum wl1271_cmd_ps_mode mode);
+void wl1271_ps_elp_sleep(struct wl1271 *wl);
+int wl1271_ps_elp_wakeup(struct wl1271 *wl);
+void wl1271_elp_work(struct work_struct *work);
+void wl12xx_ps_link_start(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			  u8 hlid, bool clean_queues);
+void wl12xx_ps_link_end(struct wl1271 *wl, struct wl12xx_vif *wlvif, u8 hlid);
+
+#define WL1271_PS_COMPLETE_TIMEOUT 500
+
+#endif /* __WL1271_PS_H__ */
+/*
+ * This file is part of wl12xx
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __REG_H__
+#define __REG_H__
+
+#include <linux/bitops.h>
+
+#define REGISTERS_BASE 0x00300000
+#define DRPW_BASE      0x00310000
+
+#define REGISTERS_DOWN_SIZE 0x00008800
+#define REGISTERS_WORK_SIZE 0x0000b000
+
+#define HW_ACCESS_ELP_CTRL_REG_ADDR         0x1FFFC
+#define FW_STATUS_ADDR                      (0x14FC0 + 0xA000)
+
+/* ELP register commands */
+#define ELPCTRL_WAKE_UP             0x1
+#define ELPCTRL_WAKE_UP_WLAN_READY  0x5
+#define ELPCTRL_SLEEP               0x0
+/* ELP WLAN_READY bit */
+#define ELPCTRL_WLAN_READY          0x2
+
+/*===============================================
+   Host Software Reset - 32bit RW
+ ------------------------------------------
+    [31:1] Reserved
+    0  SOFT_RESET Soft Reset  - When this bit is set,
+    it holds the Wlan hardware in a soft reset state.
+    This reset disables all MAC and baseband processor
+    clocks except the CardBus/PCI interface clock.
+    It also initializes all MAC state machines except
+    the host interface. It does not reload the
+    contents of the EEPROM. When this bit is cleared
+    (not self-clearing), the Wlan hardware
+    exits the software reset state.
+===============================================*/
+#define ACX_REG_SLV_SOFT_RESET         (REGISTERS_BASE + 0x0000)
+
+#define WL1271_SLV_REG_DATA            (REGISTERS_BASE + 0x0008)
+#define WL1271_SLV_REG_ADATA           (REGISTERS_BASE + 0x000c)
+#define WL1271_SLV_MEM_DATA            (REGISTERS_BASE + 0x0018)
+
+#define ACX_REG_INTERRUPT_TRIG         (REGISTERS_BASE + 0x0474)
+#define ACX_REG_INTERRUPT_TRIG_H       (REGISTERS_BASE + 0x0478)
+
+/*=============================================
+  Host Interrupt Mask Register - 32bit (RW)
+  ------------------------------------------
+  Setting a bit in this register masks the
+  corresponding interrupt to the host.
+  0 - RX0		- Rx first dubble buffer Data Interrupt
+  1 - TXD		- Tx Data Interrupt
+  2 - TXXFR		- Tx Transfer Interrupt
+  3 - RX1		- Rx second dubble buffer Data Interrupt
+  4 - RXXFR		- Rx Transfer Interrupt
+  5 - EVENT_A	- Event Mailbox interrupt
+  6 - EVENT_B	- Event Mailbox interrupt
+  7 - WNONHST	- Wake On Host Interrupt
+  8 - TRACE_A	- Debug Trace interrupt
+  9 - TRACE_B	- Debug Trace interrupt
+ 10 - CDCMP		- Command Complete Interrupt
+ 11 -
+ 12 -
+ 13 -
+ 14 - ICOMP		- Initialization Complete Interrupt
+ 16 - SG SE		- Soft Gemini - Sense enable interrupt
+ 17 - SG SD		- Soft Gemini - Sense disable interrupt
+ 18 -			-
+ 19 -			-
+ 20 -			-
+ 21-			-
+ Default: 0x0001
+*==============================================*/
+#define ACX_REG_INTERRUPT_MASK         (REGISTERS_BASE + 0x04DC)
+
+/*=============================================
+  Host Interrupt Mask Set 16bit, (Write only)
+  ------------------------------------------
+ Setting a bit in this register sets
+ the corresponding bin in ACX_HINT_MASK register
+ without effecting the mask
+ state of other bits (0 = no effect).
+==============================================*/
+#define ACX_REG_HINT_MASK_SET          (REGISTERS_BASE + 0x04E0)
+
+/*=============================================
+  Host Interrupt Mask Clear 16bit,(Write only)
+  ------------------------------------------
+ Setting a bit in this register clears
+ the corresponding bin in ACX_HINT_MASK register
+ without effecting the mask
+ state of other bits (0 = no effect).
+=============================================*/
+#define ACX_REG_HINT_MASK_CLR          (REGISTERS_BASE + 0x04E4)
+
+/*=============================================
+  Host Interrupt Status Nondestructive Read
+  16bit,(Read only)
+  ------------------------------------------
+ The host can read this register to determine
+ which interrupts are active.
+ Reading this register doesn't
+ effect its content.
+=============================================*/
+#define ACX_REG_INTERRUPT_NO_CLEAR     (REGISTERS_BASE + 0x04E8)
+
+/*=============================================
+  Host Interrupt Status Clear on Read  Register
+  16bit,(Read only)
+  ------------------------------------------
+ The host can read this register to determine
+ which interrupts are active.
+ Reading this register clears it,
+ thus making all interrupts inactive.
+==============================================*/
+#define ACX_REG_INTERRUPT_CLEAR        (REGISTERS_BASE + 0x04F8)
+
+/*=============================================
+  Host Interrupt Acknowledge Register
+  16bit,(Write only)
+  ------------------------------------------
+ The host can set individual bits in this
+ register to clear (acknowledge) the corresp.
+ interrupt status bits in the HINT_STS_CLR and
+ HINT_STS_ND registers, thus making the
+ assotiated interrupt inactive. (0-no effect)
+==============================================*/
+#define ACX_REG_INTERRUPT_ACK          (REGISTERS_BASE + 0x04F0)
+
+#define RX_DRIVER_COUNTER_ADDRESS      (REGISTERS_BASE + 0x0538)
+
+/* Device Configuration registers*/
+#define SOR_CFG                        (REGISTERS_BASE + 0x0800)
+
+/* Embedded ARM CPU Control */
+
+/*===============================================
+ Halt eCPU   - 32bit RW
+ ------------------------------------------
+ 0 HALT_ECPU Halt Embedded CPU - This bit is the
+ compliment of bit 1 (MDATA2) in the SOR_CFG register.
+ During a hardware reset, this bit holds
+ the inverse of MDATA2.
+ When downloading firmware from the host,
+ set this bit (pull down MDATA2).
+ The host clears this bit after downloading the firmware into
+ zero-wait-state SSRAM.
+ When loading firmware from Flash, clear this bit (pull up MDATA2)
+ so that the eCPU can run the bootloader code in Flash
+ HALT_ECPU eCPU State
+ --------------------
+ 1 halt eCPU
+ 0 enable eCPU
+ ===============================================*/
+#define ACX_REG_ECPU_CONTROL           (REGISTERS_BASE + 0x0804)
+
+#define HI_CFG                         (REGISTERS_BASE + 0x0808)
+
+/*===============================================
+ EEPROM Burst Read Start  - 32bit RW
+ ------------------------------------------
+ [31:1] Reserved
+ 0  ACX_EE_START -  EEPROM Burst Read Start 0
+ Setting this bit starts a burst read from
+ the external EEPROM.
+ If this bit is set (after reset) before an EEPROM read/write,
+ the burst read starts at EEPROM address 0.
+ Otherwise, it starts at the address
+ following the address of the previous access.
+ TheWlan hardware hardware clears this bit automatically.
+
+ Default: 0x00000000
+*================================================*/
+#define ACX_REG_EE_START               (REGISTERS_BASE + 0x080C)
+
+#define OCP_POR_CTR                    (REGISTERS_BASE + 0x09B4)
+#define OCP_DATA_WRITE                 (REGISTERS_BASE + 0x09B8)
+#define OCP_DATA_READ                  (REGISTERS_BASE + 0x09BC)
+#define OCP_CMD                        (REGISTERS_BASE + 0x09C0)
+
+#define WL1271_HOST_WR_ACCESS          (REGISTERS_BASE + 0x09F8)
+
+#define CHIP_ID_B                      (REGISTERS_BASE + 0x5674)
+
+#define CHIP_ID_1271_PG10              (0x4030101)
+#define CHIP_ID_1271_PG20              (0x4030111)
+#define CHIP_ID_1283_PG10              (0x05030101)
+#define CHIP_ID_1283_PG20              (0x05030111)
+
+#define ENABLE                         (REGISTERS_BASE + 0x5450)
+
+/* Power Management registers */
+#define ELP_CFG_MODE                   (REGISTERS_BASE + 0x5804)
+#define ELP_CMD                        (REGISTERS_BASE + 0x5808)
+#define PLL_CAL_TIME                   (REGISTERS_BASE + 0x5810)
+#define CLK_REQ_TIME                   (REGISTERS_BASE + 0x5814)
+#define CLK_BUF_TIME                   (REGISTERS_BASE + 0x5818)
+
+#define CFG_PLL_SYNC_CNT               (REGISTERS_BASE + 0x5820)
+
+/* Scratch Pad registers*/
+#define SCR_PAD0                       (REGISTERS_BASE + 0x5608)
+#define SCR_PAD1                       (REGISTERS_BASE + 0x560C)
+#define SCR_PAD2                       (REGISTERS_BASE + 0x5610)
+#define SCR_PAD3                       (REGISTERS_BASE + 0x5614)
+#define SCR_PAD4                       (REGISTERS_BASE + 0x5618)
+#define SCR_PAD4_SET                   (REGISTERS_BASE + 0x561C)
+#define SCR_PAD4_CLR                   (REGISTERS_BASE + 0x5620)
+#define SCR_PAD5                       (REGISTERS_BASE + 0x5624)
+#define SCR_PAD5_SET                   (REGISTERS_BASE + 0x5628)
+#define SCR_PAD5_CLR                   (REGISTERS_BASE + 0x562C)
+#define SCR_PAD6                       (REGISTERS_BASE + 0x5630)
+#define SCR_PAD7                       (REGISTERS_BASE + 0x5634)
+#define SCR_PAD8                       (REGISTERS_BASE + 0x5638)
+#define SCR_PAD9                       (REGISTERS_BASE + 0x563C)
+
+/* Spare registers*/
+#define SPARE_A1                       (REGISTERS_BASE + 0x0994)
+#define SPARE_A2                       (REGISTERS_BASE + 0x0998)
+#define SPARE_A3                       (REGISTERS_BASE + 0x099C)
+#define SPARE_A4                       (REGISTERS_BASE + 0x09A0)
+#define SPARE_A5                       (REGISTERS_BASE + 0x09A4)
+#define SPARE_A6                       (REGISTERS_BASE + 0x09A8)
+#define SPARE_A7                       (REGISTERS_BASE + 0x09AC)
+#define SPARE_A8                       (REGISTERS_BASE + 0x09B0)
+#define SPARE_B1                       (REGISTERS_BASE + 0x5420)
+#define SPARE_B2                       (REGISTERS_BASE + 0x5424)
+#define SPARE_B3                       (REGISTERS_BASE + 0x5428)
+#define SPARE_B4                       (REGISTERS_BASE + 0x542C)
+#define SPARE_B5                       (REGISTERS_BASE + 0x5430)
+#define SPARE_B6                       (REGISTERS_BASE + 0x5434)
+#define SPARE_B7                       (REGISTERS_BASE + 0x5438)
+#define SPARE_B8                       (REGISTERS_BASE + 0x543C)
+
+#define PLL_PARAMETERS                 (REGISTERS_BASE + 0x6040)
+#define WU_COUNTER_PAUSE               (REGISTERS_BASE + 0x6008)
+#define WELP_ARM_COMMAND               (REGISTERS_BASE + 0x6100)
+#define DRPW_SCRATCH_START             (DRPW_BASE + 0x002C)
+
+
+#define ACX_SLV_SOFT_RESET_BIT   BIT(1)
+#define ACX_REG_EEPROM_START_BIT BIT(1)
+
+/* Command/Information Mailbox Pointers */
+
+/*===============================================
+  Command Mailbox Pointer - 32bit RW
+ ------------------------------------------
+ This register holds the start address of
+ the command mailbox located in the Wlan hardware memory.
+ The host must read this pointer after a reset to
+ find the location of the command mailbox.
+ The Wlan hardware initializes the command mailbox
+ pointer with the default address of the command mailbox.
+ The command mailbox pointer is not valid until after
+ the host receives the Init Complete interrupt from
+ the Wlan hardware.
+ ===============================================*/
+#define REG_COMMAND_MAILBOX_PTR				(SCR_PAD0)
+
+/*===============================================
+  Information Mailbox Pointer - 32bit RW
+ ------------------------------------------
+ This register holds the start address of
+ the information mailbox located in the Wlan hardware memory.
+ The host must read this pointer after a reset to find
+ the location of the information mailbox.
+ The Wlan hardware initializes the information mailbox pointer
+ with the default address of the information mailbox.
+ The information mailbox pointer is not valid
+ until after the host receives the Init Complete interrupt from
+ the Wlan hardware.
+ ===============================================*/
+#define REG_EVENT_MAILBOX_PTR				(SCR_PAD1)
+
+/*===============================================
+ EEPROM Read/Write Request 32bit RW
+ ------------------------------------------
+ 1 EE_READ - EEPROM Read Request 1 - Setting this bit
+ loads a single byte of data into the EE_DATA
+ register from the EEPROM location specified in
+ the EE_ADDR register.
+ The Wlan hardware hardware clears this bit automatically.
+ EE_DATA is valid when this bit is cleared.
+
+ 0 EE_WRITE  - EEPROM Write Request  - Setting this bit
+ writes a single byte of data from the EE_DATA register into the
+ EEPROM location specified in the EE_ADDR register.
+ The Wlan hardware hardware clears this bit automatically.
+*===============================================*/
+#define ACX_EE_CTL_REG                      EE_CTL
+#define EE_WRITE                            0x00000001ul
+#define EE_READ                             0x00000002ul
+
+/*===============================================
+  EEPROM Address  - 32bit RW
+  ------------------------------------------
+  This register specifies the address
+  within the EEPROM from/to which to read/write data.
+  ===============================================*/
+#define ACX_EE_ADDR_REG                     EE_ADDR
+
+/*===============================================
+  EEPROM Data  - 32bit RW
+  ------------------------------------------
+  This register either holds the read 8 bits of
+  data from the EEPROM or the write data
+  to be written to the EEPROM.
+  ===============================================*/
+#define ACX_EE_DATA_REG                     EE_DATA
+
+/*===============================================
+  EEPROM Base Address  - 32bit RW
+  ------------------------------------------
+  This register holds the upper nine bits
+  [23:15] of the 24-bit Wlan hardware memory
+  address for burst reads from EEPROM accesses.
+  The EEPROM provides the lower 15 bits of this address.
+  The MSB of the address from the EEPROM is ignored.
+  ===============================================*/
+#define ACX_EE_CFG                          EE_CFG
+
+/*===============================================
+  GPIO Output Values  -32bit, RW
+  ------------------------------------------
+  [31:16]  Reserved
+  [15: 0]  Specify the output values (at the output driver inputs) for
+  GPIO[15:0], respectively.
+  ===============================================*/
+#define ACX_GPIO_OUT_REG            GPIO_OUT
+#define ACX_MAX_GPIO_LINES          15
+
+/*===============================================
+  Contention window  -32bit, RW
+  ------------------------------------------
+  [31:26]  Reserved
+  [25:16]  Max (0x3ff)
+  [15:07]  Reserved
+  [06:00]  Current contention window value - default is 0x1F
+  ===============================================*/
+#define ACX_CONT_WIND_CFG_REG    CONT_WIND_CFG
+#define ACX_CONT_WIND_MIN_MASK   0x0000007f
+#define ACX_CONT_WIND_MAX        0x03ff0000
+
+/*===============================================
+  HI_CFG Interface Configuration Register Values
+  ------------------------------------------
+  ===============================================*/
+#define HI_CFG_UART_ENABLE          0x00000004
+#define HI_CFG_RST232_ENABLE        0x00000008
+#define HI_CFG_CLOCK_REQ_SELECT     0x00000010
+#define HI_CFG_HOST_INT_ENABLE      0x00000020
+#define HI_CFG_VLYNQ_OUTPUT_ENABLE  0x00000040
+#define HI_CFG_HOST_INT_ACTIVE_LOW  0x00000080
+#define HI_CFG_UART_TX_OUT_GPIO_15  0x00000100
+#define HI_CFG_UART_TX_OUT_GPIO_14  0x00000200
+#define HI_CFG_UART_TX_OUT_GPIO_7   0x00000400
+
+#define HI_CFG_DEF_VAL              \
+	(HI_CFG_UART_ENABLE |        \
+	HI_CFG_RST232_ENABLE |      \
+	HI_CFG_CLOCK_REQ_SELECT |   \
+	HI_CFG_HOST_INT_ENABLE)
+
+#define REF_FREQ_19_2                       0
+#define REF_FREQ_26_0                       1
+#define REF_FREQ_38_4                       2
+#define REF_FREQ_40_0                       3
+#define REF_FREQ_33_6                       4
+#define REF_FREQ_NUM                        5
+
+#define LUT_PARAM_INTEGER_DIVIDER           0
+#define LUT_PARAM_FRACTIONAL_DIVIDER        1
+#define LUT_PARAM_ATTN_BB                   2
+#define LUT_PARAM_ALPHA_BB                  3
+#define LUT_PARAM_STOP_TIME_BB              4
+#define LUT_PARAM_BB_PLL_LOOP_FILTER        5
+#define LUT_PARAM_NUM                       6
+
+#define ACX_EEPROMLESS_IND_REG              (SCR_PAD4)
+#define USE_EEPROM                          0
+#define SOFT_RESET_MAX_TIME                 1000000
+#define SOFT_RESET_STALL_TIME               1000
+#define NVS_DATA_BUNDARY_ALIGNMENT          4
+
+
+/* Firmware image load chunk size */
+#define CHUNK_SIZE	16384
+
+/* Firmware image header size */
+#define FW_HDR_SIZE 8
+
+#define ECPU_CONTROL_HALT					0x00000101
+
+
+/******************************************************************************
+
+    CHANNELS, BAND & REG DOMAINS definitions
+
+******************************************************************************/
+
+
+enum {
+	RADIO_BAND_2_4GHZ = 0,  /* 2.4 Ghz band */
+	RADIO_BAND_5GHZ = 1,    /* 5 Ghz band */
+	RADIO_BAND_JAPAN_4_9_GHZ = 2,
+	DEFAULT_BAND = RADIO_BAND_2_4GHZ,
+	INVALID_BAND = 0xFE,
+	MAX_RADIO_BANDS = 0xFF
+};
+
+#define SHORT_PREAMBLE_BIT   BIT(0) /* CCK or Barker depending on the rate */
+#define OFDM_RATE_BIT        BIT(6)
+#define PBCC_RATE_BIT        BIT(7)
+
+enum {
+	CCK_LONG = 0,
+	CCK_SHORT = SHORT_PREAMBLE_BIT,
+	PBCC_LONG = PBCC_RATE_BIT,
+	PBCC_SHORT = PBCC_RATE_BIT | SHORT_PREAMBLE_BIT,
+	OFDM = OFDM_RATE_BIT
+};
+
+/******************************************************************************
+
+Transmit-Descriptor RATE-SET field definitions...
+
+Define a new "Rate-Set" for TX path that incorporates the
+Rate & Modulation info into a single 16-bit field.
+
+TxdRateSet_t:
+b15   - Indicates Preamble type (1=SHORT, 0=LONG).
+	Notes:
+	Must be LONG (0) for 1Mbps rate.
+	Does not apply (set to 0) for RevG-OFDM rates.
+b14   - Indicates PBCC encoding (1=PBCC, 0=not).
+	Notes:
+	Does not apply (set to 0) for rates 1 and 2 Mbps.
+	Does not apply (set to 0) for RevG-OFDM rates.
+b13    - Unused (set to 0).
+b12-b0 - Supported Rate indicator bits as defined below.
+
+******************************************************************************/
+
+
+/*************************************************************************
+
+    Interrupt Trigger Register (Host -> WiLink)
+
+**************************************************************************/
+
+/* Hardware to Embedded CPU Interrupts - first 32-bit register set */
+
+/*
+ * Host Command Interrupt. Setting this bit masks
+ * the interrupt that the host issues to inform
+ * the FW that it has sent a command
+ * to the Wlan hardware Command Mailbox.
+ */
+#define INTR_TRIG_CMD       BIT(0)
+
+/*
+ * Host Event Acknowlegde Interrupt. The host
+ * sets this bit to acknowledge that it received
+ * the unsolicited information from the event
+ * mailbox.
+ */
+#define INTR_TRIG_EVENT_ACK BIT(1)
+
+/*
+ * The host sets this bit to inform the Wlan
+ * FW that a TX packet is in the XFER
+ * Buffer #0.
+ */
+#define INTR_TRIG_TX_PROC0 BIT(2)
+
+/*
+ * The host sets this bit to inform the FW
+ * that it read a packet from RX XFER
+ * Buffer #0.
+ */
+#define INTR_TRIG_RX_PROC0 BIT(3)
+
+#define INTR_TRIG_DEBUG_ACK BIT(4)
+
+#define INTR_TRIG_STATE_CHANGED BIT(5)
+
+
+/* Hardware to Embedded CPU Interrupts - second 32-bit register set */
+
+/*
+ * The host sets this bit to inform the FW
+ * that it read a packet from RX XFER
+ * Buffer #1.
+ */
+#define INTR_TRIG_RX_PROC1 BIT(17)
+
+/*
+ * The host sets this bit to inform the Wlan
+ * hardware that a TX packet is in the XFER
+ * Buffer #1.
+ */
+#define INTR_TRIG_TX_PROC1 BIT(18)
+
+#define WL127X_REG_FUSE_DATA_2_1	0x050a
+#define WL128X_REG_FUSE_DATA_2_1	0x2152
+#define PG_VER_MASK			0x3c
+#define PG_VER_OFFSET			2
+
+#define WL127X_PG_MAJOR_VER_MASK	0x3
+#define WL127X_PG_MAJOR_VER_OFFSET	0x0
+#define WL127X_PG_MINOR_VER_MASK	0xc
+#define WL127X_PG_MINOR_VER_OFFSET	0x2
+
+#define WL128X_PG_MAJOR_VER_MASK	0xc
+#define WL128X_PG_MAJOR_VER_OFFSET	0x2
+#define WL128X_PG_MINOR_VER_MASK	0x3
+#define WL128X_PG_MINOR_VER_OFFSET	0x0
+
+#define WL127X_PG_GET_MAJOR(pg_ver) ((pg_ver & WL127X_PG_MAJOR_VER_MASK) >> \
+				     WL127X_PG_MAJOR_VER_OFFSET)
+#define WL127X_PG_GET_MINOR(pg_ver) ((pg_ver & WL127X_PG_MINOR_VER_MASK) >> \
+				     WL127X_PG_MINOR_VER_OFFSET)
+#define WL128X_PG_GET_MAJOR(pg_ver) ((pg_ver & WL128X_PG_MAJOR_VER_MASK) >> \
+				     WL128X_PG_MAJOR_VER_OFFSET)
+#define WL128X_PG_GET_MINOR(pg_ver) ((pg_ver & WL128X_PG_MINOR_VER_MASK) >> \
+				     WL128X_PG_MINOR_VER_OFFSET)
+
+#define WL12XX_REG_FUSE_BD_ADDR_1	0x00310eb4
+#define WL12XX_REG_FUSE_BD_ADDR_2	0x00310eb8
+
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2008-2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __RX_H__
+#define __RX_H__
+
+#include <linux/bitops.h>
+
+#define WL1271_RX_MAX_RSSI -30
+#define WL1271_RX_MIN_RSSI -95
+
+#define SHORT_PREAMBLE_BIT   BIT(0)
+#define OFDM_RATE_BIT        BIT(6)
+#define PBCC_RATE_BIT        BIT(7)
+
+#define PLCP_HEADER_LENGTH 8
+#define RX_DESC_PACKETID_SHIFT 11
+#define RX_MAX_PACKET_ID 3
+
+#define NUM_RX_PKT_DESC_MOD_MASK   7
+
+#define RX_DESC_VALID_FCS         0x0001
+#define RX_DESC_MATCH_RXADDR1     0x0002
+#define RX_DESC_MCAST             0x0004
+#define RX_DESC_STAINTIM          0x0008
+#define RX_DESC_VIRTUAL_BM        0x0010
+#define RX_DESC_BCAST             0x0020
+#define RX_DESC_MATCH_SSID        0x0040
+#define RX_DESC_MATCH_BSSID       0x0080
+#define RX_DESC_ENCRYPTION_MASK   0x0300
+#define RX_DESC_MEASURMENT        0x0400
+#define RX_DESC_SEQNUM_MASK       0x1800
+#define	RX_DESC_MIC_FAIL	  0x2000
+#define	RX_DESC_DECRYPT_FAIL	  0x4000
+
+/*
+ * RX Descriptor flags:
+ *
+ * Bits 0-1 - band
+ * Bit  2   - STBC
+ * Bit  3   - A-MPDU
+ * Bit  4   - HT
+ * Bits 5-7 - encryption
+ */
+#define WL1271_RX_DESC_BAND_MASK    0x03
+#define WL1271_RX_DESC_ENCRYPT_MASK 0xE0
+
+#define WL1271_RX_DESC_BAND_BG      0x00
+#define WL1271_RX_DESC_BAND_J       0x01
+#define WL1271_RX_DESC_BAND_A       0x02
+
+#define WL1271_RX_DESC_STBC         BIT(2)
+#define WL1271_RX_DESC_A_MPDU       BIT(3)
+#define WL1271_RX_DESC_HT           BIT(4)
+
+#define WL1271_RX_DESC_ENCRYPT_WEP  0x20
+#define WL1271_RX_DESC_ENCRYPT_TKIP 0x40
+#define WL1271_RX_DESC_ENCRYPT_AES  0x60
+#define WL1271_RX_DESC_ENCRYPT_GEM  0x80
+
+/*
+ * RX Descriptor status
+ *
+ * Bits 0-2 - error code
+ * Bits 3-5 - process_id tag (AP mode FW)
+ * Bits 6-7 - reserved
+ */
+#define WL1271_RX_DESC_STATUS_MASK      0x03
+
+#define WL1271_RX_DESC_SUCCESS          0x00
+#define WL1271_RX_DESC_DECRYPT_FAIL     0x01
+#define WL1271_RX_DESC_MIC_FAIL         0x02
+#define WL1271_RX_DESC_DRIVER_RX_Q_FAIL 0x03
+
+#define RX_MEM_BLOCK_MASK            0xFF
+#define RX_BUF_SIZE_MASK             0xFFF00
+#define RX_BUF_SIZE_SHIFT_DIV        6
+/* If set, the start of IP payload is not 4 bytes aligned */
+#define RX_BUF_UNALIGNED_PAYLOAD     BIT(20)
+
+enum {
+	WL12XX_RX_CLASS_UNKNOWN,
+	WL12XX_RX_CLASS_MANAGEMENT,
+	WL12XX_RX_CLASS_DATA,
+	WL12XX_RX_CLASS_QOS_DATA,
+	WL12XX_RX_CLASS_BCN_PRBRSP,
+	WL12XX_RX_CLASS_EAPOL,
+	WL12XX_RX_CLASS_BA_EVENT,
+	WL12XX_RX_CLASS_AMSDU,
+	WL12XX_RX_CLASS_LOGGER,
+};
+
+struct wl1271_rx_descriptor {
+	__le16 length;
+	u8  status;
+	u8  flags;
+	u8  rate;
+	u8  channel;
+	s8  rssi;
+	u8  snr;
+	__le32 timestamp;
+	u8  packet_class;
+	u8  hlid;
+	u8  pad_len;
+	u8  reserved;
+} __packed;
+
+void wl12xx_rx(struct wl1271 *wl, struct wl12xx_fw_status *status);
+u8 wl1271_rate_to_idx(int rate, enum ieee80211_band band);
+
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2009-2010 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __SCAN_H__
+#define __SCAN_H__
+
+#include "wl12xx.h"
+
+int wl1271_scan(struct wl1271 *wl, struct ieee80211_vif *vif,
+		const u8 *ssid, size_t ssid_len,
+		struct cfg80211_scan_request *req);
+int wl1271_scan_stop(struct wl1271 *wl);
+int wl1271_scan_build_probe_req(struct wl1271 *wl,
+				const u8 *ssid, size_t ssid_len,
+				const u8 *ie, size_t ie_len, u8 band);
+void wl1271_scan_stm(struct wl1271 *wl, struct ieee80211_vif *vif);
+void wl1271_scan_complete_work(struct work_struct *work);
+int wl1271_scan_sched_scan_config(struct wl1271 *wl,
+				     struct wl12xx_vif *wlvif,
+				     struct cfg80211_sched_scan_request *req,
+				     struct ieee80211_sched_scan_ies *ies);
+int wl1271_scan_sched_scan_start(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+void wl1271_scan_sched_scan_stop(struct wl1271 *wl);
+void wl1271_scan_sched_scan_results(struct wl1271 *wl);
+
+#define WL1271_SCAN_MAX_CHANNELS       24
+#define WL1271_SCAN_DEFAULT_TAG        1
+#define WL1271_SCAN_CURRENT_TX_PWR     0
+#define WL1271_SCAN_OPT_ACTIVE         0
+#define WL1271_SCAN_OPT_PASSIVE	       1
+#define WL1271_SCAN_OPT_SPLIT_SCAN     2
+#define WL1271_SCAN_OPT_PRIORITY_HIGH  4
+/* scan even if we fail to enter psm */
+#define WL1271_SCAN_OPT_FORCE          8
+#define WL1271_SCAN_BAND_2_4_GHZ 0
+#define WL1271_SCAN_BAND_5_GHZ 1
+
+#define WL1271_SCAN_TIMEOUT    10000 /* msec */
+
+enum {
+	WL1271_SCAN_STATE_IDLE,
+	WL1271_SCAN_STATE_2GHZ_ACTIVE,
+	WL1271_SCAN_STATE_2GHZ_PASSIVE,
+	WL1271_SCAN_STATE_5GHZ_ACTIVE,
+	WL1271_SCAN_STATE_5GHZ_PASSIVE,
+	WL1271_SCAN_STATE_DONE
+};
+
+struct basic_scan_params {
+	/* Scan option flags (WL1271_SCAN_OPT_*) */
+	__le16 scan_options;
+	u8 role_id;
+	/* Number of scan channels in the list (maximum 30) */
+	u8 n_ch;
+	/* This field indicates the number of probe requests to send
+	   per channel for an active scan */
+	u8 n_probe_reqs;
+	u8 tid_trigger;
+	u8 ssid_len;
+	u8 use_ssid_list;
+
+	/* Rate bit field for sending the probes */
+	__le32 tx_rate;
+
+	u8 ssid[IEEE80211_MAX_SSID_LEN];
+	/* Band to scan */
+	u8 band;
+
+	u8 scan_tag;
+	u8 padding2[2];
+} __packed;
+
+struct basic_scan_channel_params {
+	/* Duration in TU to wait for frames on a channel for active scan */
+	__le32 min_duration;
+	__le32 max_duration;
+	__le32 bssid_lsb;
+	__le16 bssid_msb;
+	u8 early_termination;
+	u8 tx_power_att;
+	u8 channel;
+	/* FW internal use only! */
+	u8 dfs_candidate;
+	u8 activity_detected;
+	u8 pad;
+} __packed;
+
+struct wl1271_cmd_scan {
+	struct wl1271_cmd_header header;
+
+	struct basic_scan_params params;
+	struct basic_scan_channel_params channels[WL1271_SCAN_MAX_CHANNELS];
+
+	/* src mac address */
+	u8 addr[ETH_ALEN];
+	u8 padding[2];
+} __packed;
+
+struct wl1271_cmd_trigger_scan_to {
+	struct wl1271_cmd_header header;
+
+	__le32 timeout;
+} __packed;
+
+#define MAX_CHANNELS_2GHZ	14
+#define MAX_CHANNELS_5GHZ	23
+#define MAX_CHANNELS_4GHZ	4
+
+#define SCAN_MAX_CYCLE_INTERVALS 16
+#define SCAN_MAX_BANDS 3
+
+enum {
+	SCAN_SSID_FILTER_ANY      = 0,
+	SCAN_SSID_FILTER_SPECIFIC = 1,
+	SCAN_SSID_FILTER_LIST     = 2,
+	SCAN_SSID_FILTER_DISABLED = 3
+};
+
+enum {
+	SCAN_BSS_TYPE_INDEPENDENT,
+	SCAN_BSS_TYPE_INFRASTRUCTURE,
+	SCAN_BSS_TYPE_ANY,
+};
+
+#define SCAN_CHANNEL_FLAGS_DFS		BIT(0)
+#define SCAN_CHANNEL_FLAGS_DFS_ENABLED	BIT(1)
+
+struct conn_scan_ch_params {
+	__le16 min_duration;
+	__le16 max_duration;
+	__le16 passive_duration;
+
+	u8  channel;
+	u8  tx_power_att;
+
+	/* bit 0: DFS channel; bit 1: DFS enabled */
+	u8  flags;
+
+	u8  padding[3];
+} __packed;
+
+struct wl1271_cmd_sched_scan_config {
+	struct wl1271_cmd_header header;
+
+	__le32 intervals[SCAN_MAX_CYCLE_INTERVALS];
+
+	s8 rssi_threshold; /* for filtering (in dBm) */
+	s8 snr_threshold;  /* for filtering (in dB) */
+
+	u8 cycles;       /* maximum number of scan cycles */
+	u8 report_after; /* report when this number of results are received */
+	u8 terminate;    /* stop scanning after reporting */
+
+	u8 tag;
+	u8 bss_type; /* for filtering */
+	u8 filter_type;
+
+	u8 ssid_len;     /* For SCAN_SSID_FILTER_SPECIFIC */
+	u8 ssid[IEEE80211_MAX_SSID_LEN];
+
+	u8 n_probe_reqs; /* Number of probes requests per channel */
+
+	u8 passive[SCAN_MAX_BANDS];
+	u8 active[SCAN_MAX_BANDS];
+
+	u8 dfs;
+
+	u8 padding[3];
+
+	struct conn_scan_ch_params channels_2[MAX_CHANNELS_2GHZ];
+	struct conn_scan_ch_params channels_5[MAX_CHANNELS_5GHZ];
+	struct conn_scan_ch_params channels_4[MAX_CHANNELS_4GHZ];
+} __packed;
+
+
+#define SCHED_SCAN_MAX_SSIDS 16
+
+enum {
+	SCAN_SSID_TYPE_PUBLIC = 0,
+	SCAN_SSID_TYPE_HIDDEN = 1,
+};
+
+struct wl1271_ssid {
+	u8 type;
+	u8 len;
+	u8 ssid[IEEE80211_MAX_SSID_LEN];
+	/* u8 padding[2]; */
+} __packed;
+
+struct wl1271_cmd_sched_scan_ssid_list {
+	struct wl1271_cmd_header header;
+
+	u8 n_ssids;
+	struct wl1271_ssid ssids[SCHED_SCAN_MAX_SSIDS];
+	u8 padding[3];
+} __packed;
+
+struct wl1271_cmd_sched_scan_start {
+	struct wl1271_cmd_header header;
+
+	u8 tag;
+	u8 padding[3];
+} __packed;
+
+struct wl1271_cmd_sched_scan_stop {
+	struct wl1271_cmd_header header;
+
+	u8 tag;
+	u8 padding[3];
+} __packed;
+
+
+#endif /* __WL1271_SCAN_H__ */
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 2010 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __TESTMODE_H__
+#define __TESTMODE_H__
+
+#include <net/mac80211.h>
+
+int wl1271_tm_cmd(struct ieee80211_hw *hw, void *data, int len);
+
+#endif /* __WL1271_TESTMODE_H__ */
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __TX_H__
+#define __TX_H__
+
+#define TX_HW_BLOCK_SPARE_DEFAULT        1
+#define TX_HW_BLOCK_SIZE                 252
+
+#define TX_HW_MGMT_PKT_LIFETIME_TU       2000
+#define TX_HW_AP_MODE_PKT_LIFETIME_TU    8000
+
+#define TX_HW_ATTR_SAVE_RETRIES          BIT(0)
+#define TX_HW_ATTR_HEADER_PAD            BIT(1)
+#define TX_HW_ATTR_SESSION_COUNTER       (BIT(2) | BIT(3) | BIT(4))
+#define TX_HW_ATTR_RATE_POLICY           (BIT(5) | BIT(6) | BIT(7) | \
+					  BIT(8) | BIT(9))
+#define TX_HW_ATTR_LAST_WORD_PAD         (BIT(10) | BIT(11))
+#define TX_HW_ATTR_TX_CMPLT_REQ          BIT(12)
+#define TX_HW_ATTR_TX_DUMMY_REQ          BIT(13)
+#define TX_HW_ATTR_HOST_ENCRYPT          BIT(14)
+
+#define TX_HW_ATTR_OFST_SAVE_RETRIES     0
+#define TX_HW_ATTR_OFST_HEADER_PAD       1
+#define TX_HW_ATTR_OFST_SESSION_COUNTER  2
+#define TX_HW_ATTR_OFST_RATE_POLICY      5
+#define TX_HW_ATTR_OFST_LAST_WORD_PAD    10
+#define TX_HW_ATTR_OFST_TX_CMPLT_REQ     12
+
+#define TX_HW_RESULT_QUEUE_LEN           16
+#define TX_HW_RESULT_QUEUE_LEN_MASK      0xf
+
+#define WL1271_TX_ALIGN_TO 4
+#define WL1271_EXTRA_SPACE_TKIP 4
+#define WL1271_EXTRA_SPACE_AES  8
+#define WL1271_EXTRA_SPACE_MAX  8
+
+/* Used for management frames and dummy packets */
+#define WL1271_TID_MGMT 7
+
+struct wl127x_tx_mem {
+	/*
+	 * Number of extra memory blocks to allocate for this packet
+	 * in addition to the number of blocks derived from the packet
+	 * length.
+	 */
+	u8 extra_blocks;
+	/*
+	 * Total number of memory blocks allocated by the host for
+	 * this packet. Must be equal or greater than the actual
+	 * blocks number allocated by HW.
+	 */
+	u8 total_mem_blocks;
+} __packed;
+
+struct wl128x_tx_mem {
+	/*
+	 * Total number of memory blocks allocated by the host for
+	 * this packet.
+	 */
+	u8 total_mem_blocks;
+	/*
+	 * Number of extra bytes, at the end of the frame. the host
+	 * uses this padding to complete each frame to integer number
+	 * of SDIO blocks.
+	 */
+	u8 extra_bytes;
+} __packed;
+
+/*
+ * On wl128x based devices, when TX packets are aggregated, each packet
+ * size must be aligned to the SDIO block size. The maximum block size
+ * is bounded by the type of the padded bytes field that is sent to the
+ * FW. Currently the type is u8, so the maximum block size is 256 bytes.
+ */
+#define WL12XX_BUS_BLOCK_SIZE min(512u,	\
+	    (1u << (8 * sizeof(((struct wl128x_tx_mem *) 0)->extra_bytes))))
+
+struct wl1271_tx_hw_descr {
+	/* Length of packet in words, including descriptor+header+data */
+	__le16 length;
+	union {
+		struct wl127x_tx_mem wl127x_mem;
+		struct wl128x_tx_mem wl128x_mem;
+	} __packed;
+	/* Device time (in us) when the packet arrived to the driver */
+	__le32 start_time;
+	/*
+	 * Max delay in TUs until transmission. The last device time the
+	 * packet can be transmitted is: start_time + (1024 * life_time)
+	 */
+	__le16 life_time;
+	/* Bitwise fields - see TX_ATTR... definitions above. */
+	__le16 tx_attr;
+	/* Packet identifier used also in the Tx-Result. */
+	u8 id;
+	/* The packet TID value (as User-Priority) */
+	u8 tid;
+	/* host link ID (HLID) */
+	u8 hlid;
+	u8 reserved;
+} __packed;
+
+enum wl1271_tx_hw_res_status {
+	TX_SUCCESS          = 0,
+	TX_HW_ERROR         = 1,
+	TX_DISABLED         = 2,
+	TX_RETRY_EXCEEDED   = 3,
+	TX_TIMEOUT          = 4,
+	TX_KEY_NOT_FOUND    = 5,
+	TX_PEER_NOT_FOUND   = 6,
+	TX_SESSION_MISMATCH = 7,
+	TX_LINK_NOT_VALID   = 8,
+};
+
+struct wl1271_tx_hw_res_descr {
+	/* Packet Identifier - same value used in the Tx descriptor.*/
+	u8 id;
+	/* The status of the transmission, indicating success or one of
+	   several possible reasons for failure. */
+	u8 status;
+	/* Total air access duration including all retrys and overheads.*/
+	__le16 medium_usage;
+	/* The time passed from host xfer to Tx-complete.*/
+	__le32 fw_handling_time;
+	/* Total media delay
+	   (from 1st EDCA AIFS counter until TX Complete). */
+	__le32 medium_delay;
+	/* LS-byte of last TKIP seq-num (saved per AC for recovery). */
+	u8 tx_security_sequence_number_lsb;
+	/* Retry count - number of transmissions without successful ACK.*/
+	u8 ack_failures;
+	/* The rate that succeeded getting ACK
+	   (Valid only if status=SUCCESS). */
+	u8 rate_class_index;
+	/* for 4-byte alignment. */
+	u8 spare;
+} __packed;
+
+struct wl1271_tx_hw_res_if {
+	__le32 tx_result_fw_counter;
+	__le32 tx_result_host_counter;
+	struct wl1271_tx_hw_res_descr tx_results_queue[TX_HW_RESULT_QUEUE_LEN];
+} __packed;
+
+static inline int wl1271_tx_get_queue(int queue)
+{
+	switch (queue) {
+	case 0:
+		return CONF_TX_AC_VO;
+	case 1:
+		return CONF_TX_AC_VI;
+	case 2:
+		return CONF_TX_AC_BE;
+	case 3:
+		return CONF_TX_AC_BK;
+	default:
+		return CONF_TX_AC_BE;
+	}
+}
+
+static inline int wl1271_tx_get_mac80211_queue(int queue)
+{
+	switch (queue) {
+	case CONF_TX_AC_VO:
+		return 0;
+	case CONF_TX_AC_VI:
+		return 1;
+	case CONF_TX_AC_BE:
+		return 2;
+	case CONF_TX_AC_BK:
+		return 3;
+	default:
+		return 2;
+	}
+}
+
+static inline int wl1271_tx_total_queue_count(struct wl1271 *wl)
+{
+	int i, count = 0;
+
+	for (i = 0; i < NUM_TX_QUEUES; i++)
+		count += wl->tx_queue_count[i];
+
+	return count;
+}
+
+void wl1271_tx_work(struct work_struct *work);
+void wl1271_tx_work_locked(struct wl1271 *wl);
+void wl1271_tx_complete(struct wl1271 *wl);
+void wl12xx_tx_reset_wlvif(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+void wl12xx_tx_reset(struct wl1271 *wl, bool reset_tx_queues);
+void wl1271_tx_flush(struct wl1271 *wl);
+u8 wl1271_rate_to_idx(int rate, enum ieee80211_band band);
+u32 wl1271_tx_enabled_rates_get(struct wl1271 *wl, u32 rate_set,
+				enum ieee80211_band rate_band);
+u32 wl1271_tx_min_rate_get(struct wl1271 *wl, u32 rate_set);
+u8 wl12xx_tx_get_hlid_ap(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+			 struct sk_buff *skb);
+u8 wl12xx_tx_get_hlid(struct wl1271 *wl, struct wl12xx_vif *wlvif,
+		      struct sk_buff *skb);
+void wl1271_tx_reset_link_queues(struct wl1271 *wl, u8 hlid);
+void wl1271_handle_tx_low_watermark(struct wl1271 *wl);
+bool wl12xx_is_dummy_packet(struct wl1271 *wl, struct sk_buff *skb);
+void wl12xx_rearm_rx_streaming(struct wl1271 *wl, unsigned long *active_hlids);
+
+/* from main.c */
+void wl1271_free_sta(struct wl1271 *wl, struct wl12xx_vif *wlvif, u8 hlid);
+void wl12xx_rearm_tx_watchdog_locked(struct wl1271 *wl);
+
+#endif
+/*
+ * This file is part of wl1271
+ *
+ * Copyright (C) 1998-2009 Texas Instruments. All rights reserved.
+ * Copyright (C) 2008-2009 Nokia Corporation
+ *
+ * Contact: Luciano Coelho <luciano.coelho@nokia.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA
+ *
+ */
+
+#ifndef __WL12XX_H__
+#define __WL12XX_H__
+
+#include <linux/mutex.h>
+#include <linux/completion.h>
+#include <linux/spinlock.h>
+#include <linux/list.h>
+#include <linux/bitops.h>
+#include <net/mac80211.h>
+
+#include "conf.h"
+#include "ini.h"
+
+#define WL127X_FW_NAME_MULTI "ti-connectivity/wl127x-fw-4-mr.bin"
+#define WL127X_FW_NAME_SINGLE "ti-connectivity/wl127x-fw-4-sr.bin"
+
+#define WL128X_FW_NAME_MULTI "ti-connectivity/wl128x-fw-4-mr.bin"
+#define WL128X_FW_NAME_SINGLE "ti-connectivity/wl128x-fw-4-sr.bin"
+
+#define WL127X_PLT_FW_NAME "ti-connectivity/wl127x-fw-4-plt.bin"
+#define WL128X_PLT_FW_NAME "ti-connectivity/wl128x-fw-4-plt.bin"
+
+/*
+ * wl127x and wl128x are using the same NVS file name. However, the
+ * ini parameters between them are different.  The driver validates
+ * the correct NVS size in wl1271_boot_upload_nvs().
+ */
+#define WL12XX_NVS_NAME "ti-connectivity/wl1271-nvs.bin"
+
+#define WL1271_TX_SECURITY_LO16(s) ((u16)((s) & 0xffff))
+#define WL1271_TX_SECURITY_HI32(s) ((u32)(((s) >> 16) & 0xffffffff))
+#define WL1271_TX_SQN_POST_RECOVERY_PADDING 0xff
+
+#define WL1271_CIPHER_SUITE_GEM 0x00147201
+
+#define WL1271_BUSY_WORD_CNT 1
+#define WL1271_BUSY_WORD_LEN (WL1271_BUSY_WORD_CNT * sizeof(u32))
+
+#define WL1271_ELP_HW_STATE_ASLEEP 0
+#define WL1271_ELP_HW_STATE_IRQ    1
+
+#define WL1271_DEFAULT_BEACON_INT  100
+#define WL1271_DEFAULT_DTIM_PERIOD 1
+
+#define WL12XX_MAX_ROLES           4
+#define WL12XX_MAX_LINKS           12
+#define WL12XX_INVALID_ROLE_ID     0xff
+#define WL12XX_INVALID_LINK_ID     0xff
+
+#define WL12XX_MAX_RATE_POLICIES 16
+
+/* Defined by FW as 0. Will not be freed or allocated. */
+#define WL12XX_SYSTEM_HLID         0
+
+/*
+ * When in AP-mode, we allow (at least) this number of packets
+ * to be transmitted to FW for a STA in PS-mode. Only when packets are
+ * present in the FW buffers it will wake the sleeping STA. We want to put
+ * enough packets for the driver to transmit all of its buffered data before
+ * the STA goes to sleep again. But we don't want to take too much memory
+ * as it might hurt the throughput of active STAs.
+ */
+#define WL1271_PS_STA_MAX_PACKETS  2
+
+#define WL1271_AP_BSS_INDEX        0
+#define WL1271_AP_DEF_BEACON_EXP   20
+
+#define ACX_TX_DESCRIPTORS         16
+
+#define WL1271_AGGR_BUFFER_SIZE (4 * PAGE_SIZE)
+
+enum wl1271_state {
+	WL1271_STATE_OFF,
+	WL1271_STATE_ON,
+};
+
+enum wl12xx_fw_type {
+	WL12XX_FW_TYPE_NONE,
+	WL12XX_FW_TYPE_NORMAL,
+	WL12XX_FW_TYPE_MULTI,
+	WL12XX_FW_TYPE_PLT,
+};
+
+enum wl1271_partition_type {
+	PART_DOWN,
+	PART_WORK,
+	PART_DRPW,
+
+	PART_TABLE_LEN
+};
+
+struct wl1271_partition {
+	u32 size;
+	u32 start;
+};
+
+struct wl1271_partition_set {
+	struct wl1271_partition mem;
+	struct wl1271_partition reg;
+	struct wl1271_partition mem2;
+	struct wl1271_partition mem3;
+};
+
+struct wl1271;
+
+enum {
+	FW_VER_CHIP,
+	FW_VER_IF_TYPE,
+	FW_VER_MAJOR,
+	FW_VER_SUBTYPE,
+	FW_VER_MINOR,
+
+	NUM_FW_VER
+};
+
+#define FW_VER_CHIP_WL127X 6
+#define FW_VER_CHIP_WL128X 7
+
+#define FW_VER_IF_TYPE_STA 1
+#define FW_VER_IF_TYPE_AP  2
+
+#define FW_VER_MINOR_1_SPARE_STA_MIN 58
+#define FW_VER_MINOR_1_SPARE_AP_MIN  47
+
+#define FW_VER_MINOR_FWLOG_STA_MIN 70
+
+struct wl1271_chip {
+	u32 id;
+	char fw_ver_str[ETHTOOL_BUSINFO_LEN];
+	unsigned int fw_ver[NUM_FW_VER];
+};
+
+struct wl1271_stats {
+	struct acx_statistics *fw_stats;
+	unsigned long fw_stats_update;
+
+	unsigned int retry_count;
+	unsigned int excessive_retries;
+};
+
+#define NUM_TX_QUEUES              4
+#define NUM_RX_PKT_DESC            8
+
+#define AP_MAX_STATIONS            8
+
+/* FW status registers */
+struct wl12xx_fw_status {
+	__le32 intr;
+	u8  fw_rx_counter;
+	u8  drv_rx_counter;
+	u8  reserved;
+	u8  tx_results_counter;
+	__le32 rx_pkt_descs[NUM_RX_PKT_DESC];
+	__le32 fw_localtime;
+
+	/*
+	 * A bitmap (where each bit represents a single HLID)
+	 * to indicate if the station is in PS mode.
+	 */
+	__le32 link_ps_bitmap;
+
+	/*
+	 * A bitmap (where each bit represents a single HLID) to indicate
+	 * if the station is in Fast mode
+	 */
+	__le32 link_fast_bitmap;
+
+	/* Cumulative counter of total released mem blocks since FW-reset */
+	__le32 total_released_blks;
+
+	/* Size (in Memory Blocks) of TX pool */
+	__le32 tx_total;
+
+	/* Cumulative counter of released packets per AC */
+	u8 tx_released_pkts[NUM_TX_QUEUES];
+
+	/* Cumulative counter of freed packets per HLID */
+	u8 tx_lnk_free_pkts[WL12XX_MAX_LINKS];
+
+	/* Cumulative counter of released Voice memory blocks */
+	u8 tx_voice_released_blks;
+	u8 padding_1[3];
+	__le32 log_start_addr;
+} __packed;
+
+struct wl1271_rx_mem_pool_addr {
+	u32 addr;
+	u32 addr_extra;
+};
+
+#define WL1271_MAX_CHANNELS 64
+struct wl1271_scan {
+	struct cfg80211_scan_request *req;
+	unsigned long scanned_ch[BITS_TO_LONGS(WL1271_MAX_CHANNELS)];
+	bool failed;
+	u8 state;
+	u8 ssid[IEEE80211_MAX_SSID_LEN+1];
+	size_t ssid_len;
+};
+
+struct wl1271_if_operations {
+	void (*read)(struct device *child, int addr, void *buf, size_t len,
+		     bool fixed);
+	void (*write)(struct device *child, int addr, void *buf, size_t len,
+		     bool fixed);
+	void (*reset)(struct device *child);
+	void (*init)(struct device *child);
+	int (*power)(struct device *child, bool enable);
+	void (*set_block_size) (struct device *child, unsigned int blksz);
+};
+
+#define MAX_NUM_KEYS 14
+#define MAX_KEY_SIZE 32
+
+struct wl1271_ap_key {
+	u8 id;
+	u8 key_type;
+	u8 key_size;
+	u8 key[MAX_KEY_SIZE];
+	u8 hlid;
+	u32 tx_seq_32;
+	u16 tx_seq_16;
+};
+
+enum wl12xx_flags {
+	WL1271_FLAG_GPIO_POWER,
+	WL1271_FLAG_TX_QUEUE_STOPPED,
+	WL1271_FLAG_TX_PENDING,
+	WL1271_FLAG_IN_ELP,
+	WL1271_FLAG_ELP_REQUESTED,
+	WL1271_FLAG_IRQ_RUNNING,
+	WL1271_FLAG_FW_TX_BUSY,
+	WL1271_FLAG_DUMMY_PACKET_PENDING,
+	WL1271_FLAG_SUSPENDED,
+	WL1271_FLAG_PENDING_WORK,
+	WL1271_FLAG_SOFT_GEMINI,
+	WL1271_FLAG_RECOVERY_IN_PROGRESS,
+	WL1271_FLAG_VIF_CHANGE_IN_PROGRESS,
+	WL1271_FLAG_INTENDED_FW_RECOVERY,
+};
+
+enum wl12xx_vif_flags {
+	WLVIF_FLAG_INITIALIZED,
+	WLVIF_FLAG_STA_ASSOCIATED,
+	WLVIF_FLAG_STA_AUTHORIZED,
+	WLVIF_FLAG_IBSS_JOINED,
+	WLVIF_FLAG_AP_STARTED,
+	WLVIF_FLAG_IN_PS,
+	WLVIF_FLAG_STA_STATE_SENT,
+	WLVIF_FLAG_RX_STREAMING_STARTED,
+	WLVIF_FLAG_PSPOLL_FAILURE,
+	WLVIF_FLAG_CS_PROGRESS,
+	WLVIF_FLAG_AP_PROBE_RESP_SET,
+	WLVIF_FLAG_IN_USE,
+};
+
+struct wl1271_link {
+	/* AP-mode - TX queue per AC in link */
+	struct sk_buff_head tx_queue[NUM_TX_QUEUES];
+
+	/* accounting for allocated / freed packets in FW */
+	u8 allocated_pkts;
+	u8 prev_freed_pkts;
+
+	u8 addr[ETH_ALEN];
+
+	/* bitmap of TIDs where RX BA sessions are active for this link */
+	u8 ba_bitmap;
+};
+
+struct wl1271 {
+	struct ieee80211_hw *hw;
+	bool mac80211_registered;
+
+	struct device *dev;
+
+	void *if_priv;
+
+	struct wl1271_if_operations *if_ops;
+
+	void (*set_power)(bool enable);
+	int irq;
+	int ref_clock;
+
+	spinlock_t wl_lock;
+
+	enum wl1271_state state;
+	enum wl12xx_fw_type fw_type;
+	bool plt;
+	u8 last_vif_count;
+	struct mutex mutex;
+
+	unsigned long flags;
+
+	struct wl1271_partition_set part;
+
+	struct wl1271_chip chip;
+
+	int cmd_box_addr;
+	int event_box_addr;
+
+	u8 *fw;
+	size_t fw_len;
+	void *nvs;
+	size_t nvs_len;
+
+	s8 hw_pg_ver;
+
+	/* address read from the fuse ROM */
+	u32 fuse_oui_addr;
+	u32 fuse_nic_addr;
+
+	/* we have up to 2 MAC addresses */
+	struct mac_address addresses[2];
+	int channel;
+	u8 system_hlid;
+
+	unsigned long links_map[BITS_TO_LONGS(WL12XX_MAX_LINKS)];
+	unsigned long roles_map[BITS_TO_LONGS(WL12XX_MAX_ROLES)];
+	unsigned long roc_map[BITS_TO_LONGS(WL12XX_MAX_ROLES)];
+	unsigned long rate_policies_map[
+			BITS_TO_LONGS(WL12XX_MAX_RATE_POLICIES)];
+
+	struct list_head wlvif_list;
+
+	u8 sta_count;
+	u8 ap_count;
+
+	struct wl1271_acx_mem_map *target_mem_map;
+
+	/* Accounting for allocated / available TX blocks on HW */
+	u32 tx_blocks_freed;
+	u32 tx_blocks_available;
+	u32 tx_allocated_blocks;
+	u32 tx_results_count;
+
+	/* amount of spare TX blocks to use */
+	u32 tx_spare_blocks;
+
+	/* Accounting for allocated / available Tx packets in HW */
+	u32 tx_pkts_freed[NUM_TX_QUEUES];
+	u32 tx_allocated_pkts[NUM_TX_QUEUES];
+
+	/* Transmitted TX packets counter for chipset interface */
+	u32 tx_packets_count;
+
+	/* Time-offset between host and chipset clocks */
+	s64 time_offset;
+
+	/* Frames scheduled for transmission, not handled yet */
+	int tx_queue_count[NUM_TX_QUEUES];
+	long stopped_queues_map;
+
+	/* Frames received, not handled yet by mac80211 */
+	struct sk_buff_head deferred_rx_queue;
+
+	/* Frames sent, not returned yet to mac80211 */
+	struct sk_buff_head deferred_tx_queue;
+
+	struct work_struct tx_work;
+	struct workqueue_struct *freezable_wq;
+
+	/* Pending TX frames */
+	unsigned long tx_frames_map[BITS_TO_LONGS(ACX_TX_DESCRIPTORS)];
+	struct sk_buff *tx_frames[ACX_TX_DESCRIPTORS];
+	int tx_frames_cnt;
+
+	/* FW Rx counter */
+	u32 rx_counter;
+
+	/* Rx memory pool address */
+	struct wl1271_rx_mem_pool_addr rx_mem_pool_addr;
+
+	/* Intermediate buffer, used for packet aggregation */
+	u8 *aggr_buf;
+
+	/* Reusable dummy packet template */
+	struct sk_buff *dummy_packet;
+
+	/* Network stack work  */
+	struct work_struct netstack_work;
+
+	/* FW log buffer */
+	u8 *fwlog;
+
+	/* Number of valid bytes in the FW log buffer */
+	ssize_t fwlog_size;
+
+	/* Sysfs FW log entry readers wait queue */
+	wait_queue_head_t fwlog_waitq;
+
+	/* Hardware recovery work */
+	struct work_struct recovery_work;
+
+	/* The mbox event mask */
+	u32 event_mask;
+
+	/* Mailbox pointers */
+	u32 mbox_ptr[2];
+
+	/* Are we currently scanning */
+	struct ieee80211_vif *scan_vif;
+	struct wl1271_scan scan;
+	struct delayed_work scan_complete_work;
+
+	bool sched_scanning;
+
+	/* The current band */
+	enum ieee80211_band band;
+
+	struct completion *elp_compl;
+	struct delayed_work elp_work;
+
+	/* in dBm */
+	int power_level;
+
+	struct wl1271_stats stats;
+
+	__le32 buffer_32;
+	u32 buffer_cmd;
+	u32 buffer_busyword[WL1271_BUSY_WORD_CNT];
+
+	struct wl12xx_fw_status *fw_status;
+	struct wl1271_tx_hw_res_if *tx_res_if;
+
+	/* Current chipset configuration */
+	struct conf_drv_settings conf;
+
+	bool sg_enabled;
+
+	bool enable_11a;
+
+	/* Most recently reported noise in dBm */
+	s8 noise;
+
+	/* bands supported by this instance of wl12xx */
+	struct ieee80211_supported_band bands[IEEE80211_NUM_BANDS];
+
+	int tcxo_clock;
+
+	/*
+	 * wowlan trigger was configured during suspend.
+	 * (currently, only "ANY" trigger is supported)
+	 */
+	bool wow_enabled;
+	bool irq_wake_enabled;
+
+	/*
+	 * AP-mode - links indexed by HLID. The global and broadcast links
+	 * are always active.
+	 */
+	struct wl1271_link links[WL12XX_MAX_LINKS];
+
+	/* AP-mode - a bitmap of links currently in PS mode according to FW */
+	u32 ap_fw_ps_map;
+
+	/* AP-mode - a bitmap of links currently in PS mode in mac80211 */
+	unsigned long ap_ps_map;
+
+	/* Quirks of specific hardware revisions */
+	unsigned int quirks;
+
+	/* Platform limitations */
+	unsigned int platform_quirks;
+
+	/* number of currently active RX BA sessions */
+	int ba_rx_session_count;
+
+	/* AP-mode - number of currently connected stations */
+	int active_sta_count;
+
+	/* last wlvif we transmitted from */
+	struct wl12xx_vif *last_wlvif;
+
+	/* work to fire when Tx is stuck */
+	struct delayed_work tx_watchdog_work;
+};
+
+struct wl1271_station {
+	u8 hlid;
+};
+
+struct wl12xx_vif {
+	struct wl1271 *wl;
+	struct list_head list;
+	unsigned long flags;
+	u8 bss_type;
+	u8 p2p; /* we are using p2p role */
+	u8 role_id;
+
+	/* sta/ibss specific */
+	u8 dev_role_id;
+	u8 dev_hlid;
+
+	union {
+		struct {
+			u8 hlid;
+			u8 ba_rx_bitmap;
+
+			u8 basic_rate_idx;
+			u8 ap_rate_idx;
+			u8 p2p_rate_idx;
+
+			bool qos;
+		} sta;
+		struct {
+			u8 global_hlid;
+			u8 bcast_hlid;
+
+			/* HLIDs bitmap of associated stations */
+			unsigned long sta_hlid_map[BITS_TO_LONGS(
+							WL12XX_MAX_LINKS)];
+
+			/* recoreded keys - set here before AP startup */
+			struct wl1271_ap_key *recorded_keys[MAX_NUM_KEYS];
+
+			u8 mgmt_rate_idx;
+			u8 bcast_rate_idx;
+			u8 ucast_rate_idx[CONF_TX_MAX_AC_COUNT];
+		} ap;
+	};
+
+	/* the hlid of the last transmitted skb */
+	int last_tx_hlid;
+
+	unsigned long links_map[BITS_TO_LONGS(WL12XX_MAX_LINKS)];
+
+	u8 ssid[IEEE80211_MAX_SSID_LEN + 1];
+	u8 ssid_len;
+
+	/* The current band */
+	enum ieee80211_band band;
+	int channel;
+
+	u32 bitrate_masks[IEEE80211_NUM_BANDS];
+	u32 basic_rate_set;
+
+	/*
+	 * currently configured rate set:
+	 *	bits  0-15 - 802.11abg rates
+	 *	bits 16-23 - 802.11n   MCS index mask
+	 * support only 1 stream, thus only 8 bits for the MCS rates (0-7).
+	 */
+	u32 basic_rate;
+	u32 rate_set;
+
+	/* probe-req template for the current AP */
+	struct sk_buff *probereq;
+
+	/* Beaconing interval (needed for ad-hoc) */
+	u32 beacon_int;
+
+	/* Default key (for WEP) */
+	u32 default_key;
+
+	/* Our association ID */
+	u16 aid;
+
+	/* Session counter for the chipset */
+	int session_counter;
+
+	/* retry counter for PSM entries */
+	u8 psm_entry_retry;
+
+	/* in dBm */
+	int power_level;
+
+	int rssi_thold;
+	int last_rssi_event;
+
+	/* save the current encryption type for auto-arp config */
+	u8 encryption_type;
+	__be32 ip_addr;
+
+	/* RX BA constraint value */
+	bool ba_support;
+	bool ba_allowed;
+
+	/* Rx Streaming */
+	struct work_struct rx_streaming_enable_work;
+	struct work_struct rx_streaming_disable_work;
+	struct timer_list rx_streaming_timer;
+
+	/*
+	 * This struct must be last!
+	 * data that has to be saved acrossed reconfigs (e.g. recovery)
+	 * should be declared in this struct.
+	 */
+	struct {
+		u8 persistent[0];
+		/*
+		 * Security sequence number
+		 *     bits 0-15: lower 16 bits part of sequence number
+		 *     bits 16-47: higher 32 bits part of sequence number
+		 *     bits 48-63: not in use
+		 */
+		u64 tx_security_seq;
+
+		/* 8 bits of the last sequence number in use */
+		u8 tx_security_last_seq_lsb;
+	};
+};
+
+static inline struct wl12xx_vif *wl12xx_vif_to_data(struct ieee80211_vif *vif)
+{
+	return (struct wl12xx_vif *)vif->drv_priv;
+}
+
+static inline
+struct ieee80211_vif *wl12xx_wlvif_to_vif(struct wl12xx_vif *wlvif)
+{
+	return container_of((void *)wlvif, struct ieee80211_vif, drv_priv);
+}
+
+#define wl12xx_for_each_wlvif(wl, wlvif) \
+		list_for_each_entry(wlvif, &wl->wlvif_list, list)
+
+#define wl12xx_for_each_wlvif_continue(wl, wlvif) \
+		list_for_each_entry_continue(wlvif, &wl->wlvif_list, list)
+
+#define wl12xx_for_each_wlvif_bss_type(wl, wlvif, _bss_type)	\
+		wl12xx_for_each_wlvif(wl, wlvif)		\
+			if (wlvif->bss_type == _bss_type)
+
+#define wl12xx_for_each_wlvif_sta(wl, wlvif)	\
+		wl12xx_for_each_wlvif_bss_type(wl, wlvif, BSS_TYPE_STA_BSS)
+
+#define wl12xx_for_each_wlvif_ap(wl, wlvif)	\
+		wl12xx_for_each_wlvif_bss_type(wl, wlvif, BSS_TYPE_AP_BSS)
+
+int wl1271_plt_start(struct wl1271 *wl);
+int wl1271_plt_stop(struct wl1271 *wl);
+int wl1271_recalc_rx_streaming(struct wl1271 *wl, struct wl12xx_vif *wlvif);
+void wl12xx_queue_recovery_work(struct wl1271 *wl);
+size_t wl12xx_copy_fwlog(struct wl1271 *wl, u8 *memblock, size_t maxlen);
+
+#define JOIN_TIMEOUT 5000 /* 5000 milliseconds to join */
+
+#define SESSION_COUNTER_MAX 6 /* maximum value for the session counter */
+#define SESSION_COUNTER_INVALID 7 /* used with dummy_packet */
+
+#define WL1271_DEFAULT_POWER_LEVEL 0
+
+#define WL1271_TX_QUEUE_LOW_WATERMARK  32
+#define WL1271_TX_QUEUE_HIGH_WATERMARK 256
+
+#define WL1271_DEFERRED_QUEUE_LIMIT    64
+
+/* WL1271 needs a 200ms sleep after power on, and a 20ms sleep before power
+   on in case is has been shut down shortly before */
+#define WL1271_PRE_POWER_ON_SLEEP 20 /* in milliseconds */
+#define WL1271_POWER_ON_SLEEP 200 /* in milliseconds */
+
+/* Macros to handle wl1271.sta_rate_set */
+#define HW_BG_RATES_MASK	0xffff
+#define HW_HT_RATES_OFFSET	16
+
+/* Quirks */
+
+/* Each RX/TX transaction requires an end-of-transaction transfer */
+#define WL12XX_QUIRK_END_OF_TRANSACTION		BIT(0)
+
+/* wl127x and SPI don't support SDIO block size alignment */
+#define WL12XX_QUIRK_NO_BLOCKSIZE_ALIGNMENT	BIT(2)
+
+/* Older firmwares did not implement the FW logger over bus feature */
+#define WL12XX_QUIRK_FWLOG_NOT_IMPLEMENTED	BIT(4)
+
+#define WL12XX_HW_BLOCK_SIZE	256
+
+#endif
+#ifndef __WL12XX_80211_H__
+#define __WL12XX_80211_H__
+
+#include <linux/if_ether.h>	/* ETH_ALEN */
+#include <linux/if_arp.h>
+
+/* RATES */
+#define IEEE80211_CCK_RATE_1MB		        0x02
+#define IEEE80211_CCK_RATE_2MB		        0x04
+#define IEEE80211_CCK_RATE_5MB		        0x0B
+#define IEEE80211_CCK_RATE_11MB		        0x16
+#define IEEE80211_OFDM_RATE_6MB		        0x0C
+#define IEEE80211_OFDM_RATE_9MB		        0x12
+#define IEEE80211_OFDM_RATE_12MB		0x18
+#define IEEE80211_OFDM_RATE_18MB		0x24
+#define IEEE80211_OFDM_RATE_24MB		0x30
+#define IEEE80211_OFDM_RATE_36MB		0x48
+#define IEEE80211_OFDM_RATE_48MB		0x60
+#define IEEE80211_OFDM_RATE_54MB		0x6C
+#define IEEE80211_BASIC_RATE_MASK		0x80
+
+#define IEEE80211_CCK_RATE_1MB_MASK		(1<<0)
+#define IEEE80211_CCK_RATE_2MB_MASK		(1<<1)
+#define IEEE80211_CCK_RATE_5MB_MASK		(1<<2)
+#define IEEE80211_CCK_RATE_11MB_MASK		(1<<3)
+#define IEEE80211_OFDM_RATE_6MB_MASK		(1<<4)
+#define IEEE80211_OFDM_RATE_9MB_MASK		(1<<5)
+#define IEEE80211_OFDM_RATE_12MB_MASK		(1<<6)
+#define IEEE80211_OFDM_RATE_18MB_MASK		(1<<7)
+#define IEEE80211_OFDM_RATE_24MB_MASK		(1<<8)
+#define IEEE80211_OFDM_RATE_36MB_MASK		(1<<9)
+#define IEEE80211_OFDM_RATE_48MB_MASK		(1<<10)
+#define IEEE80211_OFDM_RATE_54MB_MASK		(1<<11)
+
+#define IEEE80211_CCK_RATES_MASK	  0x0000000F
+#define IEEE80211_CCK_BASIC_RATES_MASK	 (IEEE80211_CCK_RATE_1MB_MASK | \
+	IEEE80211_CCK_RATE_2MB_MASK)
+#define IEEE80211_CCK_DEFAULT_RATES_MASK (IEEE80211_CCK_BASIC_RATES_MASK | \
+	IEEE80211_CCK_RATE_5MB_MASK | \
+	IEEE80211_CCK_RATE_11MB_MASK)
+
+#define IEEE80211_OFDM_RATES_MASK	  0x00000FF0
+#define IEEE80211_OFDM_BASIC_RATES_MASK	  (IEEE80211_OFDM_RATE_6MB_MASK | \
+	IEEE80211_OFDM_RATE_12MB_MASK | \
+	IEEE80211_OFDM_RATE_24MB_MASK)
+#define IEEE80211_OFDM_DEFAULT_RATES_MASK (IEEE80211_OFDM_BASIC_RATES_MASK | \
+	IEEE80211_OFDM_RATE_9MB_MASK  | \
+	IEEE80211_OFDM_RATE_18MB_MASK | \
+	IEEE80211_OFDM_RATE_36MB_MASK | \
+	IEEE80211_OFDM_RATE_48MB_MASK | \
+	IEEE80211_OFDM_RATE_54MB_MASK)
+#define IEEE80211_DEFAULT_RATES_MASK (IEEE80211_OFDM_DEFAULT_RATES_MASK | \
+				      IEEE80211_CCK_DEFAULT_RATES_MASK)
+
+
+/* This really should be 8, but not for our firmware */
+#define MAX_SUPPORTED_RATES 32
+#define MAX_COUNTRY_TRIPLETS 32
+
+/* Headers */
+struct ieee80211_header {
+	__le16 frame_ctl;
+	__le16 duration_id;
+	u8 da[ETH_ALEN];
+	u8 sa[ETH_ALEN];
+	u8 bssid[ETH_ALEN];
+	__le16 seq_ctl;
+	u8 payload[0];
+} __packed;
+
+struct wl12xx_ie_header {
+	u8 id;
+	u8 len;
+} __packed;
+
+/* IEs */
+
+struct wl12xx_ie_ssid {
+	struct wl12xx_ie_header header;
+	char ssid[IEEE80211_MAX_SSID_LEN];
+} __packed;
+
+struct wl12xx_ie_rates {
+	struct wl12xx_ie_header header;
+	u8 rates[MAX_SUPPORTED_RATES];
+} __packed;
+
+struct wl12xx_ie_ds_params {
+	struct wl12xx_ie_header header;
+	u8 channel;
+} __packed;
+
+struct country_triplet {
+	u8 channel;
+	u8 num_channels;
+	u8 max_tx_power;
+} __packed;
+
+struct wl12xx_ie_country {
+	struct wl12xx_ie_header header;
+	u8 country_string[IEEE80211_COUNTRY_STRING_LEN];
+	struct country_triplet triplets[MAX_COUNTRY_TRIPLETS];
+} __packed;
+
+
+/* Templates */
+
+struct wl12xx_null_data_template {
+	struct ieee80211_header header;
+} __packed;
+
+struct wl12xx_ps_poll_template {
+	__le16 fc;
+	__le16 aid;
+	u8 bssid[ETH_ALEN];
+	u8 ta[ETH_ALEN];
+} __packed;
+
+struct wl12xx_arp_rsp_template {
+	/* not including ieee80211 header */
+
+	u8 llc_hdr[sizeof(rfc1042_header)];
+	__be16 llc_type;
+
+	struct arphdr arp_hdr;
+	u8 sender_hw[ETH_ALEN];
+	__be32 sender_ip;
+	u8 target_hw[ETH_ALEN];
+	__be32 target_ip;
+} __packed;
+
+struct wl12xx_disconn_template {
+	struct ieee80211_header header;
+	__le16 disconn_reason;
+} __packed;
+
+#endif

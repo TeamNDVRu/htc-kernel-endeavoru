@@ -23,12 +23,14 @@
 
 #include <linux/module.h>
 #include <linux/platform_device.h>
-#include <linux/crc7.h>
 #include <linux/spi/spi.h>
+#include <linux/interrupt.h>
 
 #include "wl12xx.h"
+#include "debug.h"
 #include "wl12xx_80211.h"
 #include "io.h"
+#include "tx.h"
 
 #define OCP_CMD_LOOP  32
 
@@ -43,14 +45,83 @@
 #define OCP_STATUS_REQ_FAILED 0x20000
 #define OCP_STATUS_RESP_ERROR 0x30000
 
+struct wl1271_partition_set wl12xx_part_table[PART_TABLE_LEN] = {
+	[PART_DOWN] = {
+		.mem = {
+			.start = 0x00000000,
+			.size  = 0x000177c0
+		},
+		.reg = {
+			.start = REGISTERS_BASE,
+			.size  = 0x00008800
+		},
+		.mem2 = {
+			.start = 0x00000000,
+			.size  = 0x00000000
+		},
+		.mem3 = {
+			.start = 0x00000000,
+			.size  = 0x00000000
+		},
+	},
+
+	[PART_WORK] = {
+		.mem = {
+			.start = 0x00040000,
+			.size  = 0x00014fc0
+		},
+		.reg = {
+			.start = REGISTERS_BASE,
+			.size  = 0x0000a000
+		},
+		.mem2 = {
+			.start = 0x003004f8,
+			.size  = 0x00000004
+		},
+		.mem3 = {
+			.start = 0x00040404,
+			.size  = 0x00000000
+		},
+	},
+
+	[PART_DRPW] = {
+		.mem = {
+			.start = 0x00040000,
+			.size  = 0x00014fc0
+		},
+		.reg = {
+			.start = DRPW_BASE,
+			.size  = 0x00006000
+		},
+		.mem2 = {
+			.start = 0x00000000,
+			.size  = 0x00000000
+		},
+		.mem3 = {
+			.start = 0x00000000,
+			.size  = 0x00000000
+		}
+	}
+};
+
+bool wl1271_set_block_size(struct wl1271 *wl)
+{
+	if (wl->if_ops->set_block_size) {
+		wl->if_ops->set_block_size(wl->dev, WL12XX_BUS_BLOCK_SIZE);
+		return true;
+	}
+
+	return false;
+}
+
 void wl1271_disable_interrupts(struct wl1271 *wl)
 {
-	wl->if_ops->disable_irq(wl);
+	disable_irq(wl->irq);
 }
 
 void wl1271_enable_interrupts(struct wl1271 *wl)
 {
-	wl->if_ops->enable_irq(wl);
+	enable_irq(wl->irq);
 }
 
 /* Set the SPI partitions to access the chip addresses
@@ -117,12 +188,14 @@ EXPORT_SYMBOL_GPL(wl1271_set_partition);
 
 void wl1271_io_reset(struct wl1271 *wl)
 {
-	wl->if_ops->reset(wl);
+	if (wl->if_ops->reset)
+		wl->if_ops->reset(wl->dev);
 }
 
 void wl1271_io_init(struct wl1271 *wl)
 {
-	wl->if_ops->init(wl);
+	if (wl->if_ops->init)
+		wl->if_ops->init(wl->dev);
 }
 
 void wl1271_top_reg_write(struct wl1271 *wl, int addr, u16 val)
