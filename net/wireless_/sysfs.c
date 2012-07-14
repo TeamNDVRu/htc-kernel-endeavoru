@@ -89,7 +89,7 @@ static int wiphy_suspend(struct device *dev, pm_message_t state)
 	struct cfg80211_registered_device *rdev = dev_to_rdev(dev);
 	int ret = 0;
 
-/*	rdev->suspend_at = get_seconds();
+	rdev->suspend_at = get_seconds();
 
 	if (rdev->ops->suspend) {
 		rtnl_lock();
@@ -97,7 +97,7 @@ static int wiphy_suspend(struct device *dev, pm_message_t state)
 			ret = rdev->ops->suspend(&rdev->wiphy, rdev->wowlan);
 		rtnl_unlock();
 	}
-*/
+
 	return ret;
 }
 
@@ -107,7 +107,7 @@ static int wiphy_resume(struct device *dev)
 	int ret = 0;
 
 	/* Age scan results with time spent in suspend */
-/*	spin_lock_bh(&rdev->bss_lock);
+	spin_lock_bh(&rdev->bss_lock);
 	cfg80211_bss_age(rdev, get_seconds() - rdev->suspend_at);
 	spin_unlock_bh(&rdev->bss_lock);
 
@@ -117,7 +117,7 @@ static int wiphy_resume(struct device *dev)
 			ret = rdev->ops->resume(&rdev->wiphy);
 		rtnl_unlock();
 	}
-*/
+
 	return ret;
 }
 
