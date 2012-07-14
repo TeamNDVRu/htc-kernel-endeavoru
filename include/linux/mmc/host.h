@@ -106,6 +106,15 @@ struct mmc_host_ops {
 	 */
 	int (*enable)(struct mmc_host *host);
 	int (*disable)(struct mmc_host *host, int lazy);
+	/*
+	 * It is optional for the host to implement pre_req and post_req in
+	 * order to support double buffering of requests (prepare one
+	 * request while another request is active).
+	 */
+	void	(*post_req)(struct mmc_host *host, struct mmc_request *req,
+			    int err);
+	void	(*pre_req)(struct mmc_host *host, struct mmc_request *req,
+			   bool is_first_req);
 	void	(*request)(struct mmc_host *host, struct mmc_request *req);
 	/*
 	 * Avoid calling these three functions too often or in a "fast path",
@@ -138,12 +147,23 @@ struct mmc_host_ops {
 
 	int	(*start_signal_voltage_switch)(struct mmc_host *host, struct mmc_ios *ios);
 	int	(*execute_tuning)(struct mmc_host *host);
-	int	(*select_drive_strength)(unsigned int max_dtr,
-		int host_drv, int card_drv);
+	void	(*enable_preset_value)(struct mmc_host *host, bool enable);
+	int	(*select_drive_strength)(unsigned int max_dtr, int host_drv, int card_drv);
+	void	(*hw_reset)(struct mmc_host *host);
 };
 
 struct mmc_card;
 struct device;
+
+struct mmc_async_req {
+	/* active mmc request */
+	struct mmc_request	*mrq;
+	/*
+	 * Check error status of completed mmc request.
+	 * Returns 0 if success otherwise non zero.
+	 */
+	int (*err_check) (struct mmc_card *, struct mmc_async_req *);
+};
 
 struct mmc_host {
 	struct device		*parent;
@@ -208,6 +228,15 @@ struct mmc_host {
 #define MMC_CAP_DRIVER_TYPE_C	(1 << 24)	/* Host supports Driver Type C */
 #define MMC_CAP_DRIVER_TYPE_D	(1 << 25)	/* Host supports Driver Type D */
 #define MMC_CAP_BKOPS		(1 << 26)	/* Host supports BKOPS */
+#define MMC_CAP_MAX_CURRENT_200 (1 << 27)	/* Host max current limit is 200mA */ 
+#define MMC_CAP_MAX_CURRENT_400 (1 << 28)	/* Host max current limit is 400mA */
+#define MMC_CAP_MAX_CURRENT_600 (1 << 29)	/* Host max current limit is 600mA */
+#define MMC_CAP_MAX_CURRENT_800 (1 << 30)	/* Host max current limit is 800mA */
+#define MMC_CAP_CMD23		(1 << 31)	/* CMD23 supported. */
+
+	unsigned int		caps2;		/* More host capabilities */
+
+#define MMC_CAP2_BOOTPART_NOACC	(1 << 0)	/* Boot partition no access */
 
 	mmc_pm_flag_t		pm_caps;	/* supported pm features */
 
@@ -228,6 +257,7 @@ struct mmc_host {
 	unsigned int		max_req_size;	/* maximum number of bytes in one req */
 	unsigned int		max_blk_size;	/* maximum size of one mmc block */
 	unsigned int		max_blk_count;	/* maximum number of blocks in one req */
+	unsigned int		max_discard_to;	/* max. discard timeout in ms */
 
 	/* private data */
 	spinlock_t		lock;		/* lock for claim and bus ops */
@@ -290,6 +320,8 @@ struct mmc_host {
 		int				num_funcs;
 	} embedded_sdio_data;
 #endif
+
+	struct mmc_async_req	*areq;		/* active async req */
 
 	unsigned long		private[0] ____cacheline_aligned;
 };
@@ -382,14 +414,14 @@ static inline void mmc_set_disable_delay(struct mmc_host *host,
 }
 
 /* Module parameter */
-extern int mmc_assume_removable;
+extern bool mmc_assume_removable;
 
 static inline int mmc_card_is_removable(struct mmc_host *host)
 {
 	return !(host->caps & MMC_CAP_NONREMOVABLE) && mmc_assume_removable;
 }
 
-static inline int mmc_card_is_powered_resumed(struct mmc_host *host)
+static inline int mmc_card_keep_power(struct mmc_host *host)
 {
 	return host->pm_flags & MMC_PM_KEEP_POWER;
 }
@@ -398,5 +430,16 @@ static inline int mmc_card_wake_sdio_irq(struct mmc_host *host)
 {
        return host->pm_flags & MMC_PM_WAKE_SDIO_IRQ;
 }
+
+static inline int mmc_host_cmd23(struct mmc_host *host)
+{
+	return host->caps & MMC_CAP_CMD23;
+}
+
+static inline int mmc_boot_partition_access(struct mmc_host *host)
+{
+	return !(host->caps2 & MMC_CAP2_BOOTPART_NOACC);
+}
+
 #endif
 

@@ -1,7 +1,8 @@
 /*
- *  This file contains work-arounds for many known sdio hardware
- *  bugs.
+ *  This file contains work-arounds for many known SD/MMC
+ *  and SDIO hardware bugs.
  *
+ *  Copyright (c) 2011 Andrei Warkentin <andreiw@motorola.com>
  *  Copyright (c) 2011 Pierre Tardy <tardyp@gmail.com>
  *  Inspired from pci fixup code:
  *  Copyright (c) 1999 Martin Mares <mj@ucw.cz>
@@ -36,11 +37,14 @@ static const struct mmc_fixup mmc_fixup_methods[] = {
 		add_quirk_for_sdio_devices, MMC_QUIRK_BROKEN_CLK_GATING),
 	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
 		remove_quirk, MMC_QUIRK_BROKEN_CLK_GATING),
+	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
+		add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
+	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
+		add_quirk, MMC_QUIRK_DISABLE_CD),
 	END_FIXUP
 };
 
-void mmc_fixup_device(struct mmc_card *card,
-		      const struct mmc_fixup *table)
+void mmc_fixup_device(struct mmc_card *card, const struct mmc_fixup *table)
 {
 	const struct mmc_fixup *f;
 	u64 rev = cid_rev_card(card);

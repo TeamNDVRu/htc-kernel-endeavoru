@@ -317,7 +317,6 @@ static int wl1271_suspend(struct device *dev)
 
 	dev_dbg(dev, "wl1271 suspend. wow_enabled: %d\n",
 		wl->wow_enabled);
-
 	/* check whether sdio should keep power */
 /*	if (wl->wow_enabled) {*/
 	if (stop_wifi_driver_flag) {
