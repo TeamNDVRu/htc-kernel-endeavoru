@@ -140,7 +140,7 @@ static int wl12xx_sdio_power_on(struct wl12xx_sdio_glue *glue)
 		 */
 		ret = mmc_power_restore_host(card->host);
 		if (ret < 0) {
-			pm_runtime_put_sync(&card->dev);
+			pm_runtime_get_sync(&card->dev);
 			goto out;
 		}
 	}
@@ -169,7 +169,7 @@ static int wl12xx_sdio_power_off(struct wl12xx_sdio_glue *glue)
 		goto out;
 
 	/* Let runtime PM know the card is powered off */
-	pm_runtime_put_sync(&card->dev);
+	pm_runtime_get_sync(&card->dev);
 
 out:
 	return ret;

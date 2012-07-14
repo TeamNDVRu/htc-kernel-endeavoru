@@ -2145,11 +2145,11 @@ int sdhci_suspend_host(struct sdhci_host *host, pm_message_t state)
 
 	sdhci_disable_card_detection(host);
 
-#if defined(CONFIG_MACH_ENDEAVORU) || defined(CONFIG_MACH_ENDEAVORTD)
+/*#if defined(CONFIG_MACH_ENDEAVORU) || defined(CONFIG_MACH_ENDEAVORTD)
 	if (mmc->card) { //austin && (mmc->card->type != MMC_TYPE_SDIO))
-#else
+#else*/
     if (mmc->card && (mmc->card->type != MMC_TYPE_SDIO)) {
-#endif
+//#endif
         ret = mmc_suspend_host(host->mmc);
     }
 
@@ -2197,7 +2197,7 @@ int sdhci_resume_host(struct sdhci_host *host)
 		if (mmc->card->type != MMC_TYPE_SDIO) {
 			ret = mmc_resume_host(host->mmc);
 		} else {
-#if defined(CONFIG_MACH_ENDEAVORU) || defined(CONFIG_MACH_ENDEAVORTD)
+/*#if defined(CONFIG_MACH_ENDEAVORU) || defined(CONFIG_MACH_ENDEAVORTD)
             printk("wifi_is_on: %d\n",wifi_is_on);
             if (host->mmc->index == 1 && wifi_is_on == 1) {
                 printk("%s: host->mmc->index = %d, call mmc_resume_host()\n"
@@ -2207,7 +2207,7 @@ int sdhci_resume_host(struct sdhci_host *host)
 			if (host->ops->set_clock)
 				host->ops->set_clock(host, 0);
 		}
-#endif
+#endif*/
 			/* Enable card interrupt as it is overwritten in sdhci_init */
 			if ((mmc->caps & MMC_CAP_SDIO_IRQ) &&
 				(mmc->pm_flags & MMC_PM_KEEP_POWER))
