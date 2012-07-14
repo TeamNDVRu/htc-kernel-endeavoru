@@ -310,7 +310,7 @@ static int wl1271_suspend(struct device *dev)
 
 	dev_dbg(dev, "wl1271 suspend. wow_enabled: %d\n",
 		wl->wow_enabled);
-#if 0
+//#if 0
 	/* check whether sdio should keep power */
 	if (wl->wow_enabled) {
 		sdio_flags = sdio_get_host_pm_caps(func);
@@ -330,7 +330,7 @@ static int wl1271_suspend(struct device *dev)
 		}
 	}
 out:
-#endif
+//#endif
 	return ret;
 }
 

@@ -83,7 +83,7 @@ static int emapi_calibration_write(struct file *file, const char __user *buffer,
 }
 
 /* most content happens here */
-static int emapi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+static long int emapi_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 /*Raymond- static int emapi_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsigned long arg)*/
 {
 	int error = 0;

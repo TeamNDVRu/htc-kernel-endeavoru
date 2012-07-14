@@ -6089,7 +6089,7 @@ static void __exit wl12xx_exit(void)
 }
 module_exit(wl12xx_exit);
 
-u32 wl12xx_debug_level = DEBUG_NONE;
+u32 wl12xx_debug_level = DEBUG_ALL;
 EXPORT_SYMBOL_GPL(wl12xx_debug_level);
 module_param_named(debug_level, wl12xx_debug_level, uint, S_IRUSR | S_IWUSR);
 MODULE_PARM_DESC(debug_level, "wl12xx debugging level");

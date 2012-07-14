@@ -696,17 +696,6 @@ int sdioDrv_SyncReadMethod(char *out_data_buffer,
 			unsigned long in_source_address,
 			unsigned long data_length)
 {
-	/*SDIO_BufferLength bytes_count;*/
-	/*unsigned long extra_size;
-	unsigned int transferSize;
-	SDIO_Status status;
-	unsigned int incr_fix=1;/*INCREMENT_REG_ADDR; //address will be inc by HW automatically*/
-#if 0/*USE_SIGNAL_READ_WRITE*/
-/*use cmd 52*/
-	unsigned long bytes_count;
-	for (bytes_count = 0; bytes_count < data_length; bytes_count++)
-		sdioDrv_ReadSyncBytes(TXN_FUNC_ID_WLAN, in_source_address++, out_data_buffer++, 1, 1);
-#else
 /*use cmd 53*/
 	unsigned long extra_size;
 	unsigned int transferSize;
@@ -746,7 +735,6 @@ int sdioDrv_SyncReadMethod(char *out_data_buffer,
 		in_source_address += ((incr_fix == 1/*INCREMENT_REG_ADDR*/) ? transferSize : 0);
 		extra_size -= transferSize;
 	}
-#endif
 	return 0;/*SDIO_SUCCESS;*/
 }
 
@@ -1352,6 +1340,8 @@ static void wlan_gpio_deinit(void){
 static int sdioDrv_probe(void)
 {
 	int rc = 0;
+	int bit;
+	struct mmc_ios *ios;
 /*TODO	struct mmc_ios ios;*/
 	/*struct mmc_platform_data* plat = pdev->dev.platform_data;  //austin disabled for build break*/
 	struct mmc_host *mmc = 0;
@@ -1399,8 +1389,6 @@ static int sdioDrv_probe(void)
 	memcpy(&mmc->ios,&ios,sizeof(struct mmc_ios));
 	mmc->ops->set_ios(mmc, &ios);
 */
-
-	int bit;
 	mmc->ios.bus_width = MMC_BUS_WIDTH_1;
 	mmc->ios.power_mode = MMC_POWER_UP;
 	/* If ocr is set, we use it */
@@ -1412,7 +1400,6 @@ static int sdioDrv_probe(void)
 	mmc->ios.bus_mode = MMC_BUSMODE_OPENDRAIN;
 	mmc->ios.chip_select = MMC_CS_DONTCARE;
 	mmc->ios.timing = MMC_TIMING_LEGACY;
-	struct mmc_ios *ios;
 	ios = &mmc->ios;
 	pr_info("[SD] %s: clock %uHz busmode %u powermode %u cs %u Vdd %u "
 		"width %u timing %u\n",
@@ -1510,6 +1497,7 @@ static int sdioDrv_remove(void)
 void sdioDrv_set_clock_rate(int clock_rate)
 {
 	struct mmc_host *mmc  = mmci_get_mmc();
+	struct mmc_ios *ios;
 /*TODO	struct mmc_ios ios;
 
 	memset(&ios, 0, sizeof(struct mmc_ios));
@@ -1543,7 +1531,6 @@ void sdioDrv_set_clock_rate(int clock_rate)
 
 	mmc->ios.vdd = 21;
 	mmc->ios.timing = MMC_TIMING_LEGACY;
-	struct mmc_ios *ios;
 	ios = &mmc->ios;
 	pr_info("[SD] %s: clock %uHz busmode %u powermode %u cs %u Vdd %u "
 		"width %u timing %u\n",
@@ -1575,8 +1562,6 @@ int sdiodrv_close(void)
 
 static struct file_operations sdiodrv_fops = {
 	.owner		= THIS_MODULE,
-	.open		= sdiodrv_open,
-	.release	= sdiodrv_close,
 };
 
 static struct miscdevice sdiodrv_device = {
