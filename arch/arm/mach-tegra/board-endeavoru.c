@@ -110,11 +110,6 @@ extern int resume_from_deep_suspend;
 
 extern unsigned engineer_id;
 
-#ifdef CONFIG_CPU_FREQ_GOV_ONDEMAND_2_PHASE
-int set_two_phase_freq(int cpufreq);
-#endif
-
-
 /* All units are in millicelsius */
 static struct tegra_thermal_data thermal_data = {
 	.temp_throttle = 85000,
@@ -2303,9 +2298,6 @@ static void __init tegra_enterprise_init(void)
 	enterprise_regulator_init();
 	enterprise_sdhci_init();
 	headset_uart_init();
-#ifdef CONFIG_CPU_FREQ_GOV_ONDEMAND_2_PHASE
-		set_two_phase_freq(1000000);
-#endif
 
 #ifdef CONFIG_TEGRA_EDP_LIMITS
 	enterprise_edp_init();
