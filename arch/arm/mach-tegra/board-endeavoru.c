@@ -80,10 +80,7 @@
 #include "wakeups-t3.h"
 #include "pm.h"
 #include "htc-gpio.h"
-#include <mach/htc_util.h>
 #include <media/rawchip/rawchip.h>
-
-#include "pokecpu.h"
 
 #include "touch.h"
 #ifdef CONFIG_TEGRA_HAPTIC2

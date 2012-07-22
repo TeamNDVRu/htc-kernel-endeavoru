@@ -1278,7 +1278,7 @@ static int __init cpufreq_interactive_init(void)
 	sched_setscheduler_nocheck(core_lock.lock_task, SCHED_FIFO, &param);
 	get_task_struct(core_lock.lock_task);
 
-	//idle_notifier_register(&cpufreq_interactive_idle_nb);
+	idle_notifier_register(&cpufreq_interactive_idle_nb);
 	INIT_WORK(&inputopen.inputopen_work, cpufreq_interactive_input_open);
 	INIT_WORK(&core_lock.unlock_work, cpufreq_interactive_unlock_cores);
 	return cpufreq_register_governor(&cpufreq_gov_interactive);
