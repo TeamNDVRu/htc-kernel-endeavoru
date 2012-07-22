@@ -254,5 +254,3 @@ obj-${CONFIG_MACH_ENDEAVORTD}         += nand_partitions.o
 
 # Add ramdump from NV patches
 obj-y                                   += nvdumper.o
-
-obj-y                                   += tegra_sleep_stats.o
