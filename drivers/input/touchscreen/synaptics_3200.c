@@ -754,7 +754,7 @@ static int synaptics_input_register(struct synaptics_ts_data *ts)
 		printk(KERN_ERR "[TP] TOUCH_ERR: %s: Failed to allocate mt slots\n", __func__);
 		return ret;
 	}
-	set_bit(ABS_MT_TOOL_TYPE, ts->input_dev->absbit);
+//	set_bit(ABS_MT_TOOL_TYPE, ts->input_dev->absbit);
 
 	printk(KERN_INFO "[TP] input_set_abs_params: mix_x %d, max_x %d, min_y %d, max_y %d\n",
 		ts->layout[0], ts->layout[1], ts->layout[2], ts->layout[3]);
@@ -775,7 +775,7 @@ static int synaptics_input_register(struct synaptics_ts_data *ts)
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION,
 		0, ((1 << 31) | (ts->layout[1] << 16) | ts->layout[3]), 0, 0);
 
-	input_set_abs_params(ts->input_dev, ABS_MT_TOOL_TYPE, 0, 1, 0, 0);
+//	input_set_abs_params(ts->input_dev, ABS_MT_TOOL_TYPE, 0, 1, 0, 0);
 
 	return input_register_device(ts->input_dev);
 }
