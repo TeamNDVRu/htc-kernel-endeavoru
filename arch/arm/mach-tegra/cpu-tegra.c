@@ -50,8 +50,6 @@
 
 /* Symbol to store resume resume */
 extern unsigned long long wake_reason_resume;
-static spinlock_t user_cap_lock;
-
 
 /* tegra throttling and edp governors require frequencies in the table
    to be in ascending order */
@@ -98,22 +96,6 @@ module_param_cb(force_policy_max, &policy_ops, &force_policy_max, 0644);
 
 
 static unsigned int cpu_user_cap;
-
-void htc_set_cpu_user_cap(const unsigned int value)
-{
-	int flags = 0;
-	spin_lock_irqsave(&user_cap_lock, flags);
-	cpu_user_cap = value;
-	spin_unlock_irqrestore(&user_cap_lock, flags);
-}
-
-void htc_get_cpu_user_cap(unsigned int *value)
-{
-	int flags = 0;
-	spin_lock_irqsave(&user_cap_lock, flags);
-	*value = cpu_user_cap;
-	spin_unlock_irqrestore(&user_cap_lock, flags);
-}
 
 static int cpu_user_cap_set(const char *arg, const struct kernel_param *kp)
 {
