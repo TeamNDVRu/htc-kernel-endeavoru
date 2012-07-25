@@ -56,19 +56,22 @@ STA_FILE(last_signal, last_signal, D);
 static ssize_t sta_flags_read(struct file *file, char __user *userbuf,
 			      size_t count, loff_t *ppos)
 {
-	char buf[100];
+	char buf[121];
 	struct sta_info *sta = file->private_data;
-	u32 staflags = get_sta_flags(sta);
-	int res = scnprintf(buf, sizeof(buf), "%s%s%s%s%s%s%s%s%s",
-		staflags & WLAN_STA_AUTH ? "AUTH\n" : "",
-		staflags & WLAN_STA_ASSOC ? "ASSOC\n" : "",
-		staflags & WLAN_STA_PS_STA ? "PS (sta)\n" : "",
-		staflags & WLAN_STA_PS_DRIVER ? "PS (driver)\n" : "",
-		staflags & WLAN_STA_AUTHORIZED ? "AUTHORIZED\n" : "",
-		staflags & WLAN_STA_SHORT_PREAMBLE ? "SHORT PREAMBLE\n" : "",
-		staflags & WLAN_STA_WME ? "WME\n" : "",
-		staflags & WLAN_STA_WDS ? "WDS\n" : "",
-		staflags & WLAN_STA_MFP ? "MFP\n" : "");
+
+#define TEST(flg) \
+	test_sta_flag(sta, WLAN_STA_##flg) ? #flg "\n" : ""
+
+	int res = scnprintf(buf, sizeof(buf),
+			    "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+			    TEST(AUTH), TEST(ASSOC), TEST(PS_STA),
+			    TEST(PS_DRIVER), TEST(AUTHORIZED),
+			    TEST(SHORT_PREAMBLE),
+			    TEST(WME), TEST(WDS), TEST(CLEAR_PS_FILT),
+			    TEST(MFP), TEST(BLOCK_BA), TEST(PSPOLL),
+			    TEST(UAPSD), TEST(SP), TEST(TDLS_PEER),
+			    TEST(TDLS_PEER_AUTH));
+#undef TEST
 	return simple_read_from_buffer(userbuf, count, ppos, buf, res);
 }
 STA_OPS(flags);
@@ -78,8 +81,14 @@ static ssize_t sta_num_ps_buf_frames_read(struct file *file,
 					  size_t count, loff_t *ppos)
 {
 	struct sta_info *sta = file->private_data;
-	return mac80211_format_buffer(userbuf, count, ppos, "%u\n",
-				      skb_queue_len(&sta->ps_tx_buf));
+	char buf[17*IEEE80211_NUM_ACS], *p = buf;
+	int ac;
+
+	for (ac = 0; ac < IEEE80211_NUM_ACS; ac++)
+		p += scnprintf(p, sizeof(buf)+buf-p, "AC%d: %d\n", ac,
+			       skb_queue_len(&sta->ps_tx_buf[ac]) +
+			       skb_queue_len(&sta->tx_filtered[ac]));
+	return simple_read_from_buffer(userbuf, count, ppos, buf, p - buf);
 }
 STA_OPS(num_ps_buf_frames);
 
@@ -91,6 +100,31 @@ static ssize_t sta_inactive_ms_read(struct file *file, char __user *userbuf,
 				      jiffies_to_msecs(jiffies - sta->last_rx));
 }
 STA_OPS(inactive_ms);
+
+
+static ssize_t sta_connected_time_read(struct file *file, char __user *userbuf,
+					size_t count, loff_t *ppos)
+{
+	struct sta_info *sta = file->private_data;
+	struct timespec uptime;
+	struct tm result;
+	long connected_time_secs;
+	char buf[100];
+	int res;
+	do_posix_clock_monotonic_gettime(&uptime);
+	connected_time_secs = uptime.tv_sec - sta->last_connected;
+	time_to_tm(connected_time_secs, 0, &result);
+	result.tm_year -= 70;
+	result.tm_mday -= 1;
+	res = scnprintf(buf, sizeof(buf),
+		"years  - %ld\nmonths - %d\ndays   - %d\nclock  - %d:%d:%d\n\n",
+			result.tm_year, result.tm_mon, result.tm_mday,
+			result.tm_hour, result.tm_min, result.tm_sec);
+	return simple_read_from_buffer(userbuf, count, ppos, buf, res);
+}
+STA_OPS(connected_time);
+
+
 
 static ssize_t sta_last_seq_ctrl_read(struct file *file, char __user *userbuf,
 				      size_t count, loff_t *ppos)
@@ -324,6 +358,7 @@ void ieee80211_sta_debugfs_add(struct sta_info *sta)
 	DEBUGFS_ADD(flags);
 	DEBUGFS_ADD(num_ps_buf_frames);
 	DEBUGFS_ADD(inactive_ms);
+	DEBUGFS_ADD(connected_time);
 	DEBUGFS_ADD(last_seq_ctrl);
 	DEBUGFS_ADD(agg_status);
 	DEBUGFS_ADD(dev);
