@@ -1,4 +1,9 @@
+ifdef CONFIG_WL12XX
+#We will build mac80211.ko at vendor/ti/wlan/
+#obj-$(CONFIG_MAC80211) += mac80211.o
+else
 obj-$(CONFIG_MAC80211) += mac80211.o
+endif
 
 # mac80211 objects
 mac80211-y := \
