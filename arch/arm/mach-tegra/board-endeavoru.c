@@ -109,7 +109,7 @@ extern unsigned engineer_id;
 
 /* All units are in millicelsius */
 static struct tegra_thermal_data thermal_data = {
-	.temp_throttle = 85000,
+	.temp_throttle = 88000,
 	.temp_shutdown = 90000,
 	.temp_offset = TDIODE_OFFSET, /* temps based on tdiode */
 #ifdef CONFIG_TEGRA_EDP_LIMITS
@@ -2384,17 +2384,6 @@ static void __init tegra_enterprise_reserve(void)
 }
 
 MACHINE_START(ENDEAVORU, "endeavoru")
-	.boot_params    = 0x80000100,
-	.map_io         = tegra_map_common_io,
-	.reserve        = tegra_enterprise_reserve,
-	.init_early	= tegra_init_early,
-	.init_irq       = tegra_init_irq,
-	.timer          = &tegra_timer,
-	.init_machine   = tegra_enterprise_init,
-MACHINE_END
-
-/* XXX for transition period only, will be removed soon */
-MACHINE_START(TEGRA_ENTERPRISE, "endeavoru")
 	.boot_params    = 0x80000100,
 	.map_io         = tegra_map_common_io,
 	.reserve        = tegra_enterprise_reserve,
