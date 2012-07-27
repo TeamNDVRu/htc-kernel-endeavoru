@@ -36,6 +36,8 @@
 #include <linux/pm_qos_params.h>
 #include <linux/earlysuspend.h>
 #include <linux/spinlock.h>
+#include <linux/cpu_debug.h>
+#include <linux/workqueue.h>
 
 #include <asm/system.h>
 
@@ -50,6 +52,7 @@
 
 /* Symbol to store resume resume */
 extern unsigned long long wake_reason_resume;
+struct work_struct htc_suspend_resume_work;
 
 /* tegra throttling and edp governors require frequencies in the table
    to be in ascending order */
@@ -972,6 +975,38 @@ static void tegra_cpufreq_performance_late_resume(struct early_suspend *h)
 
 #endif
 
+static void htc_suspend_resume_worker(struct work_struct *w)
+{
+	pm_qos_update_request(&cap_cpu_freq_req,
+			(s32)PM_QOS_CPU_FREQ_MAX_DEFAULT_VALUE);
+	pr_info("Release early suspend CPU cap by RIL!");
+
+	pm_qos_update_request(&boost_cpu_freq_req, saved_policy_max);
+	tegra_update_cpu_speed(saved_policy_max);
+	pr_info("tegra_cpufreq_powersave_late_resume:"
+		" boost cpu freq to 1.5GHz by RIL\n");
+}
+
+static int ril_boost;
+static int ril_boost_set(const char *arg, const struct kernel_param *kp)
+{
+	int ret;
+	schedule_work(&htc_suspend_resume_work);
+	return ret;
+}
+
+static int ril_boost_get(char *buffer, const struct kernel_param *kp)
+{
+	return param_get_uint(buffer, kp);
+}
+
+
+static struct kernel_param_ops ril_boost_ops = {
+	.set = ril_boost_set,
+	.get = ril_boost_get,
+};
+
+module_param_cb(ril_boost, &ril_boost_ops, &ril_boost, 0644);
 static int __init tegra_cpufreq_init(void)
 {
 	int ret = 0;
@@ -997,6 +1032,7 @@ static int __init tegra_cpufreq_init(void)
 
 	freq_table = table_data->freq_table;
 	tegra_cpu_edp_init(false);
+	INIT_WORK(&htc_suspend_resume_work, htc_suspend_resume_worker);
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	pm_qos_add_request(&boost_cpu_freq_req, PM_QOS_CPU_FREQ_MIN, (s32)PM_QOS_CPU_FREQ_MIN_DEFAULT_VALUE);
