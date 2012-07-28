@@ -66,7 +66,7 @@
 #define WL1271_DEFAULT_BEACON_INT  100
 #define WL1271_DEFAULT_DTIM_PERIOD 1
 
-#define WL12XX_MAX_ROLES           4
+#define WL12XX_MAX_ROLES           6
 #define WL12XX_MAX_LINKS           12
 #define WL12XX_INVALID_ROLE_ID     0xff
 #define WL12XX_INVALID_LINK_ID     0xff
