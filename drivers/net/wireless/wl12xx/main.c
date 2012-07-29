@@ -4606,6 +4606,8 @@ static bool wl1271_tx_frames_pending(struct ieee80211_hw *hw)
 	struct wl1271 *wl = hw->priv;
 	bool ret = false;
 
+	wl1271_tx_flush(wl);
+
 	mutex_lock(&wl->mutex);
 
 	if (unlikely(wl->state == WL1271_STATE_OFF))

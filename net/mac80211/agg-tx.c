@@ -70,9 +70,11 @@ static void ieee80211_send_addba_request(struct ieee80211_sub_if_data *sdata,
 
 	skb = dev_alloc_skb(sizeof(*mgmt) + local->hw.extra_tx_headroom);
 
-	if (!skb)
+	if (!skb) {
+		printk(KERN_ERR "%s: failed to allocate buffer "
+				"for addba request frame\n", sdata->name);
 		return;
-
+	}
 	skb_reserve(skb, local->hw.extra_tx_headroom);
 	mgmt = (struct ieee80211_mgmt *) skb_put(skb, 24);
 	memset(mgmt, 0, 24);
@@ -147,15 +149,13 @@ void ieee80211_assign_tid_tx(struct sta_info *sta, int tid,
 	rcu_assign_pointer(sta->ampdu_mlme.tid_tx[tid], tid_tx);
 }
 
-
 static void kfree_tid_tx(struct rcu_head *rcu_head)
 {
-struct tid_ampdu_tx *tid_tx =
-    container_of(rcu_head, struct tid_ampdu_tx, rcu_head);
+	struct tid_ampdu_tx *tid_tx =
+	    container_of(rcu_head, struct tid_ampdu_tx, rcu_head);
 
-kfree(tid_tx);
+	kfree(tid_tx);
 }
-
 
 int ___ieee80211_stop_tx_ba_session(struct sta_info *sta, u16 tid,
 				    enum ieee80211_back_parties initiator,
@@ -205,6 +205,20 @@ int ___ieee80211_stop_tx_ba_session(struct sta_info *sta, u16 tid,
 	 * with locking to ensure proper access.
 	 */
 	clear_bit(HT_AGG_STATE_OPERATIONAL, &tid_tx->state);
+
+	/*
+	 * There might be a few packets being processed right now (on
+	 * another CPU) that have already gotten past the aggregation
+	 * check when it was still OPERATIONAL and consequently have
+	 * IEEE80211_TX_CTL_AMPDU set. In that case, this code might
+	 * call into the driver at the same time or even before the
+	 * TX paths calls into it, which could confuse the driver.
+	 *
+	 * Wait for all currently running TX paths to finish before
+	 * telling the driver. New packets will not go through since
+	 * the aggregation session is no longer OPERATIONAL.
+	 */
+	synchronize_net();
 
 	/*
 	 * There might be a few packets being processed right now (on
@@ -532,6 +546,11 @@ int ieee80211_start_tx_ba_session(struct ieee80211_sta *pubsta, u16 tid,
 	/* prepare A-MPDU MLME for Tx aggregation */
 	tid_tx = kzalloc(sizeof(struct tid_ampdu_tx), GFP_ATOMIC);
 	if (!tid_tx) {
+#ifdef CONFIG_MAC80211_HT_DEBUG
+		if (net_ratelimit())
+			printk(KERN_ERR "allocate tx mlme to tid %d failed\n",
+					tid);
+#endif
 		ret = -ENOMEM;
 		goto err_unlock_sta;
 	}
@@ -658,9 +677,14 @@ void ieee80211_start_tx_ba_cb_irqsafe(struct ieee80211_vif *vif,
 	struct ieee80211_ra_tid *ra_tid;
 	struct sk_buff *skb = dev_alloc_skb(0);
 
-	if (unlikely(!skb))
+	if (unlikely(!skb)) {
+#ifdef CONFIG_MAC80211_HT_DEBUG
+		if (net_ratelimit())
+			printk(KERN_WARNING "%s: Not enough memory, "
+			       "dropping start BA session", sdata->name);
+#endif
 		return;
-
+	}
 	ra_tid = (struct ieee80211_ra_tid *) &skb->cb;
 	memcpy(&ra_tid->ra, ra, ETH_ALEN);
 	ra_tid->tid = tid;
@@ -806,9 +830,14 @@ void ieee80211_stop_tx_ba_cb_irqsafe(struct ieee80211_vif *vif,
 	struct ieee80211_ra_tid *ra_tid;
 	struct sk_buff *skb = dev_alloc_skb(0);
 
-	if (unlikely(!skb))
+	if (unlikely(!skb)) {
+#ifdef CONFIG_MAC80211_HT_DEBUG
+		if (net_ratelimit())
+			printk(KERN_WARNING "%s: Not enough memory, "
+			       "dropping stop BA session", sdata->name);
+#endif
 		return;
-
+	}
 	ra_tid = (struct ieee80211_ra_tid *) &skb->cb;
 	memcpy(&ra_tid->ra, ra, ETH_ALEN);
 	ra_tid->tid = tid;
