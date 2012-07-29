@@ -1757,7 +1757,7 @@ static int wl1271_op_suspend(struct ieee80211_hw *hw,
 
 	wl1271_tx_flush(wl);
 
-//	wl->wow_enabled = true;
+	wl->wow_enabled = true;
 	wl12xx_for_each_wlvif(wl, wlvif) {
 		ret = wl1271_configure_suspend(wl, wlvif);
 		if (ret < 0) {
