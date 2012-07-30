@@ -35,7 +35,7 @@
 
 #define MAX_ZONES (16)
 #define THROTTLE_TEMP 85000
-#define LAST_THROTTLE_TEMP 88000
+#define LAST_THROTTLE_TEMP 95000
 
 struct tegra_thermal {
 	struct tegra_thermal_device *device;
