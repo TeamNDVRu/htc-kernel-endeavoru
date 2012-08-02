@@ -119,7 +119,7 @@ static struct tegra_thermal_data thermal_data = {
 #ifdef CONFIG_TEGRA_THERMAL_SYSFS
 	.tc1 = 2,
 	.tc2 = 1,
-	.passive_delay = 2000,
+	.passive_delay = 200,
 #else
 	.hysteresis_throttle = 1000,
 #endif
