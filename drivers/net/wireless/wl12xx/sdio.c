@@ -169,7 +169,7 @@ static int wl12xx_sdio_power_off(struct wl12xx_sdio_glue *glue)
 	/* Power off the card manually in case it wasn't powered off above */
 	ret = mmc_power_save_host(card->host);
 	if (ret < 0)
-		goto out
+		goto out;
 
 	/* Let runtime PM know the card is powered off */
 	pm_runtime_put_sync(&card->dev);
