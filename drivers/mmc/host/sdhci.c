@@ -21,6 +21,8 @@
 #include <linux/scatterlist.h>
 #include <linux/regulator/consumer.h>
 
+#include <linux/wakelock.h>
+
 #include <linux/leds.h>
 
 #include <linux/mmc/mmc.h>
@@ -40,6 +42,8 @@
 #endif
 
 #define MAX_TUNING_LOOP 40
+
+struct wake_lock wifi_lock;
 
 static unsigned int debug_quirks = 0;
 
@@ -1067,6 +1071,15 @@ static int wifi_is_on = 0;
 extern int enterprise_wifi_power(int on);
 void set_wifi_is_on (int on){
     wifi_is_on = on;
+    if (on) {
+	wake_lock(&wifi_lock);
+    } else {
+	int a = 0;
+	a = wake_lock_active(&wifi_lock);
+	if (a != 0)
+	    wake_unlock(&wifi_lock);
+    }
+
 }
 EXPORT_SYMBOL(set_wifi_is_on);
 #endif
@@ -2739,12 +2752,15 @@ static int __init sdhci_drv_init(void)
 	printk(KERN_INFO DRIVER_NAME
 		": Secure Digital Host Controller Interface driver\n");
 	printk(KERN_INFO DRIVER_NAME ": Copyright(c) Pierre Ossman\n");
-
+	
+	wake_lock_init(&wifi_lock, WAKE_LOCK_SUSPEND, "wifi_wakelock");
+	
 	return 0;
 }
 
 static void __exit sdhci_drv_exit(void)
 {
+	wake_lock_destroy(&wifi_lock);
 }
 
 module_init(sdhci_drv_init);
